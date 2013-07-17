@@ -10,15 +10,14 @@
                 $("#container").masonry({
                     itemSelector: ".item"
                 });
-                $(".item").each(function(iter, val) {
-                    var left = $(val).css("left");
-                    var height = $(val).css("top");
-                    if (left == "0px") {
-                        $(val).prepend("<span class='right_corner'></span>");
-                    } else {
-                        $(val).prepend("<span class='left_corner'></span>");
-                    }
-                });
+                //$(".item").each(function(iter, val) {
+                //    var left = $(val).css("left");
+                //    if (left == "0px") {
+                //        $(val).prepend("<span class='right_corner'></span>");
+                //    } else {
+                //        $(val).prepend("<span class='left_corner'></span>");
+                //    }
+                //});
             });
         </script>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />

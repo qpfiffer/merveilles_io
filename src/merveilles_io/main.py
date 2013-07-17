@@ -21,17 +21,20 @@ def visible(element):
 
 @app.route("/submit", methods=['POST'])
 def submit():
+    mimetype = "application/json"
     url = request.json['url']
     db = DB()
 
     if not db.open("links.kct", DB.OWRITER | DB.OCREATE):
         print "Could not open database."
-        return Response('{"What happened?": "Couldn\'t open the damn database."}', mimetype="text/json")
+        return Response('{"What happened?": "Couldn\'t open the damn database."}',
+            mimetype=mimetype)
 
     try:
         soup = BeautifulSoup(urlopen(url))
     except:
-        return Response('{"What happened?": "I dunno bs4 messed up somehow."}', mimetype="text/json")
+        return Response('{"What happened?": "I dunno bs4 messed up somehow."}',
+            mimetype=mimetype)
 
     title = soup.title.string
     created_at = int(mktime(datetime.now().utctimetuple()))
@@ -50,7 +53,8 @@ def submit():
     }
     db.set(created_at, dumps(record))
     db.close()
-    return Response('{"What happened?": "MUDADA"}', mimetype="text/json")
+    return Response('{"What happened?": "MUDADA"}',
+        mimetype=mimetype)
 
 @app.route("/", methods=['GET'])
 def root():
@@ -73,7 +77,8 @@ def root():
         items.append(rec)
     cur.disable()
 
-    sorted_items_for_viewing = [loads(item[1]) for item in sorted(items)][50]
+    sorted_items = sorted(items, key=lambda x: int(x[0]), reverse=True)
+    sorted_items_for_viewing = [loads(item[1]) for item in sorted_items][:50]
     return render_template("index.html", items=sorted_items_for_viewing)
 
 def main_production():

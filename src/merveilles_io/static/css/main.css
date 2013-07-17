@@ -47,7 +47,7 @@ a {
 .summary {
     color: rgb(103, 103, 103);
 }
-.right_corner {
+/*.right_corner {
     float: right;
     position: absolute;
     width: 0;
@@ -64,8 +64,8 @@ a {
     width: 0;
     height: 0;
     margin-top: 20px;
-    margin-left: -13px;
+    margin-left: -14px;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
     border-right: 10px solid rgb(25, 25, 25);
-}
+} */
