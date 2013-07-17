@@ -1,7 +1,7 @@
 html {
     color: rgb(83, 83, 83);
     font-family: 'Titillium Web',"Helvetica Neue",Helvetica,Arial,sans-serif;
-    background-image: url("img/hexabump.png");
+    background-image: url("/static/img/hexabump.png");
     background-repeat: repeat;
 }
 #container {
@@ -16,4 +16,16 @@ html {
     word-wrap: break-word;
     text-align: justify;
     background-color: rgb(25,25,25);
+}
+a {
+    text-decoration: none;
+}
+.link {
+    color: #F8227F;
+}
+.link:hover {
+    color: #FF66FF;
+}
+.person {
+    color: #A0FB22;
 }
