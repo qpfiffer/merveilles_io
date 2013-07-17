@@ -1,18 +1,23 @@
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 from datetime import datetime
 from flask import Flask, render_template, request, Response
 from kyotocabinet import DB
 from json import loads, dumps
 from time import mktime
 from urllib2 import urlopen
+import random
+import re
 
 app = Flask(__name__)
+PERSON_COLORS = ["#FFD923", "#AA2BEF", "#366EEF", "#A68B0B"]
 
-def get_links(num):
-    db = DB()
-    if not db.open("links.kct", DB.OREADER | DB.OCREATE):
-        print "Could not open database."
-    return db[:num]
+def visible(element):
+    if element.parent.name in ['style', 'script', '[document]', 'head', 'title', 'link']:
+        return False
+    elif re.match('<!--.*-->', unicode(element)):
+        return False
+
+    return True
 
 @app.route("/submit", methods=['POST'])
 def submit():
@@ -21,19 +26,27 @@ def submit():
 
     if not db.open("links.kct", DB.OWRITER | DB.OCREATE):
         print "Could not open database."
-        return Response('{"What happened?": "Something dumb."}', mimetype="text/json")
+        return Response('{"What happened?": "Couldn\'t open the damn database."}', mimetype="text/json")
 
     try:
-        title = BeautifulSoup(urlopen(url)).title.string
+        soup = BeautifulSoup(urlopen(url))
     except:
-        return Response('{"What happened?": "Something dumb."}', mimetype="text/json")
+        return Response('{"What happened?": "I dunno bs4 messed up somehow."}', mimetype="text/json")
 
+    title = soup.title.string
     created_at = int(mktime(datetime.now().utctimetuple()))
+
+    func = lambda a,v: a + " " + v
+    visible_stuff = filter(visible, soup.findAll(text=True))
+    summary = reduce(func, visible_stuff, "")[:300] + "..."
+
     record = {
         "created_at": created_at,
         "title": title,
         "url": url,
-        "person": request.json["person"]
+        "person": request.json["person"],
+        "summary": summary,
+        "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)]
     }
     db.set(created_at, dumps(record))
     db.close()

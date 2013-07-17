@@ -5,17 +5,24 @@ html {
     background-repeat: repeat;
 }
 #container {
-    width: 860px;
+    width: 890px;
     margin: 0 auto;
 }
 .item {
-    width: 408px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    width: 411px;
     margin: 20px 10px 10px 10px;
     float: left;
     min-height: 50px;
     word-wrap: break-word;
     text-align: justify;
     background-color: rgb(25,25,25);
+    padding: 3px;
+}
+.item_header {
+    padding-bottom: 3px;
+    border-bottom: 1px solid ;
 }
 a {
     text-decoration: none;
@@ -26,6 +33,31 @@ a {
 .link:hover {
     color: #FF66FF;
 }
-.person {
-    color: #A0FB22;
+.time {
+    font-size: 12px;
+}
+.summary {
+    color: rgb(103, 103, 103);
+}
+.right_corner {
+    float: right;
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin-left: 414px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid rgb(25, 25, 25);
+    vertical-align: top;
+}
+.left_corner {
+    float: left;
+    position: absolute;
+    width: 0;
+    height: 0;
+    margin-top: 20px;
+    margin-left: -13px;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid rgb(25, 25, 25);
 }

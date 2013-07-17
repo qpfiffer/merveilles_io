@@ -6,8 +6,18 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/masonry.min.js') }}"></script>
         <script type="text/javascript">
             $(function() {
+                last_height = 0;
                 $("#container").masonry({
                     itemSelector: ".item"
+                });
+                $(".item").each(function(iter, val) {
+                    var left = $(val).css("left");
+                    var height = $(val).css("top");
+                    if (left == "0px") {
+                        $(val).prepend("<span class='right_corner'></span>");
+                    } else {
+                        $(val).prepend("<span class='left_corner'></span>");
+                    }
                 });
             });
         </script>
@@ -19,7 +29,13 @@
         <div id="container">
             {% if items %}
                 {% for item in items %}
-                    <div class="item"><span class="person">{{item.person}}</span> linked <a href="{{item.url}}"><span class="link">{{item.title}}</span></a></div>
+                <div class="item">
+                    <div class="item_header">
+                        <span style="color: {{item.person_color}};" class="person">{{item.person}}</span> linked <a href="{{item.url}}"><span class="link">{{item.title}}</span></a>
+                    </div>
+                    <div class="summary"><p>{{item.summary}}</p></div>
+                    <div class="time"><span>Linked on {{item.created_at}}</span></div>
+                </div>
                 {% endfor %}
             {% else %}
                 <p>No items yet. :<</p>
