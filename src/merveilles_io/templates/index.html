@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Merveilles.io</title>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/masonry.min.js') }}"></script>
+        <script type="text/javascript">
+            $(function() {
+                $("#container").masonry({
+                    itemSelector: ".item"
+                });
+            });
+        </script>
+        <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+        <link href="http://fonts.googleapis.com/css?family=Titillium+Web:400,700,200" rel="stylesheet" type="text/css">
+    </head>
+    <body>
+        <h1>#merveilles</h1>
+        <div id="container">
+            {% for item in items %}
+            <div class="item">{{item.person}} linked {{item.link}}</div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

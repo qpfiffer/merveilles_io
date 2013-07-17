@@ -17,7 +17,8 @@ setup(name='merveilles_io',
       ],
       entry_points={
           'console_scripts': [
-              'merveilles_io = merveilles_io.main:main',
+              'merveilles_io = merveilles_io.main:main_production',
+              'merveilles_io_dev = merveilles_io.main:main_debug',
           ]
       },
       )
