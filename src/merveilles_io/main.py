@@ -72,6 +72,7 @@ def root():
 
         items.append(rec)
     cur.disable()
+
     sorted_items_for_viewing = [loads(item[1]) for item in sorted(items)]
     return render_template("index.html", items=sorted_items_for_viewing)
 

@@ -27,6 +27,14 @@ html {
 a {
     text-decoration: none;
 }
+#line {
+    height: 100%;
+    width: 4px;
+    border-right: 3px solid #009999;
+    float: right;
+    position: absolute;
+    margin-left: 430px;
+}
 .link {
     color: #F8227F;
 }
