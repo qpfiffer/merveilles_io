@@ -14,6 +14,7 @@ setup(name='merveilles_io',
       zip_safe=True,
       install_requires=[
           'flask',
+          'beautifulsoup',
       ],
       entry_points={
           'console_scripts': [

@@ -17,9 +17,13 @@
     <body>
         <h1>#merveilles</h1>
         <div id="container">
-            {% for item in items %}
-            <div class="item"><span class="person">{{item.person}}</span> linked <a href="{{item.link}}"><span class="link">{{item.title}}</span></a></div>
-            {% endfor %}
+            {% if items %}
+                {% for item in items %}
+                    <div class="item"><span class="person">{{item.person}}</span> linked <a href="{{item.url}}"><span class="link">{{item.title}}</span></a></div>
+                {% endfor %}
+            {% else %}
+                <p>No items yet. :<</p>
+            {% endif %}
         </div>
     </body>
 </html>
