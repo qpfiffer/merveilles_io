@@ -5,11 +5,11 @@ from kyotocabinet import DB
 from json import loads, dumps
 from time import mktime
 from urllib2 import urlopen
-import random
-import re
+import sys, getopt, random, re
 
 app = Flask(__name__)
 PERSON_COLORS = ["#FFD923", "#AA2BEF", "#366EEF", "#A68B0B"]
+FILTER_MAX = 50
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title', 'link']:
@@ -19,15 +19,35 @@ def visible(element):
 
     return True
 
+def is_url_in_db(db, url):
+    cur = db.cursor()
+    cur.jump()
+
+    for i in range(0,FILTER_MAX):
+        rec = cur.get(True)
+        if not rec:
+            break
+        if loads(rec[1])['url'] == url:
+            return True
+
+    cur.disable()
+    return False
+
 @app.route("/submit", methods=['POST'])
 def submit():
     mimetype = "application/json"
     url = request.json['url']
     db = DB()
 
-    if not db.open("links.kct", DB.OWRITER | DB.OCREATE):
+    db_prefix = app.config['DB_PREFIX']
+    if not db.open("{0}links.kct".format(db_prefix),
+        DB.OWRITER | DB.OCREATE):
         print "Could not open database."
         return Response('{"What happened?": "Couldn\'t open the damn database."}',
+            mimetype=mimetype)
+
+    if is_url_in_db(db, url):
+        return Response('{"What happened?": "Someone tried to submit a duplicate URL."}',
             mimetype=mimetype)
 
     try:
@@ -58,18 +78,16 @@ def submit():
 
 @app.route("/", methods=['GET'])
 def root():
-    #items = [{"person": "person{0}".format(i),
-    #          "title": "Killing Ducks: A mortuary.",
-    #          "link":"http://link{0}.com".format(i)} for i in range(0,25)]
     items = []
     db = DB()
 
-    if not db.open("links.kct", DB.OREADER):
+    db_prefix = app.config['DB_PREFIX']
+    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER):
         print "Could not open database."
 
     cur = db.cursor()
     cur.jump()
-    while len(items) < 10:
+    while len(items) < FILTER_MAX:
         rec = cur.get(True)
         if not rec:
             break
@@ -78,14 +96,28 @@ def root():
     cur.disable()
 
     sorted_items = sorted(items, key=lambda x: int(x[0]), reverse=True)
-    sorted_items_for_viewing = [loads(item[1]) for item in sorted_items][:50]
+    sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
     return render_template("index.html", items=sorted_items_for_viewing)
 
-def main_production():
-    app.run(host="0.0.0.0")
+def main(argv):
+    app.config['DB_PREFIX'] = "/tmp/"
+    debug = False
 
-def main_debug():
-    app.run(debug=True)
+    try:
+        opts, args = getopt.getopt(argv,"hi:o:",["db=", "debug"])
+    except getopt.GetoptError:
+        print 'merveilles_io --db=<db_dir>'
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-h':
+            print 'NO HELP FOR THE WICKED'
+            sys.exit()
+        elif opt in ("-d", "--db"):
+            app.config['DB_PREFIX'] = arg
+        elif opt in ("--debug"):
+            debug = True
+
+    app.run(debug=debug)
 
 if __name__ == "__main__":
-    main_debug()
+    main(sys.argv[1:])
