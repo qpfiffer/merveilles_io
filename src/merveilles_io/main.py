@@ -51,7 +51,7 @@ def submit():
             mimetype=mimetype)
 
     try:
-        soup = BeautifulSoup(urlopen(url))
+        soup = BeautifulSoup(urlopen(url, timeout=3))
     except:
         return Response('{"What happened?": "I dunno bs4 messed up somehow."}',
             mimetype=mimetype)
