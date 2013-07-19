@@ -3,3 +3,4 @@ build/
 *.swp
 dist/
 *.kct
+*.pyc
