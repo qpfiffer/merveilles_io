@@ -21,14 +21,16 @@ def visible(element):
 
 def is_url_in_db(db, url):
     cur = db.cursor()
-    cur.jump()
+    cur.jump_back()
 
     for i in range(0,FILTER_MAX):
-        rec = cur.get(True)
+        rec = cur.get(True, step=False)
         if not rec:
             break
         if loads(rec[1])['url'] == url:
             return True
+
+        cur.step_back()
 
     cur.disable()
     return False
@@ -86,12 +88,12 @@ def root():
         print "Could not open database."
 
     cur = db.cursor()
-    cur.jump()
+    cur.jump_back()
     while len(items) < FILTER_MAX:
-        rec = cur.get(True)
+        rec = cur.get(True, step=False)
         if not rec:
             break
-
+        cur.step_back()
         items.append(rec)
     cur.disable()
 
