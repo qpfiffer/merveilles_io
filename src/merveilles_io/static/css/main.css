@@ -25,6 +25,9 @@ html {
 h1 {
     color: rgb(83,83,83);
 }
+#meta_info {
+    font-size: 12px;
+}
 a {
     text-decoration: none;
 }

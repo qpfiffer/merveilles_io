@@ -54,10 +54,24 @@ def get_items(item_filter):
 
         cur.step_back()
     cur.disable()
+    db.close()
 
     sorted_items = sorted(items, key=lambda x: int(x[0]), reverse=True)
     sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
     return sorted_items_for_viewing
+
+@app.context_processor
+def db_meta_info():
+    meta = {}
+    db = DB()
+    db_prefix = app.config['DB_PREFIX']
+    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER):
+        print "Could not open database."
+    meta["size"] = db.size()
+    meta["count"] = db.count()
+    db.close()
+
+    return meta
 
 @app.template_filter('unix_to_human')
 def unix_to_human(timestamp_str):
