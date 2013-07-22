@@ -35,6 +35,30 @@ def is_url_in_db(db, url):
     cur.disable()
     return False
 
+def get_items(item_filter):
+    items = []
+    db = DB()
+    db_prefix = app.config['DB_PREFIX']
+    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump_back()
+    while len(items) < FILTER_MAX:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        if item_filter(rec):
+            items.append(rec)
+
+        cur.step_back()
+    cur.disable()
+
+    sorted_items = sorted(items, key=lambda x: int(x[0]), reverse=True)
+    sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
+    return sorted_items_for_viewing
+
 @app.route("/submit", methods=['POST'])
 def submit():
     mimetype = "application/json"
@@ -45,17 +69,21 @@ def submit():
     if not db.open("{0}links.kct".format(db_prefix),
         DB.OWRITER | DB.OCREATE):
         print "Could not open database."
-        return Response('{"What happened?": "Couldn\'t open the damn database."}',
+        return Response('{"What happened?": "Couldn\'t open the damn '\
+            'database."}',
             mimetype=mimetype)
 
     if is_url_in_db(db, url):
-        return Response('{"What happened?": "Someone tried to submit a duplicate URL."}',
+        return Response('{"What happened?": "Someone '\
+            'tried to submit a duplicate URL."}',
             mimetype=mimetype)
 
     try:
-        soup = BeautifulSoup(urlopen(url, timeout=3))
+        request = urlopen(url, timeout=3)
+        soup = BeautifulSoup(request)
     except:
-        return Response('{"What happened?": "I dunno bs4 messed up somehow."}',
+        return Response('{"What happened?": '\
+            'I dunno bs4 messed up somehow."}',
             mimetype=mimetype)
 
     title = soup.title.string
@@ -78,28 +106,18 @@ def submit():
     return Response('{"What happened?": "MUDADA"}',
         mimetype=mimetype)
 
+@app.route("/intrique", methods=['GET'])
+def intrigue():
+    user = request.args.get("user", "")
+    items = get_items(lambda x: loads(x[1])["person"].lower() == user.lower())
+
+    return render_template("index.html", items=items)
+
 @app.route("/", methods=['GET'])
 def root():
-    items = []
-    db = DB()
+    items = get_items(lambda x: True)
 
-    db_prefix = app.config['DB_PREFIX']
-    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER):
-        print "Could not open database."
-
-    cur = db.cursor()
-    cur.jump_back()
-    while len(items) < FILTER_MAX:
-        rec = cur.get(False)
-        if not rec:
-            break
-        cur.step_back()
-        items.append(rec)
-    cur.disable()
-
-    sorted_items = sorted(items, key=lambda x: int(x[0]), reverse=True)
-    sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
-    return render_template("index.html", items=sorted_items_for_viewing)
+    return render_template("index.html", items=items)
 
 def main(argv):
     app.config['DB_PREFIX'] = "/tmp/"
