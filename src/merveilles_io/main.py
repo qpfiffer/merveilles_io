@@ -24,7 +24,7 @@ def is_url_in_db(db, url):
     cur.jump_back()
 
     for i in range(0,FILTER_MAX):
-        rec = cur.get(True, step=False)
+        rec = cur.get(False)
         if not rec:
             break
         if loads(rec[1])['url'] == url:
@@ -90,7 +90,7 @@ def root():
     cur = db.cursor()
     cur.jump_back()
     while len(items) < FILTER_MAX:
-        rec = cur.get(True, step=False)
+        rec = cur.get(False)
         if not rec:
             break
         cur.step_back()
