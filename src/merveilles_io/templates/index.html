@@ -24,7 +24,7 @@
         <link href="http://fonts.googleapis.com/css?family=Titillium+Web:400,700,200" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <h1>#merveilles</h1>
+        <h1><a href="{{ url_for('root') }}">#merveilles</a></h1>
         <div id="container">
             {# <div id="line"></div> #}
             {% if items %}
@@ -34,7 +34,7 @@
                         <a href="{{ url_for('intrigue') }}?user={{item.person}}" style="color: {{item.person_color}};" class="person">{{item.person}}</a> linked <a target="_blank" href="{{item.url}}"><span class="link">{{item.title}}</span></a>
                     </div>
                     <div class="summary"><p>{{item.summary}}</p></div>
-                    <div class="time"><span>Linked on {{item.created_at}}</span></div>
+                    <div class="time"><span>Linked on {{item.created_at|unix_to_human}}</span></div>
                 </div>
                 {% endfor %}
             {% else %}

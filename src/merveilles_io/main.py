@@ -59,6 +59,11 @@ def get_items(item_filter):
     sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
     return sorted_items_for_viewing
 
+@app.template_filter('unix_to_human')
+def unix_to_human(timestamp_str):
+    time = float(timestamp_str)
+    return unicode(datetime.fromtimestamp(time))
+
 @app.route("/submit", methods=['POST'])
 def submit():
     mimetype = "application/json"

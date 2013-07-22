@@ -22,6 +22,9 @@ html {
     padding-bottom: 3px;
     border-bottom: 1px solid ;
 }
+h1 {
+    color: rgb(83,83,83);
+}
 a {
     text-decoration: none;
 }
