@@ -141,9 +141,10 @@ def root():
 def main(argv):
     app.config['DB_PREFIX'] = "/tmp/"
     debug = False
+    port = 5000
 
     try:
-        opts, args = getopt.getopt(argv,"hi:o:",["db=", "debug"])
+        opts, args = getopt.getopt(argv,"hi:o:",["db=", "debug", "port="])
     except getopt.GetoptError:
         print 'merveilles_io --db=<db_dir>'
         sys.exit(2)
@@ -155,8 +156,10 @@ def main(argv):
             app.config['DB_PREFIX'] = arg
         elif opt in ("--debug"):
             debug = True
+        elif opt in ("--port"):
+            port = int(arg)
 
-    app.run(debug=debug)
+    app.run(debug=debug, port=port)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
