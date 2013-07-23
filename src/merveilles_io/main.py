@@ -98,8 +98,8 @@ def submit():
             mimetype=mimetype)
 
     try:
-        request = urlopen(url, timeout=10)
-        soup = BeautifulSoup(request)
+        thing = urlopen(url, timeout=10)
+        soup = BeautifulSoup(thing)
     except:
         return Response('{"What happened?": '\
             'I dunno bs4 messed up somehow."}',
