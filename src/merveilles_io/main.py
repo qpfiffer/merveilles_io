@@ -98,7 +98,7 @@ def submit():
             mimetype=mimetype)
 
     try:
-        request = urlopen(url, timeout=3)
+        request = urlopen(url, timeout=10)
         soup = BeautifulSoup(request)
     except:
         return Response('{"What happened?": '\
