@@ -8,18 +8,11 @@ setup(name='merveilles_io',
       author='Quinlan Pfiffer',
       author_email='qpfiffer@gmail.com',
       license='LICENSE',
-      packages=["merveilles_io"],
-      package_dir = {'':'src'},
+      packages=find_packages(),
       include_package_data=True,
-      zip_safe=True,
+      zip_safe=False,
       install_requires=[
           'flask',
           'beautifulsoup4',
       ],
-      entry_points={
-          'console_scripts': [
-              'merveilles_io = merveilles_io.main:main_production',
-              'merveilles_io_dev = merveilles_io.main:main_debug',
-          ]
-      },
       )
