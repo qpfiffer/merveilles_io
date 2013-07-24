@@ -26,7 +26,7 @@
     <body>
         <div ="nav">
             <h1><a href="{{ url_for('root') }}">#merveilles</a></h1>
-            <span id="meta_info">DB Size: {{ size }} bytes, Links Saved: {{ count }}</span>
+            <span id="meta_info">DB Size: {{ size|file_size }} bytes, Links Saved: {{ count }}</span>
         </div>
         <div id="container">
             {% if items %}
