@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+from huey import RedisHuey
 from datetime import datetime
 from flask import Flask, render_template, request, Response
 from kyotocabinet import DB
@@ -8,6 +9,8 @@ from urllib2 import urlopen
 import sys, getopt, random, re
 
 app = Flask(__name__)
+huey = RedisHuey('merveilles_io', host='localhost')
+
 PERSON_COLORS = ["#FFD923", "#AA2BEF", "#366EEF", "#A68B0B"]
 FILTER_MAX = 50
 
@@ -60,6 +63,46 @@ def get_items(item_filter):
     sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
     return sorted_items_for_viewing
 
+@huey.task()
+def insert_url(url, person):
+    db = DB()
+
+    db_prefix = app.config['DB_PREFIX']
+    if not db.open("{0}links.kct".format(db_prefix),
+        DB.OWRITER | DB.OCREATE):
+        print "Could not open database."
+        return '{"What happened?": "Couldn\'t open the damn database."}'
+
+    if is_url_in_db(db, url):
+        return '{"What happened?": "Someone tried to submit a duplicate URL."}'
+
+    thing = urlopen(url)
+
+    try:
+        soup = BeautifulSoup(thing)
+    except:
+        return '{"What happened?": "I dunno bs4 messed up somehow."}'
+
+    title = soup.title.string
+    created_at = int(mktime(datetime.now().utctimetuple()))
+
+    func = lambda a,v: a + " " + v
+    visible_stuff = filter(visible, soup.findAll(text=True))
+    summary = reduce(func, visible_stuff, "")[:300] + "..."
+
+    record = {
+        "created_at": created_at,
+        "title": title,
+        "url": url,
+        "person": person,
+        "summary": summary,
+        "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)]
+    }
+    db.set(created_at, dumps(record))
+    db.close()
+
+    return '{"What happened?": "MUDADA"}'
+
 @app.context_processor
 def db_meta_info():
     meta = {}
@@ -97,48 +140,10 @@ def unix_to_human(timestamp_str):
 def submit():
     mimetype = "application/json"
     url = request.json['url']
-    db = DB()
+    person = request.json["person"]
 
-    db_prefix = app.config['DB_PREFIX']
-    if not db.open("{0}links.kct".format(db_prefix),
-        DB.OWRITER | DB.OCREATE):
-        print "Could not open database."
-        return Response('{"What happened?": "Couldn\'t open the damn '\
-            'database."}',
-            mimetype=mimetype)
-
-    if is_url_in_db(db, url):
-        return Response('{"What happened?": "Someone '\
-            'tried to submit a duplicate URL."}',
-            mimetype=mimetype)
-
-    try:
-        thing = urlopen(url, timeout=10)
-        soup = BeautifulSoup(thing)
-    except:
-        return Response('{"What happened?": '\
-            'I dunno bs4 messed up somehow."}',
-            mimetype=mimetype)
-
-    title = soup.title.string
-    created_at = int(mktime(datetime.now().utctimetuple()))
-
-    func = lambda a,v: a + " " + v
-    visible_stuff = filter(visible, soup.findAll(text=True))
-    summary = reduce(func, visible_stuff, "")[:300] + "..."
-
-    record = {
-        "created_at": created_at,
-        "title": title,
-        "url": url,
-        "person": request.json["person"],
-        "summary": summary,
-        "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)]
-    }
-    db.set(created_at, dumps(record))
-    db.close()
-    return Response('{"What happened?": "MUDADA"}',
-        mimetype=mimetype)
+    insert(url)
+    return Response('{"What happened?": "MUDADA"}', mimetype=mimetype)
 
 @app.route("/intrique", methods=['GET'])
 def intrigue():
