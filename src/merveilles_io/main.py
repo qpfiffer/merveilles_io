@@ -39,7 +39,7 @@ def get_items(item_filter):
     items = []
     db = DB()
     db_prefix = app.config['DB_PREFIX']
-    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER):
+    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER | DB.OCREATE):
         print "Could not open database."
 
     cur = db.cursor()
