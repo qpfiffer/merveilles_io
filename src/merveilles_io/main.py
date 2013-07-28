@@ -35,6 +35,13 @@ def is_url_in_db(db, url):
     cur.disable()
     return False
 
+def get_key(item):
+    try:
+        key = int(item[0])
+    except:
+        key = int(loads(item[1])["created_at"])
+    return key
+
 def get_items(item_filter):
     items = []
     db = DB()
@@ -56,7 +63,7 @@ def get_items(item_filter):
     cur.disable()
     db.close()
 
-    sorted_items = sorted(items, key=lambda x: int(x[0]), reverse=True)
+    sorted_items = sorted(items, key=get_key, reverse=True)
     sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
     return sorted_items_for_viewing
 
