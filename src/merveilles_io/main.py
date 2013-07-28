@@ -140,7 +140,7 @@ def submit():
     return Response('{"What happened?": "MUDADA"}',
         mimetype=mimetype)
 
-@app.route("/intrique", methods=['GET'])
+@app.route("/intrigue", methods=['GET'])
 def intrigue():
     user = request.args.get("user", "")
     items = get_items(lambda x: loads(x[1])["person"].lower() == user.lower())
