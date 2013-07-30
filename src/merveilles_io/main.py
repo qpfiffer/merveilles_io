@@ -157,6 +157,9 @@ def intrigue():
 @app.route("/", methods=['GET'])
 def root():
     items = get_items(lambda x: True)
+    for item in items:
+        if item['title'] is None or item['title'] == "":
+            item['title'] = item['url']
 
     return render_template("index.html", items=items)
 
