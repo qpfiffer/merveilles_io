@@ -42,8 +42,9 @@ def get_key(item):
         key = int(loads(item[1])["created_at"])
     return key
 
-def top_domains():
+def top_things():
     urls = {}
+    people = {}
     db = DB()
     db_prefix = app.config['DB_PREFIX']
     if not db.open("{0}links.kct".format(db_prefix), DB.OREADER | DB.OCREATE):
@@ -56,18 +57,26 @@ def top_domains():
         if not rec:
             break
 
-        split = loads(rec[1])['url'].split("://")[1].split("/")[0]
+        loaded_rec = loads(rec[1])
+        split = loaded_rec['url'].split("://")[1].split("/")[0]
+
         if urls.get(split, False) == False:
             urls[split] = 1
         else:
             urls[split] = urls[split] + 1
 
+        person = loaded_rec['person']
+        if people.get(person, False) == False:
+            people[person] = 1
+        else:
+            people[person] = people[person] + 1
+
         cur.step_back()
     cur.disable()
     db.close()
 
-    # List of tuples, (url_domain, times_posted)
-    return sorted(urls.items(), key=lambda x: x[1], reverse=True)
+    return (sorted(urls.items(), key=lambda x: x[1], reverse=True),
+            sorted(people.items(), key=lambda x: x[1], reverse=True))
 
 def get_items(item_filter):
     items = []
@@ -192,7 +201,7 @@ def root():
 
 @app.route("/top")
 def top():
-    items = top_domains()
+    items = top_things()
     return render_template("top.html", items=items)
 
 def main(argv):

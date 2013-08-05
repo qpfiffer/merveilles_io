@@ -1,10 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
 <div id="container">
-    <ul>
-    {% for item in items %}
-        <li>{{item[0]}}: {{item[1]}}</li>
-    {% endfor %}
-    </ul>
+    <div class="item">
+        <p class="item_header">Top ten domains</p>
+        <ul>
+        {% for item in items[0][:10] %}
+            <li>{{item[0]}}: {{item[1]}}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <div class="item">
+        <p class="item_header">Top ten people</p>
+        <ul>
+        {% for item in items[1][:10] %}
+            <li>{{item[0]}}: {{item[1]}}</li>
+        {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock %}
