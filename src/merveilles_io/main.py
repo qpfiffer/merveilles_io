@@ -42,6 +42,33 @@ def get_key(item):
         key = int(loads(item[1])["created_at"])
     return key
 
+def top_domains():
+    urls = {}
+    db = DB()
+    db_prefix = app.config['DB_PREFIX']
+    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump_back()
+    while True:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        split = loads(rec[1])['url'].split("://")[1].split("/")[0]
+        if urls.get(split, False) == False:
+            urls[split] = 1
+        else:
+            urls[split] = urls[split] + 1
+
+        cur.step_back()
+    cur.disable()
+    db.close()
+
+    # List of tuples, (url_domain, times_posted)
+    return sorted(urls.items(), key=lambda x: x[1], reverse=True)
+
 def get_items(item_filter):
     items = []
     db = DB()
@@ -162,6 +189,11 @@ def root():
             item['title'] = item['url']
 
     return render_template("index.html", items=items)
+
+@app.route("/top")
+def top():
+    items = top_domains()
+    return render_template("top.html", items=items)
 
 def main(argv):
     app.config['DB_PREFIX'] = "/tmp/"
