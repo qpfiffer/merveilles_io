@@ -45,8 +45,11 @@ def get_key(item):
 def top_things():
     urls = {}
     people = {}
+    graph = {}
+
     db = DB()
     db_prefix = app.config['DB_PREFIX']
+
     if not db.open("{0}links.kct".format(db_prefix), DB.OREADER | DB.OCREATE):
         print "Could not open database."
 
@@ -71,12 +74,24 @@ def top_things():
         else:
             people[person] = people[person] + 1
 
+        # Build a crazy relational graph out of my nosql data
+        if graph.get(split, False) == False:
+            graph[split] = [person]
+        elif person not in graph[split]:
+            graph[split].append(person)
+
+        if graph.get(person, False) == False:
+            graph[person] = [split]
+        elif split not in graph[person]:
+            graph[person].append(split)
+
         cur.step_back()
     cur.disable()
     db.close()
 
     return (sorted(urls.items(), key=lambda x: x[1], reverse=True),
-            sorted(people.items(), key=lambda x: x[1], reverse=True))
+            sorted(people.items(), key=lambda x: x[1], reverse=True),
+            graph)
 
 def get_items(item_filter):
     items = []
@@ -202,7 +217,8 @@ def root():
 @app.route("/top")
 def top():
     items = top_things()
-    return render_template("top.html", items=items)
+    graph_data = items[2]
+    return render_template("top.html", items=items, graph_data=graph_data)
 
 def main(argv):
     app.config['DB_PREFIX'] = "/tmp/"

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
+<div id="sigma_graph"></div>
 <div id="container">
     <div class="item">
         <p class="item_header">Top ten domains</p>
@@ -18,4 +19,30 @@
         </ul>
     </div>
 </div>
+{% endblock %}
+{% block startup %}{{ super() }}
+$(function() {
+    var sigRoot = document.getElementById('sigma_graph');
+    var sigInst = sigma.init(sigRoot);
+
+    sigInst.drawingProperties({
+      defaultLabelColor: '#ccc',
+      font: 'Arial',
+      edgeColor: 'source',
+      defaultEdgeType: 'curve'
+    }).graphProperties({
+      minNodeSize: 2,
+      maxNodeSize: 5
+    });
+
+    var data = {{ graph_data|tojson|safe }};
+
+    sigInst.addNode('hello',{
+      label: 'Hello',
+      color: '#ff0000'
+    }).addNode('world',{
+      label: 'World !',
+      color: '#00ff00'
+    }).addEdge('hello_world','hello','world').draw();
+});
 {% endblock %}

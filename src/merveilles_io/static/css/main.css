@@ -4,7 +4,15 @@ html {
     background-image: url("/static/img/hexabump.png");
     background-repeat: repeat;
 }
+#sigma_graph {
+    width: 100%;
+    min-height: 500px;
+    background-color: #191919;
+    margin: 0 auto;
+    border-radius: 4px;
+}
 #container {
+    margin-top: 5px;
 }
 .item {
     -moz-border-radius: 4px;

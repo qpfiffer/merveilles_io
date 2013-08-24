@@ -14,7 +14,9 @@
         {% endblock %}
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/masonry.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
         <script type="text/javascript">
+        {% block startup %}
             $(function() {
                 last_height = 0;
                 $("#container").masonry({
@@ -29,6 +31,7 @@
                 //    }
                 //});
             });
+        {% endblock %}
         </script>
     </body>
 </html>
