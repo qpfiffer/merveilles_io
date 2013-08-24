@@ -20,6 +20,10 @@
     </div>
 </div>
 {% endblock %}
+{% block includes %} {{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.forceatlas2.js') }}"></script>
+{% endblock %}
 {% block startup %}{{ super() }}
 $(function() {
     var sigRoot = document.getElementById('sigma_graph');
@@ -36,13 +40,39 @@ $(function() {
     });
 
     var data = {{ graph_data|tojson|safe }};
+    // Create all nodes
+    for (var key in data) {
+        if (data[key]["is_person"] == true) {
+            var x = Math.random()
+            var y = Math.random()
+            sigInst.addNode(key, {
+                x: x,
+                y: y,
+                size: 0.75+4.5*Math.random(),
+                color: "rgb(" + Math.round(x*256) + "," + Math.round(y*256) + ", 255)",
+                label: key
+            });
+        } else {
+            var x = Math.random()
+            var y = Math.random()
+            sigInst.addNode(key, {
+                x: x,
+                y: y,
+                size: 0.25+4.5*Math.random(),
+                color: "rgb(" + Math.round(x*256) + "," + Math.round(y*256) + ", 0)",
+                label: key
+            });
+        }
+    }
+    // Create all edges
+    for (var key in data) {
+        // data[key]["data"] is a list of links to data[key]
+        for (var link in data[key]["data"]) {
+            sigInst.addEdge(key + "_" + data[key]["data"][link] + "_" + link, key, data[key]["data"][link]);
+        }
+    }
+    sigInst.startForceAtlas2();
+    setTimeout(function() { sigInst.stopForceAtlas2(); }, 10000);
 
-    sigInst.addNode('hello',{
-      label: 'Hello',
-      color: '#ff0000'
-    }).addNode('world',{
-      label: 'World !',
-      color: '#00ff00'
-    }).addEdge('hello_world','hello','world').draw();
 });
 {% endblock %}

@@ -74,16 +74,18 @@ def top_things():
         else:
             people[person] = people[person] + 1
 
-        # Build a crazy relational graph out of my nosql data
-        if graph.get(split, False) == False:
-            graph[split] = [person]
-        elif person not in graph[split]:
-            graph[split].append(person)
+        if split is not None and split is not "" and \
+            person is not None and person is not "":
+            # Build a crazy relational graph out of my nosql data
+            if graph.get(split, False) == False:
+                graph[split] = {"is_person": False, "data": [person]}
+            elif person not in graph[split]:
+                graph[split]["data"].append(person)
 
-        if graph.get(person, False) == False:
-            graph[person] = [split]
-        elif split not in graph[person]:
-            graph[person].append(split)
+            if graph.get(person, False) == False:
+                graph[person] = {"is_person": True, "data": [split]}
+            elif split not in graph[person]:
+                graph[person]["data"].append(split)
 
         cur.step_back()
     cur.disable()
