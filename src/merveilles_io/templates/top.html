@@ -48,8 +48,8 @@ $(function() {
             sigInst.addNode(key, {
                 x: x,
                 y: y,
-                size: 0.75+4.5*Math.random(),
-                color: "rgb(" + Math.round(x*256) + "," + Math.round(y*256) + ", 255)",
+                size: 1.0+4.5*Math.random(),
+                color: "rgb(" + Math.round(x*256) + ", 15, 15)",
                 label: key
             });
         } else {
@@ -58,8 +58,8 @@ $(function() {
             sigInst.addNode(key, {
                 x: x,
                 y: y,
-                size: 0.25+4.5*Math.random(),
-                color: "rgb(" + Math.round(x*256) + "," + Math.round(y*256) + ", 0)",
+                size: 0.25+2.5*Math.random(),
+                color: "rgb(" + Math.round(x*256) + "," + Math.round(y*256) + ", 255)",
                 label: key
             });
         }
@@ -72,7 +72,7 @@ $(function() {
         }
     }
     sigInst.startForceAtlas2();
-    setTimeout(function() { sigInst.stopForceAtlas2(); }, 10000);
+    setTimeout(function() { sigInst.stopForceAtlas2(); }, 20000);
 
 });
 {% endblock %}
