@@ -68,7 +68,11 @@ $(function() {
     for (var key in data) {
         // data[key]["data"] is a list of links to data[key]
         for (var link in data[key]["data"]) {
-            sigInst.addEdge(key + "_" + data[key]["data"][link] + "_" + link, key, data[key]["data"][link]);
+            try {
+                sigInst.addEdge(key + "_" + data[key]["data"][link], key, data[key]["data"][link]);
+            } catch(err) {
+                continue;
+            }
         }
     }
     sigInst.startForceAtlas2();
