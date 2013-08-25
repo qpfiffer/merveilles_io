@@ -78,9 +78,10 @@ def top_things():
             person is not None and person is not "":
             # Build a crazy relational graph out of my nosql data
             if graph.get(split, False) == False:
-                graph[split] = {"is_person": False, "data": [person]}
+                graph[split] = {"is_person": False, "data": [person], "linked_to_count": 1}
             elif person not in graph[split]:
                 graph[split]["data"].append(person)
+                graph[split]["linked_to_count"] = graph[split]["linked_to_count"] + 1
 
             if graph.get(person, False) == False:
                 graph[person] = {"is_person": True, "data": [split]}
