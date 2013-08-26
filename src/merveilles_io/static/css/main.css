@@ -47,6 +47,12 @@ a {
     position: absolute;
     margin-left: 430px;
 } */
+a {
+    color: #F8227F;
+}
+a:hover {
+    color: #FF66FF;
+}
 .link {
     color: #F8227F;
 }
