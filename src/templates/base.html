@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Merveilles.io</title>
+        <title>{{channel}}.io</title>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
         <link href="http://fonts.googleapis.com/css?family=Titillium+Web:400,700,200" rel="stylesheet" type="text/css">
     </head>
     <body>
         <div class="nav">
-            <h1><a href="{{ url_for('root') }}">#merveilles</a></h1>
+            <h1><a href="{{ url_for('root') }}">{{channel}}</a></h1>
             <span id="meta_info">DB Size: {{ size|file_size }}, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('top') }}">{{ count }}</a>
         </div>
         {% block content %}
@@ -23,14 +23,6 @@
                 $("#container").masonry({
                     itemSelector: ".item",
                 });
-                //$(".item").each(function(iter, val) {
-                //    var left = $(val).css("left");
-                //    if (left == "0px") {
-                //        $(val).prepend("<span class='right_corner'></span>");
-                //    } else {
-                //        $(val).prepend("<span class='left_corner'></span>");
-                //    }
-                //});
             });
         {% endblock %}
         </script>

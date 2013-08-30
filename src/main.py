@@ -215,14 +215,14 @@ def intrigue():
     user = request.args.get("user", "")
     items = get_items(lambda x: loads(x[1])["person"].lower() == user.lower())
 
-    return render_template("index.html", items=items)
+    return render_template("index.html", items=items, channel=app.config["CHANNEL"])
 
 @app.route("/introspect", methods=['GET'])
 def introspect():
     domain = request.args.get("domain", "")
     items = get_items(lambda x: get_domain(loads(x[1])).lower() == domain.lower())
 
-    return render_template("index.html", items=items)
+    return render_template("index.html", items=items, channel=app.config["CHANNEL"])
 
 @app.route("/", methods=['GET'])
 def root():
@@ -231,13 +231,13 @@ def root():
         if item['title'] is None or item['title'] == "":
             item['title'] = item['url']
 
-    return render_template("index.html", items=items)
+    return render_template("index.html", items=items, channel=app.config["CHANNEL"])
 
 @app.route("/top")
 def top():
     items = top_things()
     graph_data = items[2]
-    return render_template("top.html", items=items, graph_data=graph_data)
+    return render_template("top.html", items=items, graph_data=graph_data, channel=app.config["CHANNEL"])
 
 def main(argv):
     debug = False
