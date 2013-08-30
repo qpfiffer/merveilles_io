@@ -8,8 +8,8 @@ from urllib2 import urlopen
 import sys, os, getopt, random, re
 
 app = Flask(__name__)
-app.config['DB_FILE'] = os.environ["DB_FILE"] or "/tmp/links.kct"
-app.config['CHANNEL'] = os.environ["CHANNEL"] or "#merveilles"
+app.config['DB_FILE'] = os.environ.get("DB_FILE") or "/tmp/links.kct"
+app.config['CHANNEL'] = os.environ.get("CHANNEL")or "#merveilles"
 PERSON_COLORS = ["#FFD923", "#AA2BEF", "#366EEF", "#A68B0B"]
 FILTER_MAX = 50
 
