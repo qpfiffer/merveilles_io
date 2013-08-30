@@ -5,7 +5,7 @@
         {% for item in items %}
         <div class="item">
             <div class="item_header">
-                <a href="{{ url_for('intrigue') }}?user={{item.person}}" style="color: {{item.person_color}};" class="person">{{item.person}}</a> linked <a target="_blank" href="{{item.url}}"><span class="link">{{item.title}}</span></a>
+                <a href="{{ url_for('intrigue') }}?user={{item.person}}" style="color: {{item.person_color}};" class="person">{{item.person}}</a> linked <a target="_blank" href="{{item.url}}"><span class="link">{{item.title or item.url}}</span></a>
             </div>
             <div class="summary"><p>{{item.summary}}</p></div>
             <div class="time"><span>Linked on {{item.created_at|unix_to_human}}</span> | <a href="{{ url_for('introspect') }}?domain={{item.url|get_domain}}">Similar Links</a></div>
