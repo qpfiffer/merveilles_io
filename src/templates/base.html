@@ -8,7 +8,7 @@
     <body>
         <div class="nav">
             <h1><a href="{{ url_for('root') }}">#merveilles</a></h1>
-            <span id="meta_info">DB Size: {{ size|file_size }} bytes, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('top') }}">{{ count }}</a>
+            <span id="meta_info">DB Size: {{ size|file_size }}, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('top') }}">{{ count }}</a>
         </div>
         {% block content %}
         {% endblock %}

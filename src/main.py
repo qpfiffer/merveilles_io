@@ -42,6 +42,13 @@ def get_key(item):
         key = int(loads(item[1])["created_at"])
     return key
 
+@app.template_filter('get_domain')
+def get_domain_filter(raw_url):
+    return raw_url.split("://")[1].split("/")[0]
+
+def get_domain(raw_url):
+    return raw_url['url'].split("://")[1].split("/")[0]
+
 def top_things():
     urls = {}
     people = {}
@@ -61,7 +68,7 @@ def top_things():
             break
 
         loaded_rec = loads(rec[1])
-        split = loaded_rec['url'].split("://")[1].split("/")[0]
+        split = get_domain(loaded_rec)
 
         if urls.get(split, False) == False:
             urls[split] = 1
@@ -205,6 +212,13 @@ def submit():
 def intrigue():
     user = request.args.get("user", "")
     items = get_items(lambda x: loads(x[1])["person"].lower() == user.lower())
+
+    return render_template("index.html", items=items)
+
+@app.route("/introspect", methods=['GET'])
+def introspect():
+    domain = request.args.get("domain", "")
+    items = get_items(lambda x: get_domain(loads(x[1])).lower() == domain.lower())
 
     return render_template("index.html", items=items)
 
