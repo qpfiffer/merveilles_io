@@ -5,9 +5,11 @@ from kyotocabinet import DB
 from json import loads, dumps
 from time import mktime
 from urllib2 import urlopen
-import sys, getopt, random, re
+import sys, os, getopt, random, re
 
 app = Flask(__name__)
+app.config['DB_FILE'] = os.environ["DB_FILE"] or "/tmp/links.kct"
+app.config['CHANNEL'] = os.environ["CHANNEL"] or "#merveilles"
 PERSON_COLORS = ["#FFD923", "#AA2BEF", "#366EEF", "#A68B0B"]
 FILTER_MAX = 50
 
@@ -55,9 +57,9 @@ def top_things():
     graph = {}
 
     db = DB()
-    db_prefix = app.config['DB_PREFIX']
+    db_file = app.config['DB_FILE']
 
-    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER | DB.OCREATE):
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
         print "Could not open database."
 
     cur = db.cursor()
@@ -106,8 +108,8 @@ def top_things():
 def get_items(item_filter):
     items = []
     db = DB()
-    db_prefix = app.config['DB_PREFIX']
-    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER | DB.OCREATE):
+    db_file = app.config['DB_FILE']
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
         print "Could not open database."
 
     cur = db.cursor()
@@ -132,8 +134,8 @@ def get_items(item_filter):
 def db_meta_info():
     meta = {}
     db = DB()
-    db_prefix = app.config['DB_PREFIX']
-    if not db.open("{0}links.kct".format(db_prefix), DB.OREADER):
+    db_file = app.config['DB_FILE']
+    if not db.open("{0}links.kct".format(db_file), DB.OREADER):
         print "Could not open database."
     meta["size"] = db.size()
     meta["count"] = db.count()
@@ -167,8 +169,8 @@ def submit():
     url = request.json['url']
     db = DB()
 
-    db_prefix = app.config['DB_PREFIX']
-    if not db.open("{0}links.kct".format(db_prefix),
+    db_file = app.config['DB_FILE']
+    if not db.open("{0}".format(db_file),
         DB.OWRITER | DB.OCREATE):
         print "Could not open database."
         return Response('{"What happened?": "Couldn\'t open the damn '\
@@ -238,7 +240,6 @@ def top():
     return render_template("top.html", items=items, graph_data=graph_data)
 
 def main(argv):
-    app.config['DB_PREFIX'] = "/tmp/"
     debug = False
     port = 5000
 
@@ -252,7 +253,7 @@ def main(argv):
             print 'NO HELP FOR THE WICKED'
             sys.exit()
         elif opt in ("-d", "--db"):
-            app.config['DB_PREFIX'] = arg
+            app.config['DB_FILE'] = arg
         elif opt in ("--debug"):
             debug = True
         elif opt in ("--port"):
