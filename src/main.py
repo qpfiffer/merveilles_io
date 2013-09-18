@@ -10,7 +10,9 @@ import sys, os, getopt, random, re
 app = Flask(__name__)
 app.config['DB_FILE'] = os.environ.get("DB_FILE") or "/tmp/links.kct"
 app.config['CHANNEL'] = os.environ.get("CHANNEL")or "#merveilles"
-PERSON_COLORS = ["#FFD923", "#AA2BEF", "#366EEF", "#A68B0B"]
+PERSON_COLORS = ["#FFD923", "#AA2BEF", "#366EEF", "#A68B0B", "#18BECD",
+    "#4BFD03", "#32D7B7", "#E13611"
+]
 FILTER_MAX = 50
 
 def visible(element):
@@ -182,20 +184,24 @@ def submit():
             'tried to submit a duplicate URL."}',
             mimetype=mimetype)
 
+    title = url
+    summary = "~?~"
     try:
         thing = urlopen(url, timeout=10)
         soup = BeautifulSoup(thing)
+        title = soup.title.string
+
+        # Do some dumb summarizing if we can
+        func = lambda a,v: a + " " + v
+        visible_stuff = filter(visible, soup.findAll(text=True))
+        summary = reduce(func, visible_stuff, "")[:300] + "..."
     except:
-        return Response('{"What happened?": '\
-            'I dunno bs4 messed up somehow."}',
-            mimetype=mimetype)
+        pass
+        #return Response('{"What happened?": '\
+        #    'I dunno bs4 messed up somehow."}',
+        #    mimetype=mimetype)
 
-    title = soup.title.string
     created_at = int(mktime(datetime.now().utctimetuple()))
-
-    func = lambda a,v: a + " " + v
-    visible_stuff = filter(visible, soup.findAll(text=True))
-    summary = reduce(func, visible_stuff, "")[:300] + "..."
 
     record = {
         "created_at": created_at,
