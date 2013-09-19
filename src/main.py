@@ -176,7 +176,7 @@ def submit():
         DB.OWRITER | DB.OCREATE):
         print "Could not open database."
         return Response('{"What happened?": "Couldn\'t open the damn '\
-            'database. Error: {0}"}'.format(db.error()),
+            'database. Error: {0}"}'.format(unicode(db.error())),
             mimetype=mimetype)
 
     if is_url_in_db(db, url):
