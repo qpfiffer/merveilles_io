@@ -107,6 +107,56 @@ def top_things():
             sorted(people.items(), key=lambda x: x[1], reverse=True),
             graph)
 
+def insert_item(url, person):
+    mimetype = "application/json"
+    db = DB()
+
+    db_file = app.config['DB_FILE']
+    if not db.open("{0}".format(db_file),
+        DB.OWRITER | DB.OCREATE):
+        print "Could not open database."
+        return Response('{"What happened?": "Couldn\'t open the damn '\
+            'database. Error: {0}"}'.format(unicode(db.error())),
+            mimetype=mimetype)
+
+    if is_url_in_db(db, url):
+        return Response('{"What happened?": "Someone '\
+            'tried to submit a duplicate URL."}',
+            mimetype=mimetype)
+
+    title = url
+    summary = "~?~"
+    try:
+        thing = urlopen(url, timeout=10)
+        soup = BeautifulSoup(thing)
+        title = soup.title.string
+
+        # Do some dumb summarizing if we can
+        func = lambda a,v: a + " " + v
+        visible_stuff = filter(visible, soup.findAll(text=True))
+        summary = reduce(func, visible_stuff, "")[:300] + "..."
+    except:
+        pass
+        #return Response('{"What happened?": '\
+        #    'I dunno bs4 messed up somehow."}',
+        #    mimetype=mimetype)
+
+    created_at = int(mktime(datetime.now().utctimetuple()))
+
+    record = {
+        "created_at": created_at,
+        "title": title,
+        "url": url,
+        "person": person,
+        "summary": summary,
+        "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)]
+    }
+    db.set(created_at, dumps(record))
+    db.close()
+
+    return Response('{"What happened?": "MUDADA"}',
+        mimetype=mimetype)
+
 def get_items(item_filter):
     items = []
     db = DB()
@@ -167,54 +217,9 @@ def unix_to_human(timestamp_str):
 
 @app.route("/submit", methods=['POST'])
 def submit():
-    mimetype = "application/json"
     url = request.json['url']
-    db = DB()
-
-    db_file = app.config['DB_FILE']
-    if not db.open("{0}".format(db_file),
-        DB.OWRITER | DB.OCREATE):
-        print "Could not open database."
-        return Response('{"What happened?": "Couldn\'t open the damn '\
-            'database. Error: {0}"}'.format(unicode(db.error())),
-            mimetype=mimetype)
-
-    if is_url_in_db(db, url):
-        return Response('{"What happened?": "Someone '\
-            'tried to submit a duplicate URL."}',
-            mimetype=mimetype)
-
-    title = url
-    summary = "~?~"
-    try:
-        thing = urlopen(url, timeout=10)
-        soup = BeautifulSoup(thing)
-        title = soup.title.string
-
-        # Do some dumb summarizing if we can
-        func = lambda a,v: a + " " + v
-        visible_stuff = filter(visible, soup.findAll(text=True))
-        summary = reduce(func, visible_stuff, "")[:300] + "..."
-    except:
-        pass
-        #return Response('{"What happened?": '\
-        #    'I dunno bs4 messed up somehow."}',
-        #    mimetype=mimetype)
-
-    created_at = int(mktime(datetime.now().utctimetuple()))
-
-    record = {
-        "created_at": created_at,
-        "title": title,
-        "url": url,
-        "person": request.json["person"],
-        "summary": summary,
-        "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)]
-    }
-    db.set(created_at, dumps(record))
-    db.close()
-    return Response('{"What happened?": "MUDADA"}',
-        mimetype=mimetype)
+    person = request.json["person"]
+    return insert_item(url, person)
 
 @app.route("/intrigue", methods=['GET'])
 def intrigue():
