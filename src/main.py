@@ -1,14 +1,16 @@
 from flask import Flask
 from merveilles.routes import app as routes
+from merveilles.context_processors import app as context_processors
 from merveilles.filters import get_domain_filter, file_size, unix_to_human
 from merveilles.context_processors import db_meta_info
 import sys, os, getopt
 
 app = Flask(__name__)
 app.register_blueprint(routes)
+app.register_blueprint(context_processors)
 app.config['DB_FILE'] = os.environ.get("DB_FILE") or "/tmp/links.kct"
 app.config['CHANNEL'] = os.environ.get("CHANNEL") or "#merveilles"
-app.jinja_env.globals.update(db_meta_info=db_meta_info)
+#app.jinja_env.globals.update(size=db_meta_info)
 app.jinja_env.filters['get_domain'] = get_domain_filter
 app.jinja_env.filters['file_size'] = file_size
 app.jinja_env.filters['unix_to_human'] = unix_to_human
