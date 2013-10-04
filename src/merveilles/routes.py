@@ -1,4 +1,4 @@
-from database import insert_item, get_items, top_things
+from database import insert_item, get_items, top_things, search_func
 from flask import current_app, Blueprint, render_template, request
 from json import loads
 from utils import get_domain
@@ -24,7 +24,16 @@ def intrigue():
 def introspect():
     domain = request.args.get("domain", "")
     items = get_items(
-        lambda x: get_domain(loads(x[1])).lower() == domain.lower(),
+        lambda x: get_domain(loads(x[1])).lower() in domain.lower(),
+        current_app.config["DB_FILE"])
+
+    return render_template("index.html", items=items, channel=current_app.config["CHANNEL"])
+
+@app.route("/interrogate", methods=['GET'])
+def interrogate():
+    qstring = request.args.get("q", "")
+    items = get_items(
+        lambda x: search_func(loads(x[1]), qstring),
         current_app.config["DB_FILE"])
 
     return render_template("index.html", items=items, channel=current_app.config["CHANNEL"])

@@ -10,6 +10,12 @@ import random
 from constants import FILTER_MAX, PERSON_COLORS
 from utils import get_domain, visible
 
+def search_func(record, search_string):
+    for item in record:
+        if search_string in unicode(record[item]):
+            return True
+    return False
+
 def is_url_in_db(db, url):
     cur = db.cursor()
     cur.jump_back()

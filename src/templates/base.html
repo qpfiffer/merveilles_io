@@ -9,6 +9,10 @@
         <div class="nav">
             <h1><a href="{{ url_for('merveilles.root') }}">{{channel}}</a></h1>
             <span id="meta_info">DB Size: {{ size|file_size }}, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('merveilles.top') }}">{{ count }}</a>
+            <div id="search_bar">
+                <input id="search_box" type="text" placeholder="search" />
+                <input id="search_button" type="button" value="Go" />
+            </div>
         </div>
         {% block content %}
         {% endblock %}
@@ -20,6 +24,16 @@
         {% block startup %}
             $(function() {
                 last_height = 0;
+                function search() {
+                    var term = $("#search_box").val();
+                    window.location = "{{ url_for('merveilles.interrogate') }}" + "?q=" + term;
+                }
+                $("#search_button").click(search);
+                $("#search_box").keypress(function(e) {
+                    if (e.keyCode == 13) {
+                        search();
+                    }
+                });
                 $("#container").masonry({
                     itemSelector: ".item",
                 });
