@@ -100,7 +100,7 @@ def insert_item(url, person, db_file):
         DB.OWRITER | DB.OCREATE):
 
         response = '{"What happened?": "Couldn\'t open the damn '\
-            'database. Error: {0}"}'.format(unicode(db.error()))
+            'database. Error: {0}"}'.format(db.error())
         print "Could not open database. (Insert item) {}".format(response)
         return Response(response, mimetype=mimetype)
 
