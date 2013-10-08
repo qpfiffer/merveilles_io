@@ -47,7 +47,7 @@ def top_things(db_file):
     db = DB()
 
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print "Could not open database. (Top things)"
 
     cur = db.cursor()
     cur.jump_back()
@@ -98,10 +98,11 @@ def insert_item(url, person, db_file):
 
     if not db.open("{0}".format(db_file),
         DB.OWRITER | DB.OCREATE):
-        print "Could not open database."
-        return Response('{"What happened?": "Couldn\'t open the damn '\
-            'database. Error: {0}"}'.format(unicode(db.error())),
-            mimetype=mimetype)
+
+        response = '{"What happened?": "Couldn\'t open the damn '\
+            'database. Error: {0}"}'.format(unicode(db.error())
+        print "Could not open database. (Insert item) {}".format(response)
+        return Response(response, mimetype=mimetype)
 
     if is_url_in_db(db, url):
         return Response('{"What happened?": "Someone '\
