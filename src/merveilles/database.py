@@ -99,10 +99,9 @@ def insert_item(url, person, db_file):
     if not db.open("{0}".format(db_file),
         DB.OWRITER | DB.OCREATE):
 
-        response = '{"What happened?": "Couldn\'t open the damn '\
-            'database. Error: {0}"}'.format(db.error())
-        print "Could not open database. (Insert item) {}".format(response)
-        return Response(response, mimetype=mimetype)
+        response = {}
+        response['What happened?'] = "Couldn't open the damn database. Error: {0}".format(db.error())
+        return Response(dumps(response), mimetype=mimetype)
 
     if is_url_in_db(db, url):
         return Response('{"What happened?": "Someone '\
