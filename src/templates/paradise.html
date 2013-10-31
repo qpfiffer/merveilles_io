@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="sigma_graph"></div>
+{% endblock %}
+{% block includes %} {{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.forceatlas2.js') }}"></script>
+<script type="text/javascript">
+$(function() {
+    var sigRoot = document.getElementById('sigma_graph');
+    var sigInst = sigma.init(sigRoot);
+
+    sigInst.drawingProperties({
+      defaultLabelColor: '#ccc',
+      font: 'Arial',
+      edgeColor: 'source',
+      defaultEdgeType: 'curve'
+    }).graphProperties({
+      minNodeSize: 0.1,
+      maxNodeSize: 5
+    });
+
+    function lerp(a, b, f) {
+        return a + f * (b - a);
+    }
+
+    var data = {{ items|tojson|safe }};
+    var last_number = data[0]["children_count"]; // Should be like 1913
+    var distance = 0.0;
+    var size = 0.1;
+
+    // Create all nodes
+    for (var key in data) {
+        if (data[key]["children_count"] != last_number &&
+            data[key]["children_count"] != null) {
+            last_number = data[key]["children_count"];
+            distance += 0.3;
+            console.log("distance changed", distance);
+            //size -= 0.01;
+        }
+        var x = distance * Math.cos(Math.round(Math.random()* 2.0 * Math.PI));
+        var y = distance * Math.sin(Math.round(Math.random()* 2.0 * Math.PI));
+        sigInst.addNode(key, {
+            x: x,
+            y: y,
+            size: size > 0.001 ? size : 0.001,
+            color: "rgb(" + Math.round(Math.random() * 256.0) + "," + Math.round(Math.random() * 256.0) + ", 255)",
+            label: data[key]["name"]
+        });
+    }
+    // Create all edges
+    for (var key in data) {
+        // data[key]["data"] is a list of links to data[key]
+        try {
+            sigInst.addEdge(key + "_" + data[key]["parent"], key, data[key]["parent"]);
+        } catch(err) {
+        }
+    }
+    var greyColor = '#666';
+
+    //sigInst.startForceAtlas2();
+    sigInst.draw();
+    setTimeout(function() {
+        sigInst.stopForceAtlas2();
+        sigInst.bind('overnodes',function(event){
+            var nodes = event.content;
+            var neighbors = {};
+            sigInst.iterEdges(function(e){
+                if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
+                    if(!e.attr['grey']){
+                        e.attr['true_color'] = e.color;
+                        e.color = greyColor;
+                        e.attr['grey'] = 1;
+                    }
+                } else {
+                    e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+                    e.attr['grey'] = 0;
+
+                    neighbors[e.source] = 1;
+                    neighbors[e.target] = 1;
+                }
+            }).iterNodes(function(n){
+                if(!neighbors[n.id]){
+                    if(!n.attr['grey']){
+                        n.attr['true_color'] = n.color;
+                        n.color = greyColor;
+                        n.attr['grey'] = 1;
+                    }
+                } else {
+                    n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+                    n.attr['grey'] = 0;
+                }
+            }).draw(2,2,2);
+        }).bind('outnodes',function(){
+            sigInst.iterEdges(function(e){
+                e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
+                e.attr['grey'] = 0;
+            }).iterNodes(function(n){
+                n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
+                n.attr['grey'] = 0;
+            }).draw(2,2,2);
+        });
+    },
+    20000);
+
+});
+</script>
+{% endblock %}

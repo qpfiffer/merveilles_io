@@ -1,9 +1,15 @@
 from database import insert_item, get_items, top_things, search_func
 from flask import current_app, Blueprint, render_template, request
 from json import loads
-from utils import get_domain
+from utils import get_domain, get_paradise_items
+import requests
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
+
+@app.route("/paradise", methods=['GET'])
+def paradise():
+    items = get_paradise_items()
+    return render_template("paradise.html", items=items)
 
 @app.route("/submit", methods=['POST'])
 def submit():
