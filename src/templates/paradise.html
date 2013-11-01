@@ -4,7 +4,61 @@
 {% endblock %}
 {% block includes %} {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.forceatlas2.js') }}"></script>
+<script type="text/javascript">
+function lerp(a, z, p){
+  return a + (z-a)* p;
+}
+
+function ilerp(a, z, p){
+  return Math.round(lerp(a,z,p));
+}
+
+function rlerp(a,z,p){
+  return ilerp(a, z, Math.random());
+}
+
+function getHSL(h, s, l) {
+    var ret = 'hsl(' + h + ',' + s + '%,' + l + '%)';
+    //console.log(h,s,l, ret);
+    return ret;
+}
+
+
+var GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2;
+var GOLDEN_RATIO_CONJUGATE = 1 - GOLDEN_RATIO;
+var LAST_NUMBER = 0;
+
+function getColor(last) {
+    if (last != LAST_NUMBER) {
+        console.log("Number changed", LAST_NUMBER);
+        LAST_NUMBER = last;
+    }
+
+    var last = (last + GOLDEN_RATIO_CONJUGATE) % 1;
+    return getHSL(ilerp(0,360,last),    // hue
+                80,                     // saturation
+                last == 0 ? 10 : 80                      // lightness
+    );
+}
+function getColorHex(role_id) {
+        var base_num = role_id;
+        if (base_num < 4473924) {
+            base_num += 333333;
+        }
+        if (base_num % 3 == 0) {
+            base_num += 7000;
+        }
+        if (base_num % 5 == 0) {
+            base_num += 2000;
+        }
+        var hex_val = base_num.toString(16);
+        var new_str = hex_val;
+        for (i=0; i < (6 - hex_val.length); i++) {
+            new_str = new_str + hex_val[(hex_val.length - 1) - i];
+        }
+        return "#" + new_str;
+    }
+</script>
 <script type="text/javascript">
 $(function() {
     var sigRoot = document.getElementById('sigma_graph');
@@ -13,19 +67,16 @@ $(function() {
     sigInst.drawingProperties({
       defaultLabelColor: '#ccc',
       font: 'Arial',
-      edgeColor: 'source',
-      defaultEdgeType: 'curve'
+      edgeColor: 'target',
+      //defaultEdgeType: 'curve'
     }).graphProperties({
-      minNodeSize: 0.1,
-      maxNodeSize: 5
+      minNodeSize: 1,
+      maxNodeSize: 8
     });
-
-    function lerp(a, b, f) {
-        return a + f * (b - a);
-    }
 
     var data = {{ items|tojson|safe }};
     var last_number = data[0]["children_count"]; // Should be like 1913
+    var max_number = data[0]["children_count"]; // Should be like 1913
     var distance = 0.0;
     var size = 0.1;
 
@@ -34,17 +85,22 @@ $(function() {
         if (data[key]["children_count"] != last_number &&
             data[key]["children_count"] != null) {
             last_number = data[key]["children_count"];
-            distance += 0.3;
+            distance += last_number * 0.1;
             console.log("distance changed", distance);
             //size -= 0.01;
         }
-        var x = distance * Math.cos(Math.round(Math.random()* 2.0 * Math.PI));
-        var y = distance * Math.sin(Math.round(Math.random()* 2.0 * Math.PI));
+        var random_angle = Math.round(Math.random() * 360.0); // Between 0 and 360
+        var extra_distance = Math.round(Math.random() * 50.0);
+        //var x = (distance + extra_distance) * Math.cos(random_angle * Math.PI / 180.0);
+        //var y = (distance + extra_distance) * Math.sin(random_angle * Math.PI / 180.0);
+        var x = (distance - Math.pow(data[key]["security"], 2)) * Math.cos(random_angle * Math.PI / 180.0);
+        var y = (distance - Math.pow(data[key]["security"], 2)) * Math.sin(random_angle * Math.PI / 180.0);
+        data[key]["position"] = {x: x, y: y};
         sigInst.addNode(key, {
             x: x,
             y: y,
-            size: size > 0.001 ? size : 0.001,
-            color: "rgb(" + Math.round(Math.random() * 256.0) + "," + Math.round(Math.random() * 256.0) + ", 255)",
+            size: parseInt(data[key]["security"]),
+            color: getColorHex(parseInt(data[key]["security"])),
             label: data[key]["name"]
         });
     }
@@ -58,10 +114,8 @@ $(function() {
     }
     var greyColor = '#666';
 
-    //sigInst.startForceAtlas2();
     sigInst.draw();
     setTimeout(function() {
-        sigInst.stopForceAtlas2();
         sigInst.bind('overnodes',function(event){
             var nodes = event.content;
             var neighbors = {};
