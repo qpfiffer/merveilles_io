@@ -65,20 +65,18 @@ $(function() {
     var sigInst = sigma.init(sigRoot);
 
     sigInst.drawingProperties({
-      defaultLabelColor: '#ccc',
-      font: 'Arial',
-      edgeColor: 'target',
-      //defaultEdgeType: 'curve'
+        defaultLabelColor: '#ccc',
+        font: 'Arial',
+        edgeColor: 'target',
+        //defaultEdgeType: 'curve'
     }).graphProperties({
-      minNodeSize: 1,
-      maxNodeSize: 8
+        minNodeSize: 1,
+        maxNodeSize: 8
+    }).mouseProperties({
+        maxRatio: 32
     });
 
     var data = {{ items|tojson|safe }};
-    var last_number = data[0]["children_count"]; // Should be like 1913
-    var max_number = data[0]["children_count"]; // Should be like 1913
-    var distance = 0.0;
-    var size = 0.1;
 
     // Create all nodes
     for (var key in data) {
@@ -101,47 +99,28 @@ $(function() {
     var greyColor = '#666';
 
     sigInst.draw();
-    setTimeout(function() {
-        sigInst.bind('overnodes',function(event){
-            var nodes = event.content;
-            var neighbors = {};
-            sigInst.iterEdges(function(e){
-                if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
-                    if(!e.attr['grey']){
-                        e.attr['true_color'] = e.color;
-                        e.color = greyColor;
-                        e.attr['grey'] = 1;
-                    }
-                } else {
-                    e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
-                    e.attr['grey'] = 0;
-
-                    neighbors[e.source] = 1;
-                    neighbors[e.target] = 1;
-                }
-            }).iterNodes(function(n){
-                if(!neighbors[n.id]){
-                    if(!n.attr['grey']){
-                        n.attr['true_color'] = n.color;
-                        n.color = greyColor;
-                        n.attr['grey'] = 1;
-                    }
-                } else {
-                    n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
-                    n.attr['grey'] = 0;
-                }
-            }).draw(2,2,2);
-        }).bind('outnodes',function(){
-            sigInst.iterEdges(function(e){
-                e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
-                e.attr['grey'] = 0;
-            }).iterNodes(function(n){
-                n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
-                n.attr['grey'] = 0;
-            }).draw(2,2,2);
-        });
-    },
-    20000);
+    sigInst.bind('overnodes',function(event){
+        var nodes = event.content;
+        var neighbors = {};
+        sigInst.iterEdges(function(e){
+            if(nodes.indexOf(e.source)>=0 || nodes.indexOf(e.target)>=0){
+                neighbors[e.source] = 1;
+                neighbors[e.target] = 1;
+            }
+        }).iterNodes(function(n){
+            if(!neighbors[n.id]){
+                n.hidden = 1;
+            }else{
+                n.hidden = 0;
+            }
+        }).draw(2,2,2);
+    }).bind('outnodes',function(){
+        sigInst.iterEdges(function(e){
+            e.hidden = 0;
+        }).iterNodes(function(n){
+            n.hidden = 0;
+        }).draw(2,2,2);
+    });
 
 });
 </script>

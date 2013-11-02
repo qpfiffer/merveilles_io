@@ -45,8 +45,7 @@ def gen_paradise_graph(items):
         g.add_edge(item, items[item]["parent"])
 
     print "Starting spring layout generation..."
-    #the_graph = spring_layout(g, iterations=1)
-    the_graph = forceatlas2_layout(g, iterations=30)
+    the_graph = forceatlas2_layout(g, iterations=1)
     print "Finished spring layout."
 
     for item in the_graph:
