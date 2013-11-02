@@ -82,23 +82,9 @@ $(function() {
 
     // Create all nodes
     for (var key in data) {
-        if (data[key]["children_count"] != last_number &&
-            data[key]["children_count"] != null) {
-            last_number = data[key]["children_count"];
-            distance += last_number * 0.1;
-            console.log("distance changed", distance);
-            //size -= 0.01;
-        }
-        var random_angle = Math.round(Math.random() * 360.0); // Between 0 and 360
-        var extra_distance = Math.round(Math.random() * 50.0);
-        //var x = (distance + extra_distance) * Math.cos(random_angle * Math.PI / 180.0);
-        //var y = (distance + extra_distance) * Math.sin(random_angle * Math.PI / 180.0);
-        var x = (distance - Math.pow(data[key]["security"], 2)) * Math.cos(random_angle * Math.PI / 180.0);
-        var y = (distance - Math.pow(data[key]["security"], 2)) * Math.sin(random_angle * Math.PI / 180.0);
-        data[key]["position"] = {x: x, y: y};
         sigInst.addNode(key, {
-            x: x,
-            y: y,
+            x: data[key].x,
+            y: data[key].y,
             size: parseInt(data[key]["security"]),
             color: getColorHex(parseInt(data[key]["security"])),
             label: data[key]["name"]

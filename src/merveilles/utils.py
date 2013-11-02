@@ -1,4 +1,7 @@
 import re, requests, json
+from networkx import Graph, spring_layout
+from forceatlas import forceatlas2_layout
+from numpy import asscalar
 
 def paradise_compare(data, x, y):
     # we want things with huge numbers to be first
@@ -25,12 +28,36 @@ def get_paradise_items():
         return paradise_compare(paradise_json, x, y)
 
     sorted_keys = sorted(paradise_json, cmp=cmp_func, reverse=True)
-    sorted_json = []
+    sorted_json = {}
     for key in sorted_keys:
-        sorted_json.append(paradise_json[key])
-
+        item = paradise_json[key]
+        item["id"] = key
+        sorted_json[key] = item
 
     return sorted_json
+
+def gen_paradise_graph(items):
+    g = Graph()
+    for item in items:
+        g.add_node(item, **items[item])
+
+    for item in items:
+        g.add_edge(item, items[item]["parent"])
+
+    print "Starting spring layout generation..."
+    #the_graph = spring_layout(g, iterations=1)
+    the_graph = forceatlas2_layout(g, iterations=30)
+    print "Finished spring layout."
+
+    for item in the_graph:
+        try:
+            items[item]["x"] = asscalar(the_graph[item][0])
+            items[item]["y"] = asscalar(the_graph[item][1])
+        except KeyError as e:
+            print "{} not found.".format(e)
+            continue
+
+    return items
 
 def get_domain(raw_url):
     return raw_url['url'].split("://")[1].split("/")[0]

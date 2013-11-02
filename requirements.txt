@@ -8,3 +8,5 @@ distribute==0.6.24
 itsdangerous==0.23
 wsgiref==0.1.2
 requests==2.0.1
+numpy
+networkx
