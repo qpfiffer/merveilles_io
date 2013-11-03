@@ -1,17 +1,19 @@
 from database import insert_item, get_items, top_things, search_func
-from flask import current_app, Blueprint, render_template, request
+from flask import current_app, Blueprint, render_template, request, Response
 from json import loads, dumps
-from utils import get_domain, get_paradise_items, gen_paradise_graph
+from utils import get_domain, get_paradise_items, gen_paradise_graph, get_paradise_json_for_d3
 import requests
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
 
 @app.route("/paradise", methods=['GET'])
 def paradise():
-    items = get_paradise_items()
-    items = gen_paradise_graph(items)
+    return render_template("paradise.html", channel=current_app.config["CHANNEL"])
 
-    return render_template("paradise.html", items=items)
+@app.route("/paradise.json", methods=['GET'])
+def paradise_json():
+    items = get_paradise_json_for_d3()
+    return Response(dumps(items), mimetype="application/json")
 
 @app.route("/submit", methods=['POST'])
 def submit():

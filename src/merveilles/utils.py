@@ -7,6 +7,46 @@ def paradise_compare(data, x, y):
     # we want things with huge numbers to be first
     return cmp(data[x].get('children_count', 0), data[y].get('children_count', 0))
 
+def get_children_of(parent_id, paradise_json):
+    children = [] # Return a list of dictionaries
+    new_dict = {}
+
+    for item in paradise_json:
+        if paradise_json[item]["parent"] == parent_id:
+            # Found a child
+            child = {}
+            child["id"] = item
+            child["name"] = paradise_json[item]["name"]
+            #child["size"] = paradise_json[item]["security"]
+            children.append(child)
+        else:
+            new_dict[item] = paradise_json[item]
+
+    for child in children:
+        my_children = get_children_of(child["id"], new_dict)
+        if len(my_children) == 0:
+            pass
+            #child["size"] = paradise_json[item]["security"]
+            #child["size"] = 1000
+        else:
+            child["children"] = my_children
+
+    return children
+
+def get_paradise_json_for_d3():
+    paradise_api = "http://api.xxiivv.com/?key=paradise"
+    r = requests.get(paradise_api)
+    paradise_json = r.json()
+    PARADISE_ID = "1"
+
+    tree = {}
+    tree["id"] = PARADISE_ID
+    tree["name"] = paradise_json[PARADISE_ID]["name"]
+    #tree["size"] = paradise_json[PARADISE_ID]["security"]
+    tree["children"] = get_children_of(PARADISE_ID, paradise_json)
+
+    return tree
+
 def get_paradise_items():
     paradise_api = "http://api.xxiivv.com/?key=paradise"
     r = requests.get(paradise_api)

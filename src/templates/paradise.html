@@ -1,45 +1,28 @@
 {% extends "base.html" %}
 {% block content %}
-<div id="sigma_graph"></div>
+<style>
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.node {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1.5px;
+}
+
+</style>
 {% endblock %}
 {% block includes %} {{ super() }}
-<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript">
-function lerp(a, z, p){
-  return a + (z-a)* p;
-}
-
-function ilerp(a, z, p){
-  return Math.round(lerp(a,z,p));
-}
-
-function rlerp(a,z,p){
-  return ilerp(a, z, Math.random());
-}
-
-function getHSL(h, s, l) {
-    var ret = 'hsl(' + h + ',' + s + '%,' + l + '%)';
-    //console.log(h,s,l, ret);
-    return ret;
-}
-
-
-var GOLDEN_RATIO = (1 + Math.sqrt(5)) / 2;
-var GOLDEN_RATIO_CONJUGATE = 1 - GOLDEN_RATIO;
-var LAST_NUMBER = 0;
-
-function getColor(last) {
-    if (last != LAST_NUMBER) {
-        console.log("Number changed", LAST_NUMBER);
-        LAST_NUMBER = last;
-    }
-
-    var last = (last + GOLDEN_RATIO_CONJUGATE) % 1;
-    return getHSL(ilerp(0,360,last),    // hue
-                80,                     // saturation
-                last == 0 ? 10 : 80                      // lightness
-    );
-}
 function getColorHex(role_id) {
         var base_num = role_id;
         if (base_num < 4473924) {
@@ -61,66 +44,49 @@ function getColorHex(role_id) {
 </script>
 <script type="text/javascript">
 $(function() {
-    var sigRoot = document.getElementById('sigma_graph');
-    var sigInst = sigma.init(sigRoot);
 
-    sigInst.drawingProperties({
-        defaultLabelColor: '#ccc',
-        font: 'Arial',
-        edgeColor: 'target',
-        //defaultEdgeType: 'curve'
-    }).graphProperties({
-        minNodeSize: 1,
-        maxNodeSize: 8
-    }).mouseProperties({
-        maxRatio: 32
-    });
+var diameter = 960;
 
-    var data = {{ items|tojson|safe }};
+var tree = d3.layout.tree()
+    .size([960, diameter / 2])
+    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
-    // Create all nodes
-    for (var key in data) {
-        sigInst.addNode(key, {
-            x: data[key].x,
-            y: data[key].y,
-            size: parseInt(data[key]["security"]),
-            color: getColorHex(parseInt(data[key]["security"])),
-            label: data[key]["name"]
-        });
-    }
-    // Create all edges
-    for (var key in data) {
-        // data[key]["data"] is a list of links to data[key]
-        try {
-            sigInst.addEdge(key + "_" + data[key]["parent"], key, data[key]["parent"]);
-        } catch(err) {
-        }
-    }
-    var greyColor = '#666';
+var diagonal = d3.svg.diagonal.radial()
+    .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-    sigInst.draw();
-    sigInst.bind('overnodes',function(event){
-        var nodes = event.content;
-        var neighbors = {};
-        sigInst.iterEdges(function(e){
-            if(nodes.indexOf(e.source)>=0 || nodes.indexOf(e.target)>=0){
-                neighbors[e.source] = 1;
-                neighbors[e.target] = 1;
-            }
-        }).iterNodes(function(n){
-            if(!neighbors[n.id]){
-                n.hidden = 1;
-            }else{
-                n.hidden = 0;
-            }
-        }).draw(2,2,2);
-    }).bind('outnodes',function(){
-        sigInst.iterEdges(function(e){
-            e.hidden = 0;
-        }).iterNodes(function(n){
-            n.hidden = 0;
-        }).draw(2,2,2);
-    });
+var svg = d3.select("body").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter - 150)
+  .append("g")
+    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+d3.json("paradise.json", function(error, root) {
+  var nodes = tree.nodes(root),
+      links = tree.links(nodes);
+
+  var link = svg.selectAll(".link")
+      .data(links)
+    .enter().append("path")
+      .attr("class", "link")
+      .attr("d", diagonal);
+
+  var node = svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("g")
+      .attr("class", "node")
+      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + d.y + ")"; })
+
+  node.append("circle")
+      .attr("r", 4.5);
+
+  node.append("text")
+      .attr("dy", ".31em")
+      .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+      .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
+      .text(function(d) { return d.name; });
+});
+
+d3.select(self.frameElement).style("height", diameter - 150 + "px");
 
 });
 </script>

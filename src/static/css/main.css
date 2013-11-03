@@ -8,11 +8,11 @@ body {
     margin: 0px;
     overflow-x: hidden;
 }
-ul {
+.nav ul {
     display: inline;
     margin-left: 2px;
 }
-li, li h1 {
+.nav li, .nav li h1 {
     display: inline;
     list-style-type: none;
     padding-right: 20px;
