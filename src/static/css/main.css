@@ -18,7 +18,7 @@ li, li h1 {
     padding-right: 20px;
 }
 .right {
-    margin-top: 5px;
+    margin-top: 0px;
     float: right;
 }
 .right input {
@@ -27,7 +27,8 @@ li, li h1 {
 .nav {
     background-color: #111;
     width: 100%;
-    padding: 3px;
+    padding-top: 3px;
+    padding-bottom: 6px;
 }
 #sigma_graph {
     width: 100%;
@@ -50,7 +51,7 @@ li, li h1 {
     text-align: justify;
     background-color: rgb(25,25,25);
     padding: 3px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     margin-right: 5px;
 }
 .item_header {
@@ -59,6 +60,9 @@ li, li h1 {
 }
 h1 {
     color: rgb(83,83,83);
+}
+#meta_info {
+    font-size: 12px;
 }
 /* #line {
     height: 100%;

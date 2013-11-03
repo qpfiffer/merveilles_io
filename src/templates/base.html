@@ -8,7 +8,7 @@
     <body>
         <div class="nav">
             <ul class="left">
-                <li><h1><a href="{{ url_for('merveilles.root') }}">{{channel}}</a></h1></li>
+                <li><span><a href="{{ url_for('merveilles.root') }}">{{channel}}</a></span></li>
                 <li><span id="meta_info">DB Size: {{ size|file_size }}, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('merveilles.top') }}">{{ count }}</a></li>
             </ul>
             <ul class="right">
@@ -40,6 +40,7 @@
                 });
                 $("#container").masonry({
                     itemSelector: ".item",
+                    isAnimated: true
                 });
             });
         {% endblock %}
