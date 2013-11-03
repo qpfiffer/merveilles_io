@@ -24,6 +24,12 @@ li, li h1 {
 .right input {
     display: inline;
 }
+.right li {
+    border-right: 1px solid #BBB;
+    margin-right: 2px;
+    margin-left: 2px;
+    padding-right: 0px;
+}
 .nav {
     background-color: #111;
     width: 100%;
