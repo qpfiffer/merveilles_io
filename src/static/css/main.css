@@ -1,8 +1,33 @@
 html {
     color: rgb(83, 83, 83);
+    background-color: #333;
     font-family: 'Titillium Web',"Helvetica Neue",Helvetica,Arial,sans-serif;
-    background-image: url("/static/img/hexabump.png");
     background-repeat: repeat;
+}
+body {
+    margin: 0px;
+    overflow-x: hidden;
+}
+ul {
+    display: inline;
+    margin-left: 2px;
+}
+li, li h1 {
+    display: inline;
+    list-style-type: none;
+    padding-right: 20px;
+}
+.right {
+    margin-top: 5px;
+    float: right;
+}
+.right input {
+    display: inline;
+}
+.nav {
+    background-color: #111;
+    width: 100%;
+    padding: 3px;
 }
 #sigma_graph {
     width: 100%;
@@ -13,6 +38,8 @@ html {
 }
 #container {
     margin-top: 5px;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 .item {
     -moz-border-radius: 4px;
@@ -33,12 +60,6 @@ html {
 h1 {
     color: rgb(83,83,83);
 }
-#meta_info {
-    font-size: 12px;
-}
-a {
-    text-decoration: none;
-}
 /* #line {
     height: 100%;
     width: 4px;
@@ -49,6 +70,7 @@ a {
 } */
 a {
     color: #F8227F;
+    text-decoration: none;
 }
 a:hover {
     color: #FF66FF;
