@@ -1,7 +1,7 @@
 import re, requests, json
 from networkx import Graph, spring_layout
-from forceatlas import forceatlas2_layout
-from numpy import asscalar
+#from forceatlas import forceatlas2_layout
+#from numpy import asscalar
 
 def paradise_compare(data, x, y):
     # we want things with huge numbers to be first

@@ -1,5 +1,5 @@
 from database import insert_item, get_items, top_things, search_func
-from flask import current_app, Blueprint, render_template, request, Response
+from flask import current_app, Blueprint, render_template, request, Response, make_response
 from json import loads, dumps
 from utils import get_domain, get_paradise_items, gen_paradise_graph, get_paradise_json_for_d3
 import requests
@@ -12,8 +12,11 @@ def paradise():
 
 @app.route("/paradise.json", methods=['GET'])
 def paradise_json():
-    items = get_paradise_json_for_d3()
-    return Response(dumps(items), mimetype="application/json")
+    response = make_response(open('src/static/paradise.json').read())
+    response.headers["Content-type"] = "application/json"
+    return response
+    #items = get_paradise_json_for_d3()
+    #return Response(dumps(items), mimetype="application/json")
 
 @app.route("/submit", methods=['POST'])
 def submit():

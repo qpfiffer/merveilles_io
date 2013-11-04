@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
 <style>
-
+html {
+    overflow-x: scroll;
+}
 .node circle {
   fill: #fff;
   stroke: steelblue;
@@ -17,8 +19,15 @@
   stroke: #ccc;
   stroke-width: 1.5px;
 }
-
+#d3_viewport {
+    width: 100%;
+    height: 100%;
+}
+#d3_viewport svg {
+    display: block;
+}
 </style>
+<div id="d3_viewport"></div>
 {% endblock %}
 {% block includes %} {{ super() }}
 <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -45,20 +54,29 @@ function getColorHex(role_id) {
 <script type="text/javascript">
 $(function() {
 
-var diameter = 960;
+var diameter = 20000;
+
+function redraw() {
+    console.log("Redraw called.");
+    d3.select("#d3_viewport").attr("transform",
+        "translate(" + d3.event.translate + ")"
+        + " scale(" + d3.event.scale + ")");
+}
 
 var tree = d3.layout.tree()
-    .size([960, diameter / 2])
+    //.size([360, diameter / 2])
+    .size([diameter, diameter])
     .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
 var diagonal = d3.svg.diagonal.radial()
     .projection(function(d) { return [d.y, d.x / 180 * Math.PI]; });
 
-var svg = d3.select("body").append("svg")
+var svg = d3.select("#d3_viewport").append("svg")
     .attr("width", diameter)
-    .attr("height", diameter - 150)
-  .append("g")
-    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+    .attr("height", diameter)
+    .append("g")
+    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")")
+    .call(d3.behavior.zoom().on("zoom", redraw));
 
 d3.json("paradise.json", function(error, root) {
   var nodes = tree.nodes(root),
@@ -81,6 +99,7 @@ d3.json("paradise.json", function(error, root) {
 
   node.append("text")
       .attr("dy", ".31em")
+      .attr("fill", "#34DDDD")
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
       .attr("transform", function(d) { return d.x < 180 ? "translate(8)" : "rotate(180)translate(-8)"; })
       .text(function(d) { return d.name; });
