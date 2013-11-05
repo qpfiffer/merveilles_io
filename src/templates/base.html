@@ -4,6 +4,32 @@
         <title>{{channel}}.io</title>
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
         <link href="http://fonts.googleapis.com/css?family=Titillium+Web:400,700,200" rel="stylesheet" type="text/css">
+        {% block includes %}
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/masonry.min.js') }}"></script>
+        {% endblock %}
+        <script type="text/javascript">
+        {% block startup %}
+            $(function() {
+                last_height = 0;
+                function search() {
+                    var term = $("#search_box").val();
+                    window.location = "{{ url_for('merveilles.interrogate') }}" + "?q=" + term;
+                }
+                $("#search_button").click(search);
+                $("#search_box").keypress(function(e) {
+                    if (e.keyCode == 13) {
+                        search();
+                    }
+                });
+                console.log("Running masonry.");
+                $("#container").masonry({
+                    itemSelector: ".item",
+                    isAnimated: true
+                });
+            });
+        {% endblock %}
+        </script>
     </head>
     <body>
         <div class="nav">
@@ -26,30 +52,5 @@
         </div>
         {% block content %}
         {% endblock %}
-        {% block includes %}
-        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/masonry.min.js') }}"></script>
-        {% endblock %}
-        <script type="text/javascript">
-        {% block startup %}
-            $(function() {
-                last_height = 0;
-                function search() {
-                    var term = $("#search_box").val();
-                    window.location = "{{ url_for('merveilles.interrogate') }}" + "?q=" + term;
-                }
-                $("#search_button").click(search);
-                $("#search_box").keypress(function(e) {
-                    if (e.keyCode == 13) {
-                        search();
-                    }
-                });
-                $("#container").masonry({
-                    itemSelector: ".item",
-                    isAnimated: true
-                });
-            });
-        {% endblock %}
-        </script>
     </body>
 </html>
