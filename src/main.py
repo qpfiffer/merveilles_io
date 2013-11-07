@@ -10,6 +10,7 @@ app.register_blueprint(routes)
 app.register_blueprint(context_processors)
 app.config['DB_FILE'] = os.environ.get("DB_FILE") or "/tmp/links.kct"
 app.config['CHANNEL'] = os.environ.get("CHANNEL") or "#merveilles"
+app.config['LIVE_SITE'] = os.environ.get("LIVE_SITE") or False
 #app.jinja_env.globals.update(size=db_meta_info)
 app.jinja_env.filters['get_domain'] = get_domain_filter
 app.jinja_env.filters['file_size'] = file_size

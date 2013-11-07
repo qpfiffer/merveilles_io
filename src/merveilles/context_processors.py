@@ -4,6 +4,11 @@ from flask import current_app, Blueprint
 app = Blueprint("wut", __name__, template_folder='templates')
 
 @app.app_context_processor
+def site_settings():
+    return {"live_site": current_app.config['LIVE_SITE']
+            }
+
+@app.app_context_processor
 def db_meta_info():
     meta = {}
     db = DB()
