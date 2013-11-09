@@ -36,10 +36,12 @@
                     }
                 });
                 console.log("Running masonry.");
-                $("#container").masonry({
-                    itemSelector: ".item",
-                    isAnimated: true
-                });
+                setTimeout(function() {
+                    $("#container").masonry({
+                        itemSelector: ".item",
+                        isAnimated: true
+                    });
+                }, 250);
             });
         {% endblock %}
         </script>
