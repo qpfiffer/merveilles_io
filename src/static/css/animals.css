@@ -1,0 +1,33 @@
+.the_animal {
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+    background-image: url("../img/animals/32/favicon_0.png");
+}
+.the_pig, .Wally {
+    background-image: url("../img/animals/32/the_pig_0.png");
+}
+.the_pussycat, .Orihaus {
+    background-image: url("../img/animals/32/the_pussycat_0.png");
+}
+.the_owl, .aliceffekt {
+    background-image: url("../img/animals/32/the_owl_0.png");
+}
+.the_doge, .amatecha {
+    background-image: url("../img/animals/32/the_doge_0.png");
+}
+.the_rook, .Tyen {
+    background-image: url("../img/animals/32/the_rook_0.png");
+}
+.the_platypus, .Dorth {
+    background-image: url("../img/animals/32/the_platypus_0.png");
+}
+.the_panther, ._discovery {
+    background-image: url("../img/animals/32/the_panther_0.png");
+}
+.the_bear, .Kaemura {
+    background-image: url("../img/animals/32/the_bear_0.png");
+}
+.the_tiger {
+    background-image: url("../img/animals/32/the_tiger_0.png");
+}
