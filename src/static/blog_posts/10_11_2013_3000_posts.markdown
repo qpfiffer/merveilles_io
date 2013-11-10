@@ -4,18 +4,25 @@ Date: November 10th, 2013
 Preview: A commemorative post for the 3000th link scraped.
 
 We've reached 3000 links! As a sort of commemorative thing, I figured I'd do
-some analysis on the data we have. The 3000th link itself:
+some analysis on the data we have. The <a href="http://i.imgur.com/Au4mfeL.jpg">3000th link itself</a>
+is actually pretty appropriate, I think.
 
-## Uptime
+I've done quite a bit of work today to spruce things up, including a rather
+small API. For instance, you can see the 3000th link <a
+href="/data/2999/pretty">here</a> and get the data for it
+<a href="/data/2999">here.</a> Keep in mind we index from 0
+in this crazy world, so 2999 is actually the 3000th link.
 
-Dolor sit amet, _consectetur adipisicing elit_, sed do eiusmod **tempor incididunt** ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea **commodo consequat**. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint _occaecat cupidatat non proident_, sunt in culpa qui officia deserunt mollit anim id est laborum.
+In addition to this I've done some color tweaks on the site, because this whole
+post-future-burned-neon theme that I've come up with isn't exactly conducive to
+a blog, so I've unified a lot of the colors. I've also made the site a lot more
+intra-linked, for instance the <a href="/top">top posters page</a> now links to
+both the subdomains and users that it displays.
 
-## Activity
+I figured the sigma graph was big enough and impressive enough to be it's own
+page, so I moved that to <a href="/sigma">/sigma.</a> and collected everything
+into one small page call <a href="/viz">/viz.</a> I'll keep it like this until I
+start really hating it all, we'll see where it goes.
 
-Dolor sit amet, _consectetur adipisicing elit_, sed do eiusmod **tempor incididunt** ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea **commodo consequat**. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint _occaecat cupidatat non proident_, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Anyway, on to the fun stats I promised.
 
-
-Dolor sit amet, _consectetur adipisicing elit_, sed do eiusmod **tempor incididunt** ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea **commodo consequat**. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint _occaecat cupidatat non proident_, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-
-Dolor sit amet, _consectetur adipisicing elit_, sed do eiusmod **tempor incididunt** ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea **commodo consequat**. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint _occaecat cupidatat non proident_, sunt in culpa qui officia deserunt mollit anim id est laborum.

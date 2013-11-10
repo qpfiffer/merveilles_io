@@ -111,5 +111,7 @@ def post_num(post_num):
 @app.route("/data/<int:post_num>/pretty")
 def post_num_pretty(post_num):
     item = get_post_num(post_num, current_app.config["DB_FILE"])
+    if item == {}:
+        abort(404)
     return render_template("index.html", items=[item])
 

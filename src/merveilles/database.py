@@ -172,13 +172,13 @@ def get_all_items(db_file):
         print "Could not open database."
 
     cur = db.cursor()
-    cur.jump_back()
+    cur.jump()
     while True:
         rec = cur.get(False)
         if not rec:
             break
         items.append(rec)
-        cur.step_back()
+        cur.step()
 
     cur.disable()
     db.close()
@@ -193,7 +193,7 @@ def get_post_num(post_num, db_file):
         print "Could not open database."
 
     cur = db.cursor()
-    cur.jump_back()
+    cur.jump()
     i = 0
     while True:
         rec = cur.get(False)
@@ -203,7 +203,7 @@ def get_post_num(post_num, db_file):
         if i == post_num:
             item = rec
 
-        cur.step_back()
+        cur.step()
         i = i + 1
 
     cur.disable()
