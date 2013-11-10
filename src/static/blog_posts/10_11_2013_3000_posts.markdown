@@ -24,5 +24,5 @@ page, so I moved that to <a href="/sigma">/sigma.</a> and collected everything
 into one small page call <a href="/viz">/viz.</a> I'll keep it like this until I
 start really hating it all, we'll see where it goes.
 
-Anyway, on to the fun stats I promised.
+Stats coming soon.
 
