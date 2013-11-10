@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
 {% endblock %}
+    {% for post in posts %}
+        <div id="container">
+            <div class="posts">
+            </div>
+        </div>
+    {% endfor %}
 {% block includes %} {{ super() }}
 {% endblock %}

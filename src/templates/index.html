@@ -2,6 +2,14 @@
 {% block includes %}{{super()}}
 <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/animals.css') }}" />
 {% endblock %}
+{% block startup %}{{super()}}
+    setTimeout(function() {
+        $("#container").masonry({
+            itemSelector: ".item",
+            isAnimated: true
+        });
+    }, 250);
+{% endblock %}
 {% block content %}
 <div id="container">
     {% if items %}

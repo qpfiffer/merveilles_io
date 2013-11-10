@@ -32,110 +32,13 @@
 {% block includes %} {{ super() }}
 <script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/sigma.forceatlas2.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/top.js') }}"></script>
 {% endblock %}
 {% block startup %}{{ super() }}
-$(function() {
-    var sigRoot = document.getElementById('sigma_graph');
-    var sigInst = sigma.init(sigRoot);
+    data = {{ graph_data|tojson|safe }};
+    total_number_of_submitters = {{ items[1]|count }};
+    highest_linked_item = {{ items[0][0][1] }};
+    top_submitter = {{ items[1][0][1] }};
 
-    sigInst.drawingProperties({
-      defaultLabelColor: '#ccc',
-      font: 'Arial',
-      edgeColor: 'source',
-      defaultEdgeType: 'curve'
-    }).graphProperties({
-      minNodeSize: 2,
-      maxNodeSize: 5
-    });
-
-    function lerp(a, b, f) {
-        return a + f * (b - a);
-    }
-
-    var data = {{ graph_data|tojson|safe }};
-    var total_number_of_submitters = {{ items[1]|count }};
-    var highest_linked_item = {{ items[0][0][1] }};
-    var top_submitter = {{ items[1][0][1] }};
-
-    // Create all nodes
-    for (var key in data) {
-        var x = Math.round(Math.random() * 15.5);
-        var y = Math.round(Math.random() * 15.0);
-        if (data[key]["is_person"] == true) {
-            var lerpval = data[key]["data"].length/top_submitter;
-            sigInst.addNode(key, {
-                x: x,
-                y: y,
-                size: lerp(1.0, 10.0, lerpval),
-                color: "rgb(" + Math.round(Math.random()*256) + "," + Math.round(Math.random()*256) + ", 255)",
-                label: key
-            });
-        } else {
-            var lerpval_links = data[key]["linked_to_count"]/highest_linked_item;
-            sigInst.addNode(key, {
-                x: x,
-                y: y,
-                size: lerp(1.0, 10.5, lerpval_links),
-                //color: "rgb(" + Math.round(x*256) + "," + Math.round(y*256) + ", 255)",
-                color: "rgb(255, 25, 155)",
-                label: key
-            });
-        }
-    }
-    // Create all edges
-    for (var key in data) {
-        // data[key]["data"] is a list of links to data[key]
-        for (var link in data[key]["data"]) {
-            if (data[key]["is_person"] == true) {
-                sigInst.addEdge(key + "_" + data[key]["data"][link] + "_" + link, key, data[key]["data"][link]);
-            }
-        }
-    }
-    var greyColor = '#666';
-
-    sigInst.startForceAtlas2();
-    setTimeout(function() {
-        sigInst.stopForceAtlas2();
-        sigInst.bind('overnodes',function(event){
-            var nodes = event.content;
-            var neighbors = {};
-            sigInst.iterEdges(function(e){
-                if(nodes.indexOf(e.source)<0 && nodes.indexOf(e.target)<0){
-                    if(!e.attr['grey']){
-                        e.attr['true_color'] = e.color;
-                        e.color = greyColor;
-                        e.attr['grey'] = 1;
-                    }
-                } else {
-                    e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
-                    e.attr['grey'] = 0;
-
-                    neighbors[e.source] = 1;
-                    neighbors[e.target] = 1;
-                }
-            }).iterNodes(function(n){
-                if(!neighbors[n.id]){
-                    if(!n.attr['grey']){
-                        n.attr['true_color'] = n.color;
-                        n.color = greyColor;
-                        n.attr['grey'] = 1;
-                    }
-                } else {
-                    n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
-                    n.attr['grey'] = 0;
-                }
-            }).draw(2,2,2);
-        }).bind('outnodes',function(){
-            sigInst.iterEdges(function(e){
-                e.color = e.attr['grey'] ? e.attr['true_color'] : e.color;
-                e.attr['grey'] = 0;
-            }).iterNodes(function(n){
-                n.color = n.attr['grey'] ? n.attr['true_color'] : n.color;
-                n.attr['grey'] = 0;
-            }).draw(2,2,2);
-        });
-    },
-    20000);
-
-});
+    init();
 {% endblock %}
