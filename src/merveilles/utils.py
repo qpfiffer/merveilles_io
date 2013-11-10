@@ -2,8 +2,11 @@ import re, requests, json, os, markdown
 from networkx import Graph, spring_layout
 from flask import Markup
 from constants import PERSON_COLORS
-#from forceatlas import forceatlas2_layout
-#from numpy import asscalar
+
+def slugify_post(post):
+    cleaned = post.split('.')[0] # Remove file extension
+    cleaned = cleaned.replace('_', '-')
+    return cleaned
 
 def build_posts(location):
     posts = []
@@ -26,7 +29,8 @@ def build_posts(location):
             'title': md.Meta['title'][0],
             'date': md.Meta['date'][0],
             'preview': md.Meta['preview'][0],
-            'content': post_content
+            'content': post_content,
+            'slug': slugify_post(post)
         }
 
         posts.append(post_cleaned)

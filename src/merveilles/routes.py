@@ -1,8 +1,9 @@
 from database import insert_item, get_items, top_things, search_func
-from flask import current_app, Blueprint, render_template, request, Response, make_response
 from json import loads, dumps
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
     get_paradise_json_for_d3, build_posts
+from flask import current_app, Blueprint, render_template, request, Response, \
+    make_response, abort
 import requests
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
@@ -15,6 +16,16 @@ def paradise():
 def blog():
     posts = build_posts(current_app.config["BLOG_DIR"])
     return render_template("blog.html", posts=posts)
+
+@app.route("/blog/<slug>", methods=['GET'])
+def blog_post(slug):
+    # Whole-ass getting the post:
+    post = filter(lambda x: x["slug"] == slug, build_posts(current_app.config["BLOG_DIR"]))
+
+    if len(post) != 1:
+        abort(404)
+
+    return render_template("blog_post.html", post=post[0])
 
 @app.route("/paradise.json", methods=['GET'])
 def paradise_json():
