@@ -5,7 +5,7 @@
         <p class="item_header">Top ten domains</p>
         <ul>
         {% for item in items[0][:10] %}
-            <li>{{item[0]}}: {{item[1]}}</li>
+            <li><a href="{{ url_for('merveilles.introspect') }}?domain={{item[0]}}">{{item[0]}}</a>: {{item[1]}}</li>
         {% endfor %}
         </ul>
     </div>
