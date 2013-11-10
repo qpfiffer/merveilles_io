@@ -185,3 +185,30 @@ def get_all_items(db_file):
 
     sorted_items_for_viewing = [loads(item[1]) for item in items]
     return sorted_items_for_viewing
+
+def get_post_num(post_num, db_file):
+    item = None
+    db = DB()
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump_back()
+    i = 0
+    while True:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        if i == post_num:
+            item = rec
+
+        cur.step_back()
+        i = i + 1
+
+    cur.disable()
+    db.close()
+
+    if item is not None:
+        return loads(item[1])
+    return dict()

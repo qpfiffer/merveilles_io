@@ -1,6 +1,6 @@
 html {
-    color: rgb(83, 83, 83);
-    background-color: #333;
+    background-color: #222;
+    color: #DDD;
     font-family: 'Titillium Web',"Helvetica Neue",Helvetica,Arial,sans-serif;
     background-repeat: repeat;
 }
@@ -94,9 +94,6 @@ a:hover {
 }
 .time {
     font-size: 12px;
-}
-.summary {
-    color: rgb(103, 103, 103);
 }
 /*.right_corner {
     float: right;

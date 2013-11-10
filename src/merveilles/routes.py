@@ -1,4 +1,5 @@
-from database import insert_item, get_items, top_things, search_func, get_all_items
+from database import insert_item, get_items, top_things, search_func, \
+    get_all_items, get_post_num
 from json import loads, dumps
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
     get_paradise_json_for_d3, build_posts
@@ -101,4 +102,9 @@ def stats():
 def all_posts():
     items = get_all_items(current_app.config["DB_FILE"])
     return Response(dumps(items), mimetype="application/json")
+
+@app.route("/data/<int:post_num>")
+def post_num(post_num):
+    item = get_post_num(post_num, current_app.config["DB_FILE"])
+    return Response(dumps(item), mimetype="application/json")
 
