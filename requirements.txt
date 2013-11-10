@@ -7,3 +7,4 @@ beautifulsoup4==4.3.1
 itsdangerous==0.23
 wsgiref==0.1.2
 requests==2.0.1
+Markdown==2.3.1
