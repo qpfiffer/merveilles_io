@@ -8,7 +8,11 @@ app = Blueprint('merveilles', __name__, template_folder='templates')
 
 @app.route("/paradise", methods=['GET'])
 def paradise():
-    return render_template("paradise.html", channel=current_app.config["CHANNEL"])
+    return render_template("paradise.html")
+
+@app.route("/blog", methods=['GET'])
+def blog():
+    return render_template("blog.html")
 
 @app.route("/paradise.json", methods=['GET'])
 def paradise_json():
@@ -22,7 +26,7 @@ def paradise_json():
 def submit():
     url = request.json['url']
     person = request.json["person"]
-    return insert_item(url, person, current_app.config["DB_FILE"])
+    return insert_item(url, person)
 
 @app.route("/intrigue", methods=['GET'])
 def intrigue():
@@ -31,7 +35,7 @@ def intrigue():
         lambda x: loads(x[1])["person"].lower() == user.lower(),
         current_app.config["DB_FILE"])
 
-    return render_template("index.html", items=items, channel=current_app.config["CHANNEL"])
+    return render_template("index.html", items=items)
 
 @app.route("/introspect", methods=['GET'])
 def introspect():
@@ -40,7 +44,7 @@ def introspect():
         lambda x: get_domain(loads(x[1])).lower() in domain.lower(),
         current_app.config["DB_FILE"])
 
-    return render_template("index.html", items=items, channel=current_app.config["CHANNEL"])
+    return render_template("index.html", items=items)
 
 @app.route("/interrogate", methods=['GET'])
 def interrogate():
@@ -49,7 +53,7 @@ def interrogate():
         lambda x: search_func(loads(x[1]), qstring),
         current_app.config["DB_FILE"])
 
-    return render_template("index.html", items=items, channel=current_app.config["CHANNEL"])
+    return render_template("index.html", items=items)
 
 @app.route("/", methods=['GET'])
 def root():
@@ -58,10 +62,10 @@ def root():
         if item['title'] is None or item['title'] == "":
             item['title'] = item['url']
 
-    return render_template("index.html", items=items, channel=current_app.config["CHANNEL"])
+    return render_template("index.html", items=items)
 
 @app.route("/top")
 def top():
     items = top_things(current_app.config["DB_FILE"])
     graph_data = items[2]
-    return render_template("top.html", items=items, graph_data=graph_data, channel=current_app.config["CHANNEL"])
+    return render_template("top.html", items=items, graph_data=graph_data)

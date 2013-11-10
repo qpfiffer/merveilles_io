@@ -5,7 +5,8 @@ app = Blueprint("wut", __name__, template_folder='templates')
 
 @app.app_context_processor
 def site_settings():
-    return {"live_site": current_app.config['LIVE_SITE']
+    return {"live_site": current_app.config['LIVE_SITE'],
+            "channel": current_app.config['CHANNEL']
             }
 
 @app.app_context_processor
