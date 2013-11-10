@@ -1,0 +1,11 @@
+---
+title: 3000 links!
+author: the_pig
+---
+
+We've reached 3000 links! As a sort of commemorative thing, I figured I'd do
+some analysis on the data we have.
+
+# Uptime
+
+# Activity

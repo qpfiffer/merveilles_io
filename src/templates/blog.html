@@ -1,11 +1,14 @@
 {% extends "base.html" %}
+{% block includes %}{{super()}}
+{% enblock %}
 {% block content %}
-{% endblock %}
     {% for post in posts %}
         <div id="container">
             <div class="posts">
+                {{ post|safe }}
             </div>
         </div>
     {% endfor %}
+{% endblock %}
 {% block includes %} {{ super() }}
 {% endblock %}

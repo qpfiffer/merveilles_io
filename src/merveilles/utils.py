@@ -1,10 +1,22 @@
 import re, requests, json, os
 from networkx import Graph, spring_layout
+from markdown import markdown
+from flask import Markup
 #from forceatlas import forceatlas2_layout
 #from numpy import asscalar
 
-def build_posts():
-    pass
+def build_posts(location):
+    posts = []
+    blog_posts = os.listdir(location)
+    blog_posts = filter(lambda x: x.endswith(".markdown"), blog_posts)
+    for post in blog_posts:
+        post_file = open("{0}/{1}".format(location, post))
+        post_content = Markup(markdown(post_file.read()))
+        posts.append(post_content)
+        post_file.close()
+
+    return posts
+
 
 def paradise_compare(data, x, y):
     # we want things with huge numbers to be first

@@ -13,7 +13,8 @@ def paradise():
 
 @app.route("/blog", methods=['GET'])
 def blog():
-    return render_template("blog.html")
+    posts = build_posts(current_app.config["BLOG_DIR"])
+    return render_template("blog.html", posts=posts)
 
 @app.route("/paradise.json", methods=['GET'])
 def paradise_json():
