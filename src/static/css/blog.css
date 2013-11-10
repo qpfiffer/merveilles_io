@@ -1,0 +1,23 @@
+.post {
+    display: inline-block;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    width: 24%;
+    min-height: 50px;
+    word-wrap: break-word;
+    text-align: justify;
+    background-color: rgb(25,25,25);
+    padding: 3px;
+    margin-bottom: 5px;
+    margin-right: 5px;
+}
+
+.post_header {
+    padding-bottom: 3px;
+    border-bottom: 1px solid ;
+}
+
+.post_preview {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
