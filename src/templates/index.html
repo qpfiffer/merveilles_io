@@ -16,7 +16,7 @@
         {% for item in items %}
         <div class="item">
             <div class="item_header">
-            <div class="the_animal {{item.person}}"></div>
+                <div class="the_animal {{item.person}}"></div>
                 <a href="{{ url_for('merveilles.intrigue') }}?user={{item.person}}" style="color: {{item.person_color}};" class="person">{{item.person}}</a>
             </div>
             <a target="_blank" href="{{item.url}}"><span class="link">{{item.title or item.url}}</span></a>

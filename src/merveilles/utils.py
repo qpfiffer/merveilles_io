@@ -1,7 +1,7 @@
-import re, requests, json, os
+import re, requests, json, os, markdown
 from networkx import Graph, spring_layout
-from markdown import markdown
 from flask import Markup
+from constants import PERSON_COLORS
 #from forceatlas import forceatlas2_layout
 #from numpy import asscalar
 
@@ -11,8 +11,25 @@ def build_posts(location):
     blog_posts = filter(lambda x: x.endswith(".markdown"), blog_posts)
     for post in blog_posts:
         post_file = open("{0}/{1}".format(location, post))
-        post_content = Markup(markdown(post_file.read()))
-        posts.append(post_content)
+        md = markdown.Markdown(extensions = ['meta'])
+
+        post_html = md.convert(post_file.read())
+        post_content = Markup(post_html)
+
+        author = md.Meta['author'][0]
+        author_color = [ord(x) for x in author]
+        author_color = PERSON_COLORS[len(PERSON_COLORS) - 1 % sum(author_color)]
+
+        post_cleaned = {
+            'author': author,
+            'author_color': author_color,
+            'title': md.Meta['title'][0],
+            'date': md.Meta['date'][0],
+            'preview': md.Meta['preview'][0],
+            'content': post_content
+        }
+
+        posts.append(post_cleaned)
         post_file.close()
 
     return posts
