@@ -164,3 +164,24 @@ def get_items(item_filter, db_file):
     sorted_items = sorted(items, key=get_key, reverse=True)
     sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
     return sorted_items_for_viewing
+
+def get_all_items(db_file):
+    items = []
+    db = DB()
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump_back()
+    while True:
+        rec = cur.get(False)
+        if not rec:
+            break
+        items.append(rec)
+        cur.step_back()
+
+    cur.disable()
+    db.close()
+
+    sorted_items_for_viewing = [loads(item[1]) for item in items]
+    return sorted_items_for_viewing

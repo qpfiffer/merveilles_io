@@ -1,4 +1,4 @@
-from database import insert_item, get_items, top_things, search_func
+from database import insert_item, get_items, top_things, search_func, get_all_items
 from json import loads, dumps
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
     get_paradise_json_for_d3, build_posts
@@ -11,6 +11,10 @@ app = Blueprint('merveilles', __name__, template_folder='templates')
 @app.route("/paradise", methods=['GET'])
 def paradise():
     return render_template("paradise.html")
+
+@app.route("/viz", methods=['GET'])
+def viz():
+    return render_template("viz.html")
 
 @app.route("/blog", methods=['GET'])
 def blog():
@@ -29,7 +33,7 @@ def blog_post(slug):
 
 @app.route("/paradise.json", methods=['GET'])
 def paradise_json():
-    response = make_response(open(app.config["PARADISE_JSON"]).read())
+    response = make_response(open(current_app.config["PARADISE_JSON"]).read())
     response.headers["Content-type"] = "application/json"
     return response
     #items = get_paradise_json_for_d3()
@@ -77,8 +81,24 @@ def root():
 
     return render_template("index.html", items=items)
 
+@app.route("/sigma")
+def sigma():
+    items = top_things(current_app.config["DB_FILE"])
+    graph_data = items[2]
+    return render_template("sigma.html", items=items, graph_data=graph_data)
+
 @app.route("/top")
 def top():
     items = top_things(current_app.config["DB_FILE"])
     graph_data = items[2]
     return render_template("top.html", items=items, graph_data=graph_data)
+
+@app.route("/stats")
+def stats():
+    return render_template("stats.html")
+
+@app.route("/data/all")
+def all_posts():
+    items = get_all_items(current_app.config["DB_FILE"])
+    return Response(dumps(items), mimetype="application/json")
+

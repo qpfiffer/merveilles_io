@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div id="sigma_graph"></div>
+<div id="container">
+    <div class="item">
+        <p class="item_header"><span style="color: rgb(255,0,150);">Help</span></p>
+        <ul>
+            <li>URLs are <span style="color: rgb(255,25,255);">pink</span></li>
+            <li>Submitters range from  <span style="color: rgb(70,70,255);">blue</span> to <span style="color: rgb(200,90,200);">pink</span> to <span style="color: rgb(90,255,255);">teal</span> to <span style="color: rgb(160,90,255);">purple</span></li>
+            <li>More popular urls and submitters are <span style="font-size: x-large;">bigger</span></li>
+            <li>Once the graph is done arranging itself, you can mouse over a node to highlight what that node links to and from.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+{% block includes %} {{ super() }}
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.forceatlas2.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/top.js') }}"></script>
+{% endblock %}
+{% block startup %}{{ super() }}
+    data = {{ graph_data|tojson|safe }};
+    total_number_of_submitters = {{ items[1]|count }};
+    highest_linked_item = {{ items[0][0][1] }};
+    top_submitter = {{ items[1][0][1] }};
+
+    init();
+{% endblock %}
