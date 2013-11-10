@@ -44,7 +44,7 @@ def paradise_json():
 def submit():
     url = request.json['url']
     person = request.json["person"]
-    return insert_item(url, person)
+    return insert_item(url, person, current_app.config["DB_FILE"])
 
 @app.route("/intrigue", methods=['GET'])
 def intrigue():
