@@ -1,10 +1,12 @@
 from database import insert_item, get_items, top_things, search_func, \
-    get_all_items, get_post_num
+    get_all_items, get_post_num, get_items_last_X_days
 from json import loads, dumps
+from datetime import datetime, timedelta, date
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
     get_paradise_json_for_d3, build_posts
 from flask import current_app, Blueprint, render_template, request, Response, \
     make_response, abort
+from time import mktime
 import requests
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
@@ -80,7 +82,28 @@ def root():
         if item['title'] is None or item['title'] == "":
             item['title'] = item['url']
 
-    return render_template("index.html", items=items)
+    ten_days = get_items_last_X_days(current_app.config["DB_FILE"], 10)
+
+    time = datetime.now() - timedelta(days=10)
+    print time
+    date_obj = date(year=time.year, month=time.month, day=time.day)
+    day_unix = int(mktime(date_obj.timetuple()))
+
+    p_to_dp = {}
+    stats = []
+
+    for item in ten_days:
+        for person in ten_days[item]:
+            if p_to_dp.get(person, False) == False:
+                # {u'December': [[1384070400, 1
+                p_to_dp[person] = [[item, ten_days[item][person]]]
+            else:
+                p_to_dp[person].append([item, ten_days[item][person]])
+
+    for item in p_to_dp:
+        stats.append({"name": item, "data": sorted(p_to_dp[item])})
+
+    return render_template("index.html", items=items, stats=stats, start_date=day_unix)
 
 @app.route("/sigma")
 def sigma():

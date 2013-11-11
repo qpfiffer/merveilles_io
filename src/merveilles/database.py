@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from datetime import datetime
+from datetime import datetime, timedelta, date
 from flask import Response
 from kyotocabinet import DB
 from json import dumps, loads
@@ -212,3 +212,45 @@ def get_post_num(post_num, db_file):
     if item is not None:
         return loads(item[1])
     return dict()
+
+def get_items_last_X_days(db_file, X):
+    dates = {}
+    db = DB()
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    thirty_days_ago = datetime.now() - timedelta(days=X)
+
+    cur = db.cursor()
+    cur.jump_back()
+    while True:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        loaded = loads(rec[1])
+        unix = float(loaded['created_at'])
+        time = datetime.fromtimestamp(unix)
+
+        if time > thirty_days_ago:
+            date_obj = date(year=time.year, month=time.month, day=time.day)
+            # Javascript expects Date.UTC to spit out dates of a certain
+            # length.
+            day_unix = int(mktime(date_obj.timetuple()))*1000
+            if dates.get(day_unix, False) == False:
+                dates[day_unix] = {loaded["person"]: 1}
+            else:
+                relevant_dict = dates[day_unix]
+
+                if relevant_dict.get(loaded["person"], False) == False:
+                    relevant_dict[loaded["person"]] = 1
+                else:
+                    relevant_dict[loaded["person"]] = relevant_dict[loaded["person"]] + 1
+        else:
+            break;
+
+        cur.step_back()
+    cur.disable()
+    db.close()
+
+    return dates
