@@ -65,6 +65,7 @@ a {
 }
 .nav a {
     color: #C2ECFF;
+    font-weight: normal;
     /* text-decoration: none; */
 }
 a:hover {
