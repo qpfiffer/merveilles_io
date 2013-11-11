@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% block includes %}{{super()}}
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/sigma.css') }}" />
+{% endblock %}
 {% block content %}
 <div id="sigma_graph"></div>
 <div id="container">

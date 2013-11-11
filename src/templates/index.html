@@ -3,12 +3,6 @@
 <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/animals.css') }}" />
 {% endblock %}
 {% block startup %}{{super()}}
-    setTimeout(function() {
-        $("#container").masonry({
-            itemSelector: ".item",
-            isAnimated: true
-        });
-    }, 250);
 {% endblock %}
 {% block content %}
 <div id="container">
@@ -17,7 +11,7 @@
         <div class="item">
             <div class="item_header">
                 <div class="the_animal {{item.person}}"></div>
-                <a href="{{ url_for('merveilles.intrigue') }}?user={{item.person}}" style="color: {{item.person_color}};" class="person">{{item.person}}</a>
+                <a href="{{ url_for('merveilles.intrigue') }}?user={{item.person}}" class="person">{{item.person}}</a>
             </div>
             <a target="_blank" href="{{item.url}}"><span class="link">{{item.title or item.url}}</span></a>
             <div class="summary"><p>{{item.summary}}</p></div>

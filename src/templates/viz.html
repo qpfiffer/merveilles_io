@@ -1,9 +1,11 @@
 {% extends "base.html" %}
 {% block content %}
-<ul>
-    <li><a href="{{ url_for('merveilles.top') }}">Top Posters</a></li>
-    <li><a href="{{ url_for('merveilles.sigma') }}">Sigma Graph</a></li>
-    <li><a href="{{ url_for('merveilles.paradise') }}">Paradise Visualization</a></li>
-    <li><a href="{{ url_for('merveilles.stats') }}">Stats</a></li>
-</ul>
+<div id="container">
+    <ul>
+        <li><a href="{{ url_for('merveilles.top') }}">Top Posters</a></li>
+        <li><a href="{{ url_for('merveilles.sigma') }}">Sigma Graph</a></li>
+        <li><a href="{{ url_for('merveilles.paradise') }}">Paradise Visualization</a></li>
+        <li><a href="{{ url_for('merveilles.stats') }}">Stats</a></li>
+    </ul>
+</div>
 {% endblock %}
