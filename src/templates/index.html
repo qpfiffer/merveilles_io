@@ -4,6 +4,7 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
 {% endblock %}
 {% block startup %}{{super()}}
+{% if stats %}
     $('#last_10_days').highcharts({
         chart: {
             type: 'spline',
@@ -39,6 +40,7 @@
         },
         series: {{ stats|tojson|safe }}
     });
+{% endif %}
 {% endblock %}
 {% block content %}
 <div id="last_10_days"></div>
