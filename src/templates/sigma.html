@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block includes %}{{super()}}
 <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/sigma.css') }}" />
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.forceatlas2.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/top.js') }}"></script>
 {% endblock %}
 {% block content %}
 <div id="sigma_graph"></div>
@@ -15,11 +18,6 @@
         </ul>
     </div>
 </div>
-{% endblock %}
-{% block includes %} {{ super() }}
-<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/sigma.forceatlas2.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/top.js') }}"></script>
 {% endblock %}
 {% block startup %}{{ super() }}
     data = {{ graph_data|tojson|safe }};
