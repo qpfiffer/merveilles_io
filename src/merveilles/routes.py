@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, date
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
     get_paradise_json_for_d3, build_posts
 from flask import current_app, Blueprint, render_template, request, Response, \
-    make_response, abort
+    make_response, abort, redirect, url_for
 from time import mktime
 import requests
 
@@ -85,7 +85,6 @@ def root():
     ten_days = get_items_last_X_days(current_app.config["DB_FILE"], 10)
 
     time = datetime.now() - timedelta(days=10)
-    print time
     date_obj = date(year=time.year, month=time.month, day=time.day)
     day_unix = int(mktime(date_obj.timetuple()))
 
@@ -113,13 +112,14 @@ def sigma():
 
 @app.route("/top")
 def top():
-    items = top_things(current_app.config["DB_FILE"])
-    graph_data = items[2]
-    return render_template("top.html", items=items, graph_data=graph_data)
+    return redirect(url_for('merveilles.stats'))
 
 @app.route("/stats")
 def stats():
-    return render_template("stats.html")
+    top_items = top_things(current_app.config["DB_FILE"])
+    graph_data = top_items[2]
+
+    return render_template("stats.html", items=top_items, graph_data=graph_data)
 
 @app.route("/data/all")
 def all_posts():
