@@ -63,6 +63,9 @@ a {
     text-decoration: none;
     font-weight: bold;
 }
+a:visited {
+    color: #8B8686;
+}
 .nav a {
     color: #C2ECFF;
     font-weight: normal;

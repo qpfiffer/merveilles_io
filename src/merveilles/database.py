@@ -213,13 +213,13 @@ def get_post_num(post_num, db_file):
         return loads(item[1])
     return dict()
 
-def get_items_last_X_days(db_file, X):
+def get_items_last_X_days(db_file, X, munge=True):
     dates = {}
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
         print "Could not open database."
 
-    thirty_days_ago = datetime.now() - timedelta(days=X)
+    X_days_ago = datetime.now() - timedelta(days=X)
 
     cur = db.cursor()
     cur.jump_back()
@@ -232,8 +232,11 @@ def get_items_last_X_days(db_file, X):
         unix = float(loaded['created_at'])
         time = datetime.fromtimestamp(unix)
 
-        if time > thirty_days_ago:
-            date_obj = date(year=time.year, month=time.month, day=time.day)
+        if time > X_days_ago:
+            if munge:
+                date_obj = date(year=time.year, month=time.month, day=time.day)
+            else:
+                date_obj = time
             # Javascript expects Date.UTC to spit out dates of a certain
             # length.
             day_unix = int(mktime(date_obj.timetuple()))*1000

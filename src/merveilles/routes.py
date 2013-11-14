@@ -119,7 +119,26 @@ def stats():
     top_items = top_things(current_app.config["DB_FILE"])
     graph_data = top_items[2]
 
-    return render_template("stats.html", items=top_items, graph_data=graph_data)
+    last_day = get_items_last_X_days(current_app.config["DB_FILE"], 1, munge=False)
+
+    time = datetime.now() - timedelta(days=10)
+    date_obj = date(year=time.year, month=time.month, day=time.day)
+    day_unix = int(mktime(date_obj.timetuple()))
+
+    p_to_dp = {}
+    stats = []
+
+    for item in last_day:
+        for person in last_day[item]:
+            if p_to_dp.get(person, False) == False:
+                p_to_dp[person] = [[item, last_day[item][person]]]
+            else:
+                p_to_dp[person].append([item, last_day[item][person]])
+
+    for item in p_to_dp:
+        stats.append({"name": item, "data": sorted(p_to_dp[item])})
+
+    return render_template("stats.html", items=top_items, stats=stats, graph_data=graph_data)
 
 @app.route("/data/all")
 def all_posts():
