@@ -21,13 +21,19 @@ def viz():
 
 @app.route("/blog", methods=['GET'])
 def blog():
-    posts = build_posts(current_app.config["BLOG_DIR"])
+    try:
+        posts = build_posts(current_app.config["BLOG_DIR"])
+    except OSError as e:
+        return redirect(url_for('merveilles.root'))
     return render_template("blog.html", posts=posts)
 
 @app.route("/blog/<slug>", methods=['GET'])
 def blog_post(slug):
     # Whole-ass getting the post:
-    post = filter(lambda x: x["slug"] == slug, build_posts(current_app.config["BLOG_DIR"]))
+    try:
+        post = filter(lambda x: x["slug"] == slug, build_posts(current_app.config["BLOG_DIR"]))
+    except OSError as e:
+        abort(404)
 
     if len(post) != 1:
         abort(404)
