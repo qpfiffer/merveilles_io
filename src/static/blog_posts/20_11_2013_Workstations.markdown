@@ -1,4 +1,4 @@
-Title: 3000 links!
+Title: Workstations of Madness
 Author: thepig
 Date: November 20th, 2013
 Preview: Workstations!
