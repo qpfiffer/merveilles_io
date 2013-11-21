@@ -8,25 +8,26 @@ like. I've compiled a small list of them.
 
 First up is [amatecha](/intrigue?user=amatecha):
 
-<img src="/static/img/blog/amatecha_1.jpg"></img>
-<img src="/static/img/blog/amatecha_2.jpg"></img>
-<img src="/static/img/blog/amatecha_3.jpg"></img>
+<a href="/static/img/blog/amatecha_1.jpg"><img src="/static/img/blog/amatecha_1_thumb.jpg"></img></a>
+<a href="/static/img/blog/amatecha_2.jpg"><img src="/static/img/blog/amatecha_2_thumb.jpg"></img></a>
+<a href="/static/img/blog/amatecha_3.jpg"><img src="/static/img/blog/amatecha_3_thumb.jpg"></img></a>
 
 [Wally](/intrigue?user=Wally) lived in poverty:
 
-<img src="/static/img/blog/wally_1.jpg"></img>
-<img src="/static/img/blog/wally_2.jpg"></img>
-<img src="/static/img/blog/wally_3.jpg"></img>
+<a href="/static/img/blog/wally_1.jpg"><img src="/static/img/blog/wally_1_thumb.jpg"></img></a>
+<a href="/static/img/blog/wally_2.jpg"><img src="/static/img/blog/wally_2_thumb.jpg"></img></a>
+<a href="/static/img/blog/wally_3.jpg"><img src="/static/img/blog/wally_3_thumb.jpg"></img></a>
 
 [christian](/intrigue?user=christian) cares about fire safety:
 
-<img src="/static/img/blog/christian_1.png"></img>
+<a href="/static/img/blog/christian_1.png"><img src="/static/img/blog/christian_1_thumb.png"></img></a>
 
 [Somnius](/intrigue?user=Somnius) lives a simple, unforgiving lifestyle:
 
-<img src="/static/img/blog/somnius_1.jpg"></img>
+<a href="/static/img/blog/somnius_1.png"><img src="/static/img/blog/somnius_1_thumb.jpg"></img></a>
 
 [Tyen](/intrigue?user=Tyen) lived in [Cube](http://en.wikipedia.org/wiki/Cube_(film\)):
 
-<img src="/static/img/blog/tyen_1.jpg"></img>
+<a href="/static/img/blog/tyen_1.jpg"><img src="/static/img/blog/tyen_1_thumb.jpg"></img></a>
+<a href="/static/img/blog/tyen_2.jpg"><img src="/static/img/blog/tyen_2_thumb.jpg"></img></a>
 
