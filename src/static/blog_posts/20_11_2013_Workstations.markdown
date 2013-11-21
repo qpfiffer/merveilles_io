@@ -13,6 +13,7 @@ First up is [amatecha](/intrigue?user=amatecha):
 <a href="/static/img/blog/amatecha_3.jpg"><img src="/static/img/blog/amatecha_3_thumb.jpg"></img></a>
 
 [aliceffekt](/intrigue?user=aliceffekt) is a smooth criminal:
+
 <a href="/static/img/blog/aliceffekt_1.jpg"><img src="/static/img/blog/aliceffekt_1_thumb.jpg"></img></a>
 
 [Wally](/intrigue?user=Wally) lived in poverty:
