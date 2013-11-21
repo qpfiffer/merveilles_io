@@ -20,6 +20,10 @@ First up is [amatecha](/intrigue?user=amatecha):
 
 <a href="/static/img/blog/gabrielverdon_1.jpg"><img src="/static/img/blog/gabrielverdon_1_thumb.jpg"></img></a>
 
+[pl1x](/intrigue?user=pl1x) doesn't like Sprite:
+
+<a href="/static/img/blog/pl1x_1.jpg"><img src="/static/img/blog/pl1x_1_thumb.jpg"></img></a>
+
 [Wally](/intrigue?user=Wally) lived in poverty:
 
 <a href="/static/img/blog/wally_1.jpg"><img src="/static/img/blog/wally_1_thumb.jpg"></img></a>
