@@ -16,6 +16,10 @@ First up is [amatecha](/intrigue?user=amatecha):
 
 <a href="/static/img/blog/aliceffekt_1.jpg"><img src="/static/img/blog/aliceffekt_1_thumb.jpg"></img></a>
 
+[gabrielverdon](/intrigue?user=gabrielverdon) lives in a CRT television:
+
+<a href="/static/img/blog/gabrielverdon_1.jpg"><img src="/static/img/blog/gabrielverdon_1_thumb.jpg"></img></a>
+
 [Wally](/intrigue?user=Wally) lived in poverty:
 
 <a href="/static/img/blog/wally_1.jpg"><img src="/static/img/blog/wally_1_thumb.jpg"></img></a>
