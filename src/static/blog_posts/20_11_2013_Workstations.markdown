@@ -20,7 +20,7 @@ First up is [amatecha](/intrigue?user=amatecha):
 
 [christian](/intrigue?user=christian) cares about fire safety:
 
-<img src="/static/img/blog/christian_1.jpg"></img>
+<img src="/static/img/blog/christian_1.png"></img>
 
 [Somnius](/intrigue?user=Somnius) lives a simple, unforgiving lifestyle:
 
