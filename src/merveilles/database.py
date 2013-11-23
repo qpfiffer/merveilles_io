@@ -272,6 +272,5 @@ def get_page_count():
         print "Could not open database (meta info)."
     count = db.count()
     db.close()
-    print count
     return count / FILTER_MAX
 
