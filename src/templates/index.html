@@ -69,7 +69,7 @@
     <a href="{{request.path}}?page={{page}}">{{page}}</a>
     {% endfor %}
     <a>&hellip;</a>
-    {% for page in pages[::-1][0:5] %}
+    {% for page in pages[::-1][0:5]|reverse %}
     <a href="{{request.path}}?page={{page}}">{{page}}</a>
     {% endfor %}
     <a {% if nextpage %}href="{{request.path}}?page={{nextpage}}"{%else%}href="#"{%endif%}>&raquo;</a>

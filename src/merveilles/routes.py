@@ -87,7 +87,7 @@ def root():
     pages = range(0, page_count)
 
     items = get_items(lambda x: True,
-        current_app.config["DB_FILE"], request.args.get("page", 0))
+        current_app.config["DB_FILE"], int(request.args.get("page", 0)))
     for item in items:
         if item['title'] is None or item['title'] == "":
             item['title'] = item['url']
@@ -113,7 +113,7 @@ def root():
         stats.append({"name": item, "data": sorted(p_to_dp[item])})
 
     return render_template("index.html", items=items,
-        stats=stats, start_date=day_unix, pages=pages)
+        stats=stats, start_date=day_unix, pages=pages, current_page=request.args.get('page', 0))
 
 @app.route("/sigma")
 def sigma():
