@@ -44,7 +44,7 @@
 {% endblock %}
 {% block content %}
 <div id="last_10_days"></div>
-<div id="container">
+<div class="container">
     {% if items %}
         {% for item in items %}
         <div class="item">
@@ -61,4 +61,18 @@
         <p>No items yet. :<</p>
     {% endif %}
 </div>
+
+{% if pages %}
+<div id="fuck_pages" class="container">
+    <a {% if prevpage %}href="{{request.path}}?page={{prevpage}}"{%else%}href="#"{%endif%}>&laquo;</a>
+    {% for page in pages[0:5] %}
+    <a href="{{request.path}}?page={{page}}">{{page}}</a>
+    {% endfor %}
+    <a>&hellip;</a>
+    {% for page in pages[::-1][0:5] %}
+    <a href="{{request.path}}?page={{page}}">{{page}}</a>
+    {% endfor %}
+    <a {% if nextpage %}href="{{request.path}}?page={{nextpage}}"{%else%}href="#"{%endif%}>&raquo;</a>
+</div>
+{% endif %}
 {% endblock %}

@@ -26,7 +26,7 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:o:",["db=", "debug", "port="])
     except getopt.GetoptError:
-        print 'merveilles_io --db=<db_dir>'
+        print "merveilles_io --db=<db_dir>"
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':

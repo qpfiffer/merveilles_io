@@ -37,9 +37,17 @@ body {
     padding-bottom: 6px;
     border-bottom: 5px solid #94B2FF;
 }
-#container {
+.container {
     margin: 0 auto;
     width: 960px;
+}
+#fuck_pages {
+    font-size: 24px;
+    text-align: center;
+}
+#fuck_pages a {
+    margin-left: 4px;
+    margin-right: 4px;
 }
 .item {
     margin: 5% 0%;

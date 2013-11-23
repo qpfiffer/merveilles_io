@@ -1,5 +1,5 @@
 from database import insert_item, get_items, top_things, search_func, \
-    get_all_items, get_post_num, get_items_last_X_days
+    get_all_items, get_post_num, get_items_last_X_days, get_page_count
 from json import loads, dumps
 from datetime import datetime, timedelta, date
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
@@ -83,7 +83,11 @@ def interrogate():
 
 @app.route("/", methods=['GET'])
 def root():
-    items = get_items(lambda x: True, current_app.config["DB_FILE"])
+    page_count = get_page_count()
+    pages = range(0, page_count)
+
+    items = get_items(lambda x: True,
+        current_app.config["DB_FILE"], request.args.get("page", 0))
     for item in items:
         if item['title'] is None or item['title'] == "":
             item['title'] = item['url']
@@ -108,7 +112,8 @@ def root():
     for item in p_to_dp:
         stats.append({"name": item, "data": sorted(p_to_dp[item])})
 
-    return render_template("index.html", items=items, stats=stats, start_date=day_unix)
+    return render_template("index.html", items=items,
+        stats=stats, start_date=day_unix, pages=pages)
 
 @app.route("/sigma")
 def sigma():

@@ -3,6 +3,10 @@ from networkx import Graph, spring_layout
 from flask import Markup
 from constants import PERSON_COLORS
 
+class Page(object):
+    def __init__(self, posts):
+        self.posts = posts
+
 def slugify_post(post):
     cleaned = post.split('.')[0] # Remove file extension
     cleaned = cleaned.replace('_', '-')

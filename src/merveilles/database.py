@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, date
-from flask import Response
+from flask import Response, current_app
 from kyotocabinet import DB
 from json import dumps, loads
 from time import mktime
@@ -141,7 +141,8 @@ def insert_item(url, person, db_file):
     return Response('{"What happened?": "MUDADA"}',
         mimetype=mimetype)
 
-def get_items(item_filter, db_file):
+def get_items(item_filter, db_file, page):
+    item_iter = 0
     items = []
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
@@ -150,6 +151,11 @@ def get_items(item_filter, db_file):
     cur = db.cursor()
     cur.jump_back()
     while len(items) < FILTER_MAX:
+        if item_iter < FILTER_MAX * page:
+            item_iter = item_iter + 1
+            cur.step_back()
+            continue
+
         rec = cur.get(False)
         if not rec:
             break
@@ -257,3 +263,15 @@ def get_items_last_X_days(db_file, X, munge=True):
     db.close()
 
     return dates
+
+def get_page_count():
+    count = 0
+    db = DB()
+    db_file = current_app.config['DB_FILE']
+    if not db.open("{0}".format(db_file), DB.OREADER):
+        print "Could not open database (meta info)."
+    count = db.count()
+    db.close()
+    print count
+    return count / FILTER_MAX
+
