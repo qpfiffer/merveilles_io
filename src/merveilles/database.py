@@ -141,7 +141,7 @@ def insert_item(url, person, db_file):
     return Response('{"What happened?": "MUDADA"}',
         mimetype=mimetype)
 
-def get_items(item_filter, db_file, page):
+def get_items(item_filter, db_file, page=0):
     item_iter = 0
     items = []
     db = DB()
