@@ -127,6 +127,8 @@ def insert_item(url, person, db_file):
 
     created_at = int(mktime(datetime.now().utctimetuple()))
 
+    thumbnail = gen_thumbnail_for_url(url, created_at)
+
     record = {
         "created_at": created_at,
         "title": title,
@@ -134,7 +136,7 @@ def insert_item(url, person, db_file):
         "person": person,
         "summary": summary,
         "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)],
-        "thumbnail": None
+        "thumbnail": thumbnail
     }
     db.set(created_at, dumps(record))
     db.close()

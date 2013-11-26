@@ -5,6 +5,11 @@ from PIL import Image
 import re, requests, json, os, markdown
 
 def gen_thumbnail_for_url(url, filename):
+    is_image = url.lower().endswith(("jpg", "jpeg", "gif", "png"))
+
+    if not is_image:
+        return None
+
     r = requests.get(url)
 
     if r.status_code == 200:

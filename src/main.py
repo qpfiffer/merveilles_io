@@ -44,11 +44,6 @@ def gen_thumbnails(db_file):
             print "Thumbnailing {}".format(loaded["url"])
             try:
                 thumbnail = gen_thumbnail_for_url(loaded["url"], rec[0])
-            #except IndexError as e:
-            #    loaded["thumbnail"] = None
-            #    cur.set_value(dumps(loaded))
-            #    cur.step_back()
-            #    continue
             except IOError as e:
                 loaded["thumbnail"] = None
                 cur.set_value(dumps(loaded))
