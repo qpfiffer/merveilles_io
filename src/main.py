@@ -45,8 +45,9 @@ def gen_thumbnails(db_file):
             try:
                 thumbnail = gen_thumbnail_for_url(loaded["url"], rec[0])
             except IOError as e:
+                print "IOError: {}".format(e)
                 loaded["thumbnail"] = None
-                cur.set_value(dumps(loaded))
+                print "Save result: {}".format(cur.set_value(dumps(loaded)))
                 cur.step_back()
                 continue
 
@@ -58,7 +59,8 @@ def gen_thumbnails(db_file):
         else:
             loaded["thumbnail"] = None
 
-        cur.set_value(dumps(loaded))
+        print "Save result: {}".format(cur.set_value(dumps(loaded)))
+        print "Loaded val: {}".format(loaded["thumbnail"])
         cur.step_back()
 
     cur.disable()
