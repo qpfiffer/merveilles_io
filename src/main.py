@@ -59,7 +59,8 @@ def gen_thumbnails(db_file):
 
             print "Save result: {}".format(cur.set_value(dumps(loaded)))
             print "Loaded val: {}".format(loaded["thumbnail"])
-            cur.step_back()
+
+        cur.step_back()
 
     cur.disable()
     db.close()
