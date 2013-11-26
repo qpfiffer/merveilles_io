@@ -6,10 +6,12 @@ import re, requests, json, os, markdown
 
 def gen_thumbnail_for_url(url, filename):
     is_image = url.lower().endswith(("jpg", "jpeg", "gif", "png"))
-
     if not is_image:
         return None
+
+    ext = url.split(".")[-1]
     full_filepath = "{0}{1}.{2}".format(THUMBNAIL_DIR, filename, ext.lower())
+
     try:
         if open(full_filepath):
             return full_filepath
@@ -24,7 +26,6 @@ def gen_thumbnail_for_url(url, filename):
             for chunk in r.iter_content():
                 f.write(chunk)
 
-        ext = url.split(".")[-1]
         im = Image.open("/tmp/tmp_img")
         im.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
         print "Thumbnail writing to {}".format(full_filepath)
