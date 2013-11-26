@@ -40,7 +40,7 @@ def gen_thumbnails(db_file):
         loaded = loads(rec[1])
         is_image = loaded["url"].lower().endswith(("jpg", "jpeg", "gif", "png"))
 
-        if is_image and loaded.get("thumbnail", None) is None:
+        if is_image:
             print "Thumbnailing {}".format(loaded["url"])
             loaded["is_image"] = True
             try:
@@ -49,6 +49,7 @@ def gen_thumbnails(db_file):
                 print "IOError: {}".format(e)
                 cur.step_back()
                 continue
+
 
             if thumbnail:
                 loaded["thumbnail"] = thumbnail
