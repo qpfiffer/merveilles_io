@@ -11,13 +11,18 @@ def gen_thumbnail_for_url(url, filename):
         with open("/tmp/tmp_img", 'wb') as f:
             for chunk in r.iter_content():
                 f.write(chunk)
-            ext = url.split(".")[-1]
-            im = Image.open("/tmp/tmp_img")
-            im.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
-            full_filepath = "{0}{1}.{2}".format(THUMBNAIL_DIR, filename, ext.lower())
-            im.save(full_filepath)
 
-            return full_filepath
+        ext = url.split(".")[-1]
+        im = Image.open("/tmp/tmp_img")
+        im.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
+        full_filepath = "{0}{1}.{2}".format(THUMBNAIL_DIR, filename, ext.lower())
+        if ext.lower() == 'jpg':
+            im.save(full_filepath, 'JPEG')
+        else:
+            im.save(full_filepath, ext)
+
+
+        return full_filepath
     return None
 
 def slugify_post(post):

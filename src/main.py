@@ -6,7 +6,6 @@ from merveilles.context_processors import app as context_processors
 from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
     DEFAULT_CHANNEL, BLOG_DIR
 from merveilles.filters import get_domain_filter, file_size, unix_to_human
-from merveilles.context_processors import db_meta_info
 from merveilles.utils import gen_thumbnail_for_url
 import sys, os, getopt
 
@@ -28,7 +27,7 @@ app.jinja_env.filters['unix_to_human'] = unix_to_human
 def gen_thumbnails(db_file):
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        sys.exit(1)
 
     cur = db.cursor()
     cur.jump_back()
@@ -45,12 +44,12 @@ def gen_thumbnails(db_file):
             print "Thumbnailing {}".format(loaded["url"])
             try:
                 thumbnail = gen_thumbnail_for_url(loaded["url"], rec[0])
-            except IndexError:
-                loaded["thumbnail"] = None
-                cur.set_value(dumps(loaded))
-                cur.step_back()
-                continue
-            except IOError:
+            #except IndexError as e:
+            #    loaded["thumbnail"] = None
+            #    cur.set_value(dumps(loaded))
+            #    cur.step_back()
+            #    continue
+            except IOError as e:
                 loaded["thumbnail"] = None
                 cur.set_value(dumps(loaded))
                 cur.step_back()
