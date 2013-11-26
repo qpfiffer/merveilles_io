@@ -5,7 +5,7 @@ DEFAULT_CHANNEL = "#merveilles"
 BLOG_DIR = "src/static/blog_posts/"
 PARADISE_JSON = "src/static/paradise.json"
 
-#THUMBNAIL_DIR = "src/static/thumbnails/"
+THUMBNAIL_DIR = "src/static/thumbnails/"
 THUMBNAIL_DIR = "/tmp/thumbnails/"
 THUMBNAIL_SIZE = 256, 256
 
