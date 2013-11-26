@@ -42,6 +42,7 @@ def gen_thumbnails(db_file):
 
         if is_image and loaded.get("thumbnail", None) is None:
             print "Thumbnailing {}".format(loaded["url"])
+            loaded["is_image"] = True
             try:
                 thumbnail = gen_thumbnail_for_url(loaded["url"], rec[0])
             except IOError as e:
