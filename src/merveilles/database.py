@@ -128,7 +128,7 @@ def insert_item(url, person, db_file):
 
     created_at = int(mktime(datetime.now().utctimetuple()))
 
-    is_image = loaded["url"].lower().endswith(("jpg", "jpeg", "gif", "png"))
+    is_image = url.lower().endswith(("jpg", "jpeg", "gif", "png"))
     thumbnail = gen_thumbnail_for_url(url, str(created_at))
 
     record = {
