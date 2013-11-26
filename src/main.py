@@ -26,7 +26,7 @@ app.jinja_env.filters['unix_to_human'] = unix_to_human
 
 def gen_thumbnails(db_file):
     db = DB()
-    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OWRITER):
         sys.exit(1)
 
     cur = db.cursor()
