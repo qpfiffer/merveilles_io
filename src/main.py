@@ -46,19 +46,13 @@ def gen_thumbnails(db_file):
                 thumbnail = gen_thumbnail_for_url(loaded["url"], rec[0])
             except IOError as e:
                 print "IOError: {}".format(e)
-                loaded["thumbnail"] = None
-                print "Save result: {}".format(cur.set_value(dumps(loaded)))
                 cur.step_back()
                 continue
 
             if thumbnail:
-                loaded["thumbnail"] = thumbnail
+                loaded["thumbnail"] = thumbnail.replace("src/static/", "")
                 print "Thumbnailed {}".format(loaded["url"])
-            else:
-                loaded["thumbnail"] = None
-
-            print "Save result: {}".format(cur.set_value(dumps(loaded)))
-            print "Loaded val: {}".format(loaded["thumbnail"])
+                print "Save result: {}".format(cur.set_value(dumps(loaded)))
 
         cur.step_back()
 
