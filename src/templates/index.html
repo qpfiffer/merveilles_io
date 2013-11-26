@@ -54,7 +54,11 @@
             </div>
             <a target="_blank" href="{{item.url}}"><span class="link">{{item.title or item.url}}</span></a>
             {% if item.thumbnail %}
-                <div class="summary"><p>{{ url_for('static', filename=item.thumbnail) }}</p></div>
+                <div class="summary">
+                    <a target="_blank" href="{{item.url}}">
+                        <img src={{ url_for('static', filename=item.thumbnail) }}</img>
+                    </a>
+                </div>
             {% else %}
                 <div class="summary"><p>{{item.summary}}</p></div>
             {% endif %}
