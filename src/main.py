@@ -56,12 +56,10 @@ def gen_thumbnails(db_file):
                 print "Thumbnailed {}".format(loaded["url"])
             else:
                 loaded["thumbnail"] = None
-        else:
-            loaded["thumbnail"] = None
 
-        print "Save result: {}".format(cur.set_value(dumps(loaded)))
-        print "Loaded val: {}".format(loaded["thumbnail"])
-        cur.step_back()
+            print "Save result: {}".format(cur.set_value(dumps(loaded)))
+            print "Loaded val: {}".format(loaded["thumbnail"])
+            cur.step_back()
 
     cur.disable()
     db.close()
