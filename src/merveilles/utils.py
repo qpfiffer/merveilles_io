@@ -15,7 +15,7 @@ def gen_thumbnail_for_url(url, filename):
     try:
         if open(full_filepath):
             print "File exists: {}".format(full_filepath)
-            return full_filepath
+            return full_filepath.replace("src/static/", "")
     except IOError:
         # File doesn't exist. Download it.
         pass
