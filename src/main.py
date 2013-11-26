@@ -1,8 +1,10 @@
 from flask import Flask
 from json import loads, dumps
+from kyotocabinet import DB
 from merveilles.routes import app as routes
 from merveilles.context_processors import app as context_processors
-from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON
+from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
+    DEFAULT_CHANNEL, BLOG_DIR
 from merveilles.filters import get_domain_filter, file_size, unix_to_human
 from merveilles.context_processors import db_meta_info
 from merveilles.utils import gen_thumbnail_for_url
@@ -32,34 +34,51 @@ def gen_thumbnails(db_file):
     cur.jump_back()
     while True:
         rec = cur.get(False)
+
         if not rec:
             break
 
-        loaded = loads(item[1])
+        loaded = loads(rec[1])
+        is_image = loaded["url"].lower().endswith(("jpg", "jpeg", "gif", "png"))
 
-        if item["url"].lower().endswith(("jpg", "jpeg", "gif", "png")):
-            thumbnail = gen_thumbnail_for_url(loads(item[1]))
+        if is_image and loaded.get("thumbnail", None) is None:
+            print "Thumbnailing {}".format(loaded["url"])
+            try:
+                thumbnail = gen_thumbnail_for_url(loaded["url"], rec[0])
+            except IndexError:
+                loaded["thumbnail"] = None
+                cur.set_value(dumps(loaded))
+                cur.step_back()
+                continue
+            except IOError:
+                loaded["thumbnail"] = None
+                cur.set_value(dumps(loaded))
+                cur.step_back()
+                continue
 
             if thumbnail:
                 loaded["thumbnail"] = thumbnail
-                cur.set(dumps(loaded))
+                print "Thumbnailed {}".format(loaded["url"])
+            else:
+                loaded["thumbnail"] = None
+        else:
+            loaded["thumbnail"] = None
 
+        cur.set_value(dumps(loaded))
         cur.step_back()
 
     cur.disable()
     db.close()
 
-    sorted_items = sorted(items, key=get_key, reverse=True)
-    sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
-    return sorted_items_for_viewing
+    return True
 
 def main(argv):
     debug = False
-    gen_thumbnails = False
+    should_gen_thumbnails = False
     port = 5000
 
     try:
-        opts, args = getopt.getopt(argv,"hi:o:",["db=", "debug", "port="])
+        opts, args = getopt.getopt(argv,"hi:o:",["db=", "debug", "port=", "gen-thumbnails"])
     except getopt.GetoptError:
         print "merveilles_io --db=<db_dir>"
         sys.exit(2)
@@ -74,9 +93,9 @@ def main(argv):
         elif opt in ("--port"):
             port = int(arg)
         elif opt in ("--gen-thumbnails"):
-            gen_thumbnails = True
+            should_gen_thumbnails = True
 
-    if gen_thumbnails and app.config['DB_FILE']:
+    if should_gen_thumbnails and app.config['DB_FILE']:
         gen_thumbnails(app.config['DB_FILE'])
         sys.exit(0)
 
