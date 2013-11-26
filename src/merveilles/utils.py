@@ -1,11 +1,24 @@
-import re, requests, json, os, markdown
-from networkx import Graph, spring_layout
+from constants import PERSON_COLORS, THUMBNAIL_SIZE, THUMBNAIL_DIR
 from flask import Markup
-from constants import PERSON_COLORS
+from networkx import Graph, spring_layout
+from PIL import Image
+import re, requests, json, os, markdown
 
-class Page(object):
-    def __init__(self, posts):
-        self.posts = posts
+def gen_thumbnail_for_url(url, filename):
+    r = requests.get(url)
+
+    if r.status_code == 200:
+        with open("/tmp/tmp_img", 'wb') as f:
+            for chunk in r.iter_content():
+                f.write(chunk)
+            ext = url.split(".")[:-1]
+            im = Image.open("/tmp/tmp_img")
+            im.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
+            full_filepath = "{directory}{filename}.{ext}".format(directory, filename, ext)
+            im.save(full_filepath)
+
+            return full_filepath
+    return None
 
 def slugify_post(post):
     cleaned = post.split('.')[0] # Remove file extension

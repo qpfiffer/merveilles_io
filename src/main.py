@@ -2,6 +2,7 @@ from flask import Flask
 from json import loads, dumps
 from merveilles.routes import app as routes
 from merveilles.context_processors import app as context_processors
+from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON
 from merveilles.filters import get_domain_filter, file_size, unix_to_human
 from merveilles.context_processors import db_meta_info
 from merveilles.utils import gen_thumbnail_for_url
@@ -10,12 +11,12 @@ import sys, os, getopt
 app = Flask(__name__)
 app.register_blueprint(routes)
 app.register_blueprint(context_processors)
-app.config['DB_FILE'] = os.environ.get("DB_FILE") or "/tmp/links.kct"
-app.config['CHANNEL'] = os.environ.get("CHANNEL") or "#merveilles"
-app.config['LIVE_SITE'] = os.environ.get("LIVE_SITE") or False
-app.config['BLOG_DIR'] = os.environ.get("BLOG_DIR") or "src/static/blog_posts/"
-app.config['PARADISE_JSON'] = os.environ.get("PARADISE_JSON") or "src/static/paradise.json"
-app.config['THUMBNAIL_DIR'] = os.environ.get("PARADISE_JSON") or "src/static/thumbnails/"
+app.config['DB_FILE'] = os.environ.get("DB_FILE") or DB_FILE
+app.config['CHANNEL'] = os.environ.get("CHANNEL") or DEFAULT_CHANNEL
+app.config['LIVE_SITE'] = os.environ.get("LIVE_SITE") or False #Turns on or off google analytics
+app.config['BLOG_DIR'] = os.environ.get("BLOG_DIR") or BLOG_DIR
+app.config['PARADISE_JSON'] = os.environ.get("PARADISE_JSON") or PARADISE_JSON
+app.config['THUMBNAIL_DIR'] = os.environ.get("PARADISE_JSON") or THUMBNAIL_DIR
 #app.jinja_env.globals.update(size=db_meta_info)
 app.jinja_env.filters['get_domain'] = get_domain_filter
 app.jinja_env.filters['file_size'] = file_size
@@ -38,8 +39,10 @@ def gen_thumbnails(db_file):
 
         if item["url"].lower().endswith(("jpg", "jpeg", "gif", "png")):
             thumbnail = gen_thumbnail_for_url(loads(item[1]))
-            loaded["thumbnail"] = thumbnail
-            cur.set(dumps(loaded))
+
+            if thumbnail:
+                loaded["thumbnail"] = thumbnail
+                cur.set(dumps(loaded))
 
         cur.step_back()
 
