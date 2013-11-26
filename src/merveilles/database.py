@@ -5,6 +5,7 @@ from kyotocabinet import DB
 from json import dumps, loads
 from time import mktime
 from urllib2 import urlopen
+from utils import gen_thumbnail_for_url
 import random
 
 from constants import FILTER_MAX, PERSON_COLORS
