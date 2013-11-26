@@ -14,7 +14,7 @@ def gen_thumbnail_for_url(url, filename):
 
     if os.path.isfile(full_filepath):
         print "File exists: {}".format(full_filepath)
-        return full_filepath.replace("src/static/", "")
+        return "thumbnails/{}.{}".format(filename, ext.lower())
 
     r = requests.get(url)
 
@@ -31,7 +31,7 @@ def gen_thumbnail_for_url(url, filename):
         else:
             im.save(full_filepath, ext)
 
-        return full_filepath.replace("src/static/", "")
+        return "thumbnails/{}.{}".format(filename, ext.lower())
     return None
 
 def slugify_post(post):
