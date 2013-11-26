@@ -43,7 +43,7 @@
 .the_alpaca {
     background-image: url("../img/animals/32/the_alpaca_0.png");
 }
-.the_fly {
+.the_fly, .Hamcha {
     background-image: url("../img/animals/32/the_fly_0.png");
 }
 .the_frog {

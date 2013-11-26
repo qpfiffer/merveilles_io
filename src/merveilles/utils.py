@@ -26,7 +26,6 @@ def gen_thumbnail_for_url(url, filename):
         else:
             im.save(full_filepath, ext)
 
-
         return full_filepath
     return None
 

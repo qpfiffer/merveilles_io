@@ -85,9 +85,14 @@ def interrogate():
 def root():
     page_count = get_page_count()
     pages = range(0, page_count)
+    requested_page = int(request.args.get("page", 0))
+    if requested_page < 0:
+        requested_page = 0
+    elif requested_page > pages[-1]:
+        requested_page = pages[-1]
 
     items = get_items(lambda x: True,
-        current_app.config["DB_FILE"], request.args.get("page", 0))
+        current_app.config["DB_FILE"], requested_page)
     for item in items:
         if item['title'] is None or item['title'] == "":
             item['title'] = item['url']
@@ -113,7 +118,9 @@ def root():
         stats.append({"name": item, "data": sorted(p_to_dp[item])})
 
     return render_template("index.html", items=items,
-        stats=stats, start_date=day_unix, pages=pages)
+        stats=stats, start_date=day_unix, pages=pages,
+        current_page=request.args.get('page', 0),
+        next_page=requested_page+1, prev_page=requested_page-1)
 
 @app.route("/sigma")
 def sigma():

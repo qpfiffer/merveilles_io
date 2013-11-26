@@ -144,7 +144,7 @@ def insert_item(url, person, db_file):
     return Response('{"What happened?": "MUDADA"}',
         mimetype=mimetype)
 
-def get_items(item_filter, db_file, page):
+def get_items(item_filter, db_file, page=0):
     item_iter = 0
     items = []
     db = DB()
@@ -154,7 +154,7 @@ def get_items(item_filter, db_file, page):
     cur = db.cursor()
     cur.jump_back()
     while len(items) < FILTER_MAX:
-        if item_iter < FILTER_MAX * page:
+        if item_iter != (FILTER_MAX * page):
             item_iter = item_iter + 1
             cur.step_back()
             continue
@@ -275,6 +275,5 @@ def get_page_count():
         print "Could not open database (meta info)."
     count = db.count()
     db.close()
-    print count
     return count / FILTER_MAX
 

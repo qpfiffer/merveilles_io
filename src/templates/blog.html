@@ -5,7 +5,7 @@
 {% block startup %}{{super()}}
 {% endblock %}
 {% block content %}
-    <div id="container">
+    <div class="container">
     {% for post in posts %}
         <div class="post">
             <h1 class="title"><a href="{{ url_for('merveilles.blog_post', slug=post.slug) }}">{{ post.title }}</a></h1>
