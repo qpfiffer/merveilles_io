@@ -12,13 +12,9 @@ def gen_thumbnail_for_url(url, filename):
     ext = url.split(".")[-1]
     full_filepath = "{0}{1}.{2}".format(THUMBNAIL_DIR, filename, ext.lower())
 
-    try:
-        if open(full_filepath):
-            print "File exists: {}".format(full_filepath)
-            return full_filepath.replace("src/static/", "")
-    except IOError:
-        # File doesn't exist. Download it.
-        pass
+    if os.path.isfile(full_filepath):
+        print "File exists: {}".format(full_filepath)
+        return full_filepath.replace("src/static/", "")
 
     r = requests.get(url)
 
