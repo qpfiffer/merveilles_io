@@ -5,7 +5,6 @@ from PIL import Image
 import re, requests, json, os, markdown
 
 def gen_thumbnail_for_url(url, filename):
-    print 'wut'
     thumbnail_location = current_app.config['THUMBNAIL_DIR'] if current_app else THUMBNAIL_DIR
     is_image = url.lower().endswith(("jpg", "jpeg", "gif", "png"))
     if not is_image:
