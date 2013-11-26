@@ -56,7 +56,7 @@
             {% if item.thumbnail %}
                 <div class="summary">
                     <a target="_blank" href="{{item.url}}">
-                        <img src={{ url_for('static', filename=item.thumbnail) }}</img>
+                        <img src="{{ url_for('static', filename=item.thumbnail) }}"></img>
                     </a>
                 </div>
             {% elif item.is_image %}
