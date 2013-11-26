@@ -1,5 +1,5 @@
 from constants import PERSON_COLORS, THUMBNAIL_SIZE, THUMBNAIL_DIR
-from flask import Markup
+from flask import Markup, current_app
 from networkx import Graph, spring_layout
 from PIL import Image
 import re, requests, json, os, markdown
@@ -10,7 +10,7 @@ def gen_thumbnail_for_url(url, filename):
         return None
 
     ext = url.split(".")[-1]
-    full_filepath = "{0}{1}.{2}".format(THUMBNAIL_DIR, filename, ext.lower())
+    full_filepath = "{0}{1}.{2}".format(current_app.config['THUMBNAIL_DIR'], filename, ext.lower())
 
     if os.path.isfile(full_filepath):
         print "File exists: {}".format(full_filepath)
