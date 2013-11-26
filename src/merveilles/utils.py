@@ -9,6 +9,13 @@ def gen_thumbnail_for_url(url, filename):
 
     if not is_image:
         return None
+    full_filepath = "{0}{1}.{2}".format(THUMBNAIL_DIR, filename, ext.lower())
+    try:
+        if open(full_filepath):
+            return full_filepath
+    except IOError:
+        # File doesn't exist. Download it.
+        pass
 
     r = requests.get(url)
 
@@ -20,7 +27,6 @@ def gen_thumbnail_for_url(url, filename):
         ext = url.split(".")[-1]
         im = Image.open("/tmp/tmp_img")
         im.thumbnail(THUMBNAIL_SIZE, Image.ANTIALIAS)
-        full_filepath = "{0}{1}.{2}".format(THUMBNAIL_DIR, filename, ext.lower())
         print "Thumbnail writing to {}".format(full_filepath)
         if ext.lower() == 'jpg':
             im.save(full_filepath, 'JPEG')
