@@ -133,7 +133,8 @@ def insert_item(url, person, db_file):
         "url": url,
         "person": person,
         "summary": summary,
-        "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)]
+        "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)],
+        "thumbnail": None
     }
     db.set(created_at, dumps(record))
     db.close()
