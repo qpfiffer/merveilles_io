@@ -50,7 +50,7 @@ def gen_thumbnails(db_file):
                 continue
 
             if thumbnail:
-                loaded["thumbnail"] = thumbnail.replace("src/static/", "")
+                loaded["thumbnail"] = thumbnail
                 print "Thumbnailed {}".format(loaded["url"])
                 print "Save result: {}".format(cur.set_value(dumps(loaded)))
 
