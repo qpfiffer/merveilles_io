@@ -87,9 +87,9 @@ def root():
     page_count = get_page_count()
     pages = range(0, page_count)
     requested_page = int(request.args.get("page", 0))
-    if requested_page < 0:
+    if page_count > 0 and requested_page < 0:
         requested_page = 0
-    elif requested_page > pages[-1]:
+    elif page_count > 0 and requested_page > pages[-1]:
         requested_page = pages[-1]
 
     items = get_items(lambda x: True,
