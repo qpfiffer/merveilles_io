@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 from json import loads, dumps
 from kyotocabinet import DB
 from merveilles.routes import app as routes
@@ -7,7 +7,7 @@ from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
     DEFAULT_CHANNEL, BLOG_DIR
 from merveilles.filters import get_domain_filter, file_size, unix_to_human
 from merveilles.utils import gen_thumbnail_for_url
-import sys, os, getopt
+import sys, os, getopt, time
 
 app = Flask(__name__)
 app.register_blueprint(routes)
@@ -23,6 +23,11 @@ app.jinja_env.filters['get_domain'] = get_domain_filter
 app.jinja_env.filters['file_size'] = file_size
 app.jinja_env.filters['unix_to_human'] = unix_to_human
 
+
+@app.before_request
+def before_request():
+    g.request_start_time = time.time()
+    g.request_time = lambda: "%.2fs" % (time.time() - g.request_start_time)
 
 def gen_thumbnails(db_file):
     db = DB()

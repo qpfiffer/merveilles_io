@@ -42,7 +42,7 @@
         <div class="nav">
             <ul class="left">
                 <li><span><a href="{{ url_for('merveilles.root') }}">{{channel}}</a></span></li>
-                <li><span id="meta_info">DB Size: {{ size|file_size }}, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('merveilles.stats') }}">{{ count }}</a></li>
+                <li><span id="meta_info">DB Size: {{ size|file_size }},  Render Time: {{ g.request_time() }}, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('merveilles.stats') }}">{{ count }}</a></li>
             </ul>
             <ul class="right">
                 <li>
