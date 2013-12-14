@@ -1,7 +1,12 @@
 from datetime import datetime
 
 def get_domain_filter(raw_url):
-    return raw_url.split("://")[1].split("/")[0]
+    domain = ""
+    try:
+        domain = raw_url.split("://")[1].split("/")[0]
+    except IndexError:
+        pass
+    return domain
 
 def file_size(size_str):
     # Found here: http://djangosnippets.org/snippets/1866/
