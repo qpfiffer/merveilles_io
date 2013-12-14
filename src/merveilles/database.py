@@ -270,6 +270,35 @@ def get_items_last_X_days(db_file, X, munge=True):
 
     return dates
 
+def aggregate_by_hour(db_file):
+    # Initialize the dict with each hour
+    hours = {key: 0 for key in range(0,24)}
+    db = DB()
+
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump_back()
+
+    while True:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        loaded = loads(rec[1])
+        unix = float(loaded['created_at'])
+        time = datetime.fromtimestamp(unix)
+
+        hours[time.hour] = hours[time.hour] + 1
+
+        cur.step_back()
+    cur.disable()
+    db.close()
+
+    hours = [{'name': "{}:00".format(key), 'data': [hours[key]]} for key in hours]
+    return hours
+
 def get_page_count():
     count = 0
     db = DB()

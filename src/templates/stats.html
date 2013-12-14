@@ -5,6 +5,31 @@
 {% endblock %}
 {% block startup %}{{super()}}
 {% if stats %}
+    var stats = {{ stats|tojson|safe }};
+    var hourly_activity = {{ hourly_activity|tojson|safe }};
+
+    $('#activity_by_hour').highcharts({
+        chart: {
+            type: 'column',
+            backgroundColor: '#DDD'
+        },
+        title: {
+            text: false,
+            style: {
+                color: '#111'
+            }
+        },
+        tooltip: {
+            formatter: function() {
+                    return '<b>'+ this.series.name +'</b><br/>'+
+                    Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' links';
+            }
+        },
+        yAxis: {
+            min: 0,
+        },
+        series: hourly_activity
+    });
     $('#last_day').highcharts({
         chart: {
             type: 'spline',
@@ -32,7 +57,7 @@
         yAxis: {
             min: 0,
         },
-        series: {{ stats|tojson|safe }}
+        series: stats
     });
 {% endif %}
 {% endblock %}

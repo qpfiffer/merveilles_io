@@ -1,5 +1,6 @@
 from database import insert_item, get_items, top_things, search_func, \
-    get_all_items, get_post_num, get_items_last_X_days, get_page_count
+    get_all_items, get_post_num, get_items_last_X_days, get_page_count, \
+    aggregate_by_hour
 from json import loads, dumps
 from datetime import datetime, timedelta, date
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
@@ -134,10 +135,13 @@ def top():
 
 @app.route("/stats")
 def stats():
-    top_items = top_things(current_app.config["DB_FILE"])
+    db_file = current_app.config["DB_FILE"]
+    top_items = top_things(db_file)
     graph_data = top_items[2]
 
-    last_day = get_items_last_X_days(current_app.config["DB_FILE"], 1, munge=False)
+    last_day = get_items_last_X_days(db_file, 1, munge=False)
+    hourly_activity = aggregate_by_hour(db_file)
+
 
     time = datetime.now() - timedelta(days=10)
     date_obj = date(year=time.year, month=time.month, day=time.day)
@@ -156,7 +160,8 @@ def stats():
     for item in p_to_dp:
         stats.append({"name": item, "data": sorted(p_to_dp[item])})
 
-    return render_template("stats.html", items=top_items, stats=stats, graph_data=graph_data)
+    return render_template("stats.html", items=top_items, hourly_activity=hourly_activity,
+        stats=stats, graph_data=graph_data)
 
 @app.route("/data/all")
 def all_posts():

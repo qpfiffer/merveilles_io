@@ -1,5 +1,6 @@
 from constants import PERSON_COLORS, THUMBNAIL_SIZE, THUMBNAIL_DIR
 from flask import Markup, current_app
+from merveilles.filters import get_domain_filter
 from networkx import Graph, spring_layout
 from PIL import Image
 import re, requests, json, os, markdown
@@ -168,7 +169,7 @@ def gen_paradise_graph(items):
     return items
 
 def get_domain(raw_url):
-    return raw_url['url'].split("://")[1].split("/")[0]
+    return get_domain_filter(raw_url['url'])
 
 def visible(element):
     if element.parent.name in ['style', 'script', '[document]', 'head', 'title', 'link']:
