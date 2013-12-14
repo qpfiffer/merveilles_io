@@ -303,7 +303,7 @@ def get_page_count():
     count = 0
     db = DB()
     db_file = current_app.config['DB_FILE']
-    if not db.open("{0}".format(db_file), DB.OREADER | DB.WRITER | DB.OCREATE):
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OWRITER | DB.OCREATE):
         print "Could not open database (get_page_count). Error: {}".format(db.error())
     count = db.count()
     db.close()
