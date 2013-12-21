@@ -8,20 +8,34 @@ body {
     margin: 0px;
     overflow-x: hidden;
 }
+.nav {
+    background-color: #111;
+    width: 100%;
+    padding-top: 3px;
+    padding-bottom: 6px;
+    border-bottom: 5px solid #94B2FF;
+    list-style: none;
+    min-height: 1.5em;
+}
 .nav ul {
-    display: inline;
+    display: block;
     margin-left: 2px;
 }
 .nav li, .nav li h1 {
     display: inline;
-    list-style-type: none;
     padding-right: 20px;
+}
+.left {
+    margin-top: 0px;
+    margin-: 0px;
+    float: left;
 }
 .right {
     margin-top: 0px;
+    margin-bottom: 0px;
     float: right;
 }
-.right input {
+.left input, .right input {
     display: inline;
 }
 .right li {
@@ -29,13 +43,6 @@ body {
     margin-right: 2px;
     margin-left: 2px;
     padding-right: 0px;
-}
-.nav {
-    background-color: #111;
-    width: 100%;
-    padding-top: 3px;
-    padding-bottom: 6px;
-    border-bottom: 5px solid #94B2FF;
 }
 .container {
     margin: 0 auto;
@@ -84,4 +91,7 @@ a:hover {
 }
 .time {
     font-size: 12px;
+}
+.highcharts-container {
+    overflow: visible!important;
 }
