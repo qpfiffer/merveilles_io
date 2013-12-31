@@ -117,7 +117,7 @@ def insert_item(url, person, db_file):
         title = soup.title.string
 
         # Do some dumb summarizing if we can
-        func = lambda a,v: a + " " + v
+        func = lambda a,v: a + " " + v.strip()
         visible_stuff = filter(visible, soup.findAll(text=True))
         summary = reduce(func, visible_stuff, "")[:300] + "..."
     except:
