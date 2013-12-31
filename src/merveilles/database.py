@@ -119,7 +119,7 @@ def insert_item(url, person, db_file):
         # Do some dumb summarizing if we can
         func = lambda a,v: a + " " + v.strip()
         visible_stuff = filter(visible, soup.findAll(text=True))
-        summary = reduce(func, visible_stuff, "")[:300] + "..."
+        summary = reduce(func, visible_stuff, "")[:900] + "..."
     except:
         pass
         #return Response('{"What happened?": '\
