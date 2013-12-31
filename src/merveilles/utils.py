@@ -172,7 +172,9 @@ def get_domain(raw_url):
     return get_domain_filter(raw_url['url'])
 
 def visible(element):
-    if element.parent.name in ['style', 'script', '[document]', 'head', 'title', 'link']:
+    if element.parent.name in ['style', 'script', '[document]',
+        'head', 'title', 'link', 'meta', 'h1', 'h2', 'h3', 'h4',
+        'ul']:
         return False
     elif re.match('<!--.*-->', unicode(element)):
         return False
