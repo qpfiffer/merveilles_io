@@ -198,6 +198,82 @@ def get_all_items(db_file):
     sorted_items_for_viewing = [loads(item[1]) for item in items]
     return sorted_items_for_viewing
 
+def get_user_stats(username, db_file):
+    item = {
+        "username": username,
+        "aliases": [],
+        "total_posts": 0,
+        "domains": {},
+        "first_post_date": None,
+        "first_post_date_unix": None,
+        "most_recent_post": None,
+        "most_recent_post_unix": 0,
+        "average_posts_per_hour": 0.0,
+        "average_posts_per_day": 0.0,
+        "average_posts_per_week": 0.0
+    }
+
+    db = DB()
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump()
+    while True:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        loaded_rec = loads(rec[1])
+        if loaded_rec['person'] != username:
+            cur.step()
+            continue
+
+        # Looks like this is a post by the user we're looking for
+        split = get_domain(loaded_rec)
+
+        if item['domains'].get(split, False) == False:
+           item['domains'][split] = 1
+        else:
+            item['domains'][split] = item['domains'][split] + 1
+
+        if item['first_post_date_unix'] is None:
+            item['first_post_date_unix'] = loaded_rec['created_at']
+
+        if item['most_recent_post_unix'] < loaded_rec['created_at']:
+            item['most_recent_post_unix'] = loaded_rec['created_at']
+
+        item['total_posts'] = item['total_posts'] + 1
+
+        cur.step()
+
+    cur.disable()
+    db.close()
+
+    # Clean up everything
+
+    first_time = None
+    if item['first_post_date_unix'] is not None:
+        unix = float(item['first_post_date_unix'])
+        first_time = datetime.fromtimestamp(unix)
+        item['first_post_date'] = first_time.isoformat()
+
+    recent_time = None
+    if item['most_recent_post_unix'] is not None:
+        unix = float(item['most_recent_post_unix'])
+        recent_time = datetime.fromtimestamp(unix)
+        item['most_recent_post'] = recent_time.isoformat()
+
+    if first_time and recent_time:
+        delta = recent_time - first_time
+        item['user_age_days'] = delta.days
+        item['user_age_seconds'] = delta.total_seconds()
+        item['average_posts_per_hour'] = item['total_posts'] / (delta.total_seconds() / 60.0)
+        item['average_posts_per_day'] = item['total_posts'] / (delta.total_seconds() / 60.0 / 24.0)
+        item['average_posts_per_week'] = item['total_posts'] / (delta.total_seconds() / 60.0 / 24.0 / 7.0)
+
+    return item
+
 def get_post_num(post_num, db_file):
     item = None
     db = DB()

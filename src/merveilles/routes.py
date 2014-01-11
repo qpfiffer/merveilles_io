@@ -1,6 +1,6 @@
 from database import insert_item, get_items, top_things, search_func, \
     get_all_items, get_post_num, get_items_last_X_days, get_page_count, \
-    aggregate_by_hour
+    aggregate_by_hour, get_user_stats
 from json import loads, dumps
 from datetime import datetime, timedelta, date
 from utils import get_domain, get_paradise_items, gen_paradise_graph, \
@@ -171,6 +171,11 @@ def all_posts():
 @app.route("/data/<int:post_num>")
 def post_num(post_num):
     item = get_post_num(post_num, current_app.config["DB_FILE"])
+    return Response(dumps(item), mimetype="application/json")
+
+@app.route("/data/<username>")
+def user_stats(username):
+    item = get_user_stats(username, current_app.config["DB_FILE"])
     return Response(dumps(item), mimetype="application/json")
 
 @app.route("/data/<int:post_num>/pretty")
