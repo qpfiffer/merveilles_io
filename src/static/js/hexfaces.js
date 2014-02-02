@@ -1,7 +1,6 @@
 /*author: mako yass */
 
 /* note: depends MersenneTwister.js   https://gist.github.com/banksean/300494 */
-anyonesTwister = new MersenneTwister();
 /* parenthetical: (We don't need a secure hash, we just need a standard hash that can be repeated in a C environment. If someone could whip up a shoddier more efficient psuedohash that works the same as a minimal add, multiply and modulo psuedohash in C, that'd be appreciated.) */
 
 
@@ -53,7 +52,7 @@ function pathHexFace(con, seed, xin, yin, wi, hi){ //paths a centered maximized 
 	var span = ((wi < hi*widthOverHeight)?wi:hi*widthOverHeight);
 	var hexradius =
 		span/(2*(w-1)*hexfaces_root3over4 + 2); // ': (w-1)*hexradius*2*hexfaces_root3over4 + hexradius*2 == span
-	anyonesTwister.init_genrand(seed);
+    var anyonesTwister = new MersenneTwister(seed);
 	var x = xin + wi/2 - Math.floor(w/2)*2*hexradius*hexfaces_root3over4;
 	var y = yin + hi/2 - (h-1)*hexradius /*which is the top cell in the glyph*/ + hexradius*Math.floor(w/2);
 	
