@@ -175,6 +175,9 @@ def get_items(item_filter, db_file, page=0):
 
     sorted_items = sorted(items, key=get_key, reverse=True)
     sorted_items_for_viewing = [loads(item[1]) for item in sorted_items]
+    for item in sorted_items_for_viewing:
+        if item['title'] is None or item['title'] == "":
+            item['title'] = item['url']
     return sorted_items_for_viewing
 
 def get_all_items(db_file):

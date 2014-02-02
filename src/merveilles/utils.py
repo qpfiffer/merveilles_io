@@ -71,80 +71,6 @@ def build_posts(location):
 
     return posts
 
-
-def paradise_compare(data, x, y):
-    # we want things with huge numbers to be first
-    return cmp(data[x].get('children_count', 0), data[y].get('children_count', 0))
-
-def get_children_of(parent_id, paradise_json):
-    children = [] # Return a list of dictionaries
-    new_dict = {}
-
-    for item in paradise_json:
-        if paradise_json[item]["parent"] == parent_id:
-            # Found a child
-            child = {}
-            child["id"] = item
-            child["name"] = paradise_json[item]["name"]
-            #child["size"] = paradise_json[item]["security"]
-            children.append(child)
-        else:
-            new_dict[item] = paradise_json[item]
-
-    for child in children:
-        my_children = get_children_of(child["id"], new_dict)
-        if len(my_children) == 0:
-            pass
-            #child["size"] = paradise_json[item]["security"]
-            #child["size"] = 1000
-        else:
-            child["children"] = my_children
-
-    return children
-
-def get_paradise_json_for_d3():
-    paradise_api = "http://api.xxiivv.com/?key=paradise"
-    r = requests.get(paradise_api)
-    paradise_json = r.json()
-    PARADISE_ID = "1"
-
-    tree = {}
-    tree["id"] = PARADISE_ID
-    tree["name"] = paradise_json[PARADISE_ID]["name"]
-    #tree["size"] = paradise_json[PARADISE_ID]["security"]
-    tree["children"] = get_children_of(PARADISE_ID, paradise_json)
-
-    return tree
-
-def get_paradise_items():
-    paradise_api = "http://api.xxiivv.com/?key=paradise"
-    r = requests.get(paradise_api)
-    paradise_json = r.json()
-
-    for item in paradise_json:
-        parent_key = paradise_json[item]["parent"]
-        parent = paradise_json.get(parent_key)
-
-        if not parent:
-            continue;
-
-        if paradise_json[parent_key].get("children_count", False):
-            paradise_json[parent_key]["children_count"] = paradise_json[parent_key]["children_count"] + 1
-        else:
-            paradise_json[parent_key]["children_count"] = 1
-
-    def cmp_func(x,y):
-        return paradise_compare(paradise_json, x, y)
-
-    sorted_keys = sorted(paradise_json, cmp=cmp_func, reverse=True)
-    sorted_json = {}
-    for key in sorted_keys:
-        item = paradise_json[key]
-        item["id"] = key
-        sorted_json[key] = item
-
-    return sorted_json
-
 def get_domain(raw_url):
     return get_domain_filter(raw_url['url'])
 
@@ -157,3 +83,15 @@ def visible(element):
         return False
 
     return True
+
+def get_effective_page(page):
+    from merveilles.database import get_page_count
+    page_count = get_page_count()
+    pages = range(0, page_count)
+    requested_page = int(page)
+    if page_count > 0 and requested_page < 0:
+        requested_page = 0
+    elif page_count > 0 and requested_page > pages[-1]:
+        requested_page = pages[-1]
+
+    return (pages, requested_page)

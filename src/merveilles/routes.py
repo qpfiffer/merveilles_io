@@ -1,9 +1,9 @@
 from database import insert_item, get_items, top_things, search_func, \
-    get_all_items, get_post_num, get_items_last_X_days, get_page_count, \
+    get_all_items, get_post_num, get_items_last_X_days, \
     aggregate_by_hour, get_user_stats
 from json import loads, dumps
 from datetime import datetime, timedelta, date
-from utils import get_domain, build_posts
+from utils import get_domain, build_posts, get_effective_page
 from flask import current_app, Blueprint, render_template, request, Response, \
     abort, redirect, url_for
 from time import mktime
@@ -67,19 +67,8 @@ def interrogate(qstring):
 
 @app.route("/", methods=['GET'])
 def root():
-    page_count = get_page_count()
-    pages = range(0, page_count)
-    requested_page = int(request.args.get("page", 0))
-    if page_count > 0 and requested_page < 0:
-        requested_page = 0
-    elif page_count > 0 and requested_page > pages[-1]:
-        requested_page = pages[-1]
-
-    items = get_items(lambda x: True,
-        current_app.config["DB_FILE"], requested_page)
-    for item in items:
-        if item['title'] is None or item['title'] == "":
-            item['title'] = item['url']
+    pages, requested_page = get_effective_page(request.args.get("page", 0))
+    items = get_items(lambda x: True, current_app.config["DB_FILE"], requested_page)
 
     ten_days = get_items_last_X_days(current_app.config["DB_FILE"], 10)
 
