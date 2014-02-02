@@ -66,7 +66,7 @@
                 last_height = 0;
                 function search() {
                     var term = $("#search_box").val();
-                    window.location = "{{ url_for('merveilles.interrogate') }}" + "?q=" + term;
+                    window.location = "{{ url_for('merveilles.interrogate', qstring="") }}" + term;
                 }
                 $("#search_button").click(search);
                 $("#search_box").keypress(function(e) {

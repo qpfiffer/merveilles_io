@@ -9,7 +9,7 @@
         <div class="post">
             <h1>{{slug}}</h1>
             <h1 class="title"><a href="{{ url_for('merveilles.blog_post', slug=post.slug) }}">{{ post.title }}</a></h1>
-            <span class="author">By <a href="{{ url_for('merveilles.intrigue') }}?user={{post.author}}" class="person">{{ post.author|safe }}</a></span>
+            <span class="author">By <a href="{{ url_for('merveilles.intrigue', user=post.author)}}" class="person">{{ post.author|safe }}</a></span>
             <div class="post_text">{{ post.content|safe }}</div>
             <div class="time"><span>Posted on {{post.date}}</span></div>
         </div>

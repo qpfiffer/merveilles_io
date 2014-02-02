@@ -55,27 +55,24 @@ def submit():
     person = request.json["person"]
     return insert_item(url, person, current_app.config["DB_FILE"])
 
-@app.route("/intrigue", methods=['GET'])
-def intrigue():
-    user = request.args.get("user", "")
+@app.route("/intrigue/<user>", methods=['GET'])
+def intrigue(user):
     items = get_items(
         lambda x: loads(x[1])["person"].lower() == user.lower(),
         current_app.config["DB_FILE"])
 
     return render_template("index.html", items=items)
 
-@app.route("/introspect", methods=['GET'])
-def introspect():
-    domain = request.args.get("domain", "")
+@app.route("/introspect/<domain>", methods=['GET'])
+def introspect(domain):
     items = get_items(
         lambda x: get_domain(loads(x[1])).lower() in domain.lower(),
         current_app.config["DB_FILE"])
 
     return render_template("index.html", items=items)
 
-@app.route("/interrogate", methods=['GET'])
-def interrogate():
-    qstring = request.args.get("q", "")
+@app.route("/interrogate/<qstring>", methods=['GET'])
+def interrogate(qstring):
     items = get_items(
         lambda x: search_func(loads(x[1]), qstring),
         current_app.config["DB_FILE"])
