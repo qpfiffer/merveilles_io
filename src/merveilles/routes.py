@@ -5,7 +5,7 @@ from json import loads, dumps
 from datetime import datetime, timedelta, date
 from utils import get_domain, build_posts, get_effective_page
 from flask import current_app, Blueprint, render_template, request, Response, \
-    abort, redirect, url_for
+    abort, redirect, url_for, g
 from time import mktime
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
@@ -39,13 +39,14 @@ def blog_post(slug):
 def submit():
     url = request.json['url']
     person = request.json["person"]
-    return insert_item(url, person, current_app.config["DB_FILE"])
+    return insert_item(url, person, g.db_file)
 
 @app.route("/intrigue/<user>", methods=['GET'])
 def intrigue(user):
+    pages, requested_page = get_effective_page(request.args.get("page", 0))
     items = get_items(
         lambda x: loads(x[1])["person"].lower() == user.lower(),
-        current_app.config["DB_FILE"])
+        g.db_file)
 
     return render_template("index.html", items=items)
 
@@ -53,7 +54,7 @@ def intrigue(user):
 def introspect(domain):
     items = get_items(
         lambda x: get_domain(loads(x[1])).lower() in domain.lower(),
-        current_app.config["DB_FILE"])
+        g.db_file)
 
     return render_template("index.html", items=items)
 
@@ -61,16 +62,16 @@ def introspect(domain):
 def interrogate(qstring):
     items = get_items(
         lambda x: search_func(loads(x[1]), qstring),
-        current_app.config["DB_FILE"])
+        g.db_file)
 
     return render_template("index.html", items=items)
 
 @app.route("/", methods=['GET'])
 def root():
     pages, requested_page = get_effective_page(request.args.get("page", 0))
-    items = get_items(lambda x: True, current_app.config["DB_FILE"], requested_page)
+    items = get_items(lambda x: True, g.db_file, requested_page)
 
-    ten_days = get_items_last_X_days(current_app.config["DB_FILE"], 10)
+    ten_days = get_items_last_X_days(g.db_file, 10)
 
     time = datetime.now() - timedelta(days=10)
     date_obj = date(year=time.year, month=time.month, day=time.day)
@@ -82,7 +83,6 @@ def root():
     for item in ten_days:
         for person in ten_days[item]:
             if p_to_dp.get(person, False) == False:
-                # {u'December': [[1384070400, 1
                 p_to_dp[person] = [[item, ten_days[item][person]]]
             else:
                 p_to_dp[person].append([item, ten_days[item][person]])
@@ -96,7 +96,7 @@ def root():
 
 @app.route("/sigma")
 def sigma():
-    items = top_things(current_app.config["DB_FILE"])
+    items = top_things(g.db_file)
     graph_data = items[2]
     return render_template("sigma.html", items=items, graph_data=graph_data)
 
@@ -106,7 +106,7 @@ def top():
 
 @app.route("/stats")
 def stats():
-    db_file = current_app.config["DB_FILE"]
+    db_file = g.db_file
     top_items = top_things(db_file)
     graph_data = top_items[2]
 
@@ -131,22 +131,22 @@ def stats():
 
 @app.route("/data/all")
 def all_posts():
-    items = get_all_items(current_app.config["DB_FILE"])
+    items = get_all_items(g.db_file)
     return Response(dumps(items), mimetype="application/json")
 
 @app.route("/data/<int:post_num>")
 def post_num(post_num):
-    item = get_post_num(post_num, current_app.config["DB_FILE"])
+    item = get_post_num(post_num, g.db_file)
     return Response(dumps(item), mimetype="application/json")
 
 @app.route("/data/<username>")
 def user_stats(username):
-    item = get_user_stats(username, current_app.config["DB_FILE"])
+    item = get_user_stats(username, g.db_file)
     return Response(dumps(item), mimetype="application/json")
 
 @app.route("/data/<int:post_num>/pretty")
 def post_num_pretty(post_num):
-    item = get_post_num(post_num, current_app.config["DB_FILE"])
+    item = get_post_num(post_num, g.db_file)
     if item == {}:
         abort(404)
     return render_template("index.html", items=[item])
