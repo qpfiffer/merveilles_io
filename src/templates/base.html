@@ -60,6 +60,13 @@
                         search();
                     }
                 });
+                $(".the_animal").each(function(iter, val) {
+                    // Let's generate some faces
+                    var canvas = val.appendChild(document.createElement('canvas'));
+                    canvas.width = canvas.height = 32;
+                    var con = canvas.getContext('2d');
+                    drawHexFace(con, 666, 'rgb(255,255,255)', 'rgb(68,68,68)');
+                });
             {% endblock %}
             });
         </script>
