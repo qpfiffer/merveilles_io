@@ -27,7 +27,7 @@ app.jinja_env.filters['unix_to_human'] = unix_to_human
 @app.before_request
 def before_request():
     g.request_start_time = time.time()
-    g.request_time = lambda: "%.2fs" % (time.time() - g.request_start_time)
+    g.request_time = lambda: "%.2fms" % ((time.time() - g.request_start_time) * 1000)
 
 def gen_thumbnails(db_file):
     db = DB()
