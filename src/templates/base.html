@@ -36,7 +36,7 @@
 
         {% if pages %}
         <div id="fuck_pages" class="container">
-            <a {% if prev_page %}href="{{request.path}}?page={{prev_page}}"{%else%}href="#"{%endif%}>&laquo;</a>
+            <a href="{{request.path}}?page={{current_page|int -1}}">&laquo;</a>
             {% for page in pages[0:5] %}
             <a href="{{request.path}}?page={{page}}">{{page}}</a>
             {% endfor %}
@@ -44,7 +44,7 @@
             {% for page in pages[::-1][0:5]|reverse %}
             <a href="{{request.path}}?page={{page}}">{{page}}</a>
             {% endfor %}
-            <a {% if next_page %}href="{{request.path}}?page={{next_page}}"{%else%}href="#"{%endif%}>&raquo;</a>
+            <a href="{{request.path}}?page={{current_page|int +1}}">&raquo;</a>
             <div><span style="font-size: 12px; text-align: center;">Pages are deceptive. Live life in a basket.</span></div>
         </div>
         {% endif %}

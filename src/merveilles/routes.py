@@ -117,8 +117,7 @@ def root():
 
     return render_template("index.html", items=items,
         stats=stats, start_date=day_unix, pages=pages,
-        current_page=request.args.get('page', 0),
-        next_page=requested_page+1, prev_page=requested_page-1)
+        current_page=request.args.get('page', 0))
 
 @app.route("/sigma")
 def sigma():
