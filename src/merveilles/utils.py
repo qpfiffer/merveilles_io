@@ -1,9 +1,8 @@
 from constants import PERSON_COLORS, THUMBNAIL_SIZE, THUMBNAIL_DIR
 from flask import Markup, current_app
 from merveilles.filters import get_domain_filter
-from networkx import Graph, spring_layout
 from PIL import Image
-import re, requests, json, os, markdown
+import re, requests, os, markdown
 
 def gen_thumbnail_for_url(url, filename):
     thumbnail_location = current_app.config['THUMBNAIL_DIR'] if current_app else THUMBNAIL_DIR
@@ -145,28 +144,6 @@ def get_paradise_items():
         sorted_json[key] = item
 
     return sorted_json
-
-def gen_paradise_graph(items):
-    g = Graph()
-    for item in items:
-        g.add_node(item, **items[item])
-
-    for item in items:
-        g.add_edge(item, items[item]["parent"])
-
-    print "Starting spring layout generation..."
-    the_graph = forceatlas2_layout(g, iterations=1)
-    print "Finished spring layout."
-
-    for item in the_graph:
-        try:
-            items[item]["x"] = asscalar(the_graph[item][0])
-            items[item]["y"] = asscalar(the_graph[item][1])
-        except KeyError as e:
-            print "{} not found.".format(e)
-            continue
-
-    return items
 
 def get_domain(raw_url):
     return get_domain_filter(raw_url['url'])

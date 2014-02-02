@@ -3,18 +3,12 @@ from database import insert_item, get_items, top_things, search_func, \
     aggregate_by_hour, get_user_stats
 from json import loads, dumps
 from datetime import datetime, timedelta, date
-from utils import get_domain, get_paradise_items, gen_paradise_graph, \
-    get_paradise_json_for_d3, build_posts
+from utils import get_domain, build_posts
 from flask import current_app, Blueprint, render_template, request, Response, \
-    make_response, abort, redirect, url_for
+    abort, redirect, url_for
 from time import mktime
-import requests
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
-
-@app.route("/paradise", methods=['GET'])
-def paradise():
-    return render_template("paradise.html")
 
 @app.route("/viz", methods=['GET'])
 def viz():
@@ -24,7 +18,7 @@ def viz():
 def blog():
     try:
         posts = build_posts(current_app.config["BLOG_DIR"])
-    except OSError as e:
+    except OSError:
         return redirect(url_for('merveilles.root'))
     return render_template("blog.html", posts=posts)
 
@@ -33,21 +27,13 @@ def blog_post(slug):
     # Whole-ass getting the post:
     try:
         post = filter(lambda x: x["slug"] == slug, build_posts(current_app.config["BLOG_DIR"]))
-    except OSError as e:
+    except OSError:
         abort(404)
 
     if len(post) != 1:
         abort(404)
 
     return render_template("blog_post.html", post=post[0])
-
-@app.route("/paradise.json", methods=['GET'])
-def paradise_json():
-    response = make_response(open(current_app.config["PARADISE_JSON"]).read())
-    response.headers["Content-type"] = "application/json"
-    return response
-    #items = get_paradise_json_for_d3()
-    #return Response(dumps(items), mimetype="application/json")
 
 @app.route("/submit", methods=['POST'])
 def submit():
@@ -137,11 +123,6 @@ def stats():
 
     last_day = get_items_last_X_days(db_file, 1, munge=False)
     hourly_activity = aggregate_by_hour(db_file)
-
-
-    time = datetime.now() - timedelta(days=10)
-    date_obj = date(year=time.year, month=time.month, day=time.day)
-    day_unix = int(mktime(date_obj.timetuple()))
 
     p_to_dp = {}
     stats = []
