@@ -53,11 +53,13 @@ def intrigue(user):
 
 @app.route("/introspect/<domain>", methods=['GET'])
 def introspect(domain):
-    items = get_items(
-        lambda x: get_domain(loads(x[1])).lower() in domain.lower(),
-        g.db_file)
+    filter_func = lambda x: get_domain(loads(x[1])).lower() in domain.lower()
+    pages, requested_page = get_effective_page(request.args.get("page", 0),
+            filter_func)
+    items = get_items(filter_func, g.db_file)
 
-    return render_template("index.html", items=items)
+    return render_template("index.html", items=items, pages=pages,
+            requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/interrogate/<qstring>", methods=['GET'])
 def interrogate(qstring):
