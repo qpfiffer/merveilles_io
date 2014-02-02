@@ -63,11 +63,13 @@ def introspect(domain):
 
 @app.route("/interrogate/<qstring>", methods=['GET'])
 def interrogate(qstring):
-    items = get_items(
-        lambda x: search_func(loads(x[1]), qstring),
-        g.db_file)
+    filter_func = lambda x: search_func(loads(x[1]), qstring)
+    pages, requested_page = get_effective_page(request.args.get("page", 0),
+            filter_func)
+    items = get_items(filter_func, g.db_file)
 
-    return render_template("index.html", items=items)
+    return render_template("index.html", items=items, pages=pages,
+            requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/", methods=['GET'])
 def root():
