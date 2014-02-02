@@ -378,13 +378,25 @@ def aggregate_by_hour(db_file):
     hours = [{'name': "{}:00".format(key), 'data': [hours[key]]} for key in hours]
     return hours
 
-def get_page_count():
+def get_page_count(item_filter = lambda x: True):
     count = 0
     db = DB()
     db_file = current_app.config['DB_FILE']
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OWRITER | DB.OCREATE):
         print "Could not open database (get_page_count). Error: {}".format(db.error())
-    count = db.count()
+
+    cur = db.cursor()
+    cur.jump_back()
+    while True:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        if item_filter(rec):
+            count = count + 1
+
+        cur.step_back()
+
+    cur.disable()
     db.close()
     return count / FILTER_MAX
-

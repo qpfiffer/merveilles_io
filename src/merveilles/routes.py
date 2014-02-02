@@ -43,12 +43,13 @@ def submit():
 
 @app.route("/intrigue/<user>", methods=['GET'])
 def intrigue(user):
-    pages, requested_page = get_effective_page(request.args.get("page", 0))
-    items = get_items(
-        lambda x: loads(x[1])["person"].lower() == user.lower(),
-        g.db_file)
+    filter_func = lambda x: loads(x[1])["person"].lower() == user.lower()
+    pages, requested_page = get_effective_page(request.args.get("page", 0),
+            filter_func)
+    items = get_items(filter_func, g.db_file, requested_page)
 
-    return render_template("index.html", items=items)
+    return render_template("index.html", items=items, pages=pages,
+            requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/introspect/<domain>", methods=['GET'])
 def introspect(domain):
