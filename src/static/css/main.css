@@ -2,7 +2,7 @@
   font-family: 'wtf';
   font-style: normal;
   font-weight: 200;
-  src: url("wtf.woff") format('woff');
+  src: url("./css/wtf.woff") format('woff');
 }
 html {
     background-color: #DDD;
