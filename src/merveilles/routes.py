@@ -1,20 +1,24 @@
-from database import insert_item, get_items, top_things, search_func, \
-    get_all_items, get_post_num, get_items_last_X_days, \
-    aggregate_by_hour, get_user_stats
 from json import loads, dumps
 from datetime import datetime, timedelta, date
-from utils import get_domain, build_posts, get_effective_page
 from flask import current_app, Blueprint, render_template, request, Response, \
     abort, redirect, url_for, g
 from time import mktime
 
+from cache import view_cache
+from database import insert_item, get_items, top_things, search_func, \
+    get_all_items, get_post_num, get_items_last_X_days, \
+    aggregate_by_hour, get_user_stats
+from utils import get_domain, build_posts, get_effective_page
+
 app = Blueprint('merveilles', __name__, template_folder='templates')
 
 @app.route("/viz", methods=['GET'])
+@view_cache
 def viz():
     return render_template("viz.html")
 
 @app.route("/blog", methods=['GET'])
+@view_cache
 def blog():
     try:
         posts = build_posts(current_app.config["BLOG_DIR"])
@@ -23,6 +27,7 @@ def blog():
     return render_template("blog.html", posts=posts)
 
 @app.route("/blog/<slug>", methods=['GET'])
+@view_cache
 def blog_post(slug):
     # Whole-ass getting the post:
     try:
@@ -42,6 +47,7 @@ def submit():
     return insert_item(url, person, g.db_file)
 
 @app.route("/intrigue/<user>", methods=['GET'])
+@view_cache
 def intrigue(user):
     filter_func = lambda x: loads(x[1])["person"].lower() == user.lower()
     pages, requested_page = get_effective_page(request.args.get("page", 0),
@@ -52,6 +58,7 @@ def intrigue(user):
             requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/introspect/<domain>", methods=['GET'])
+@view_cache
 def introspect(domain):
     filter_func = lambda x: get_domain(loads(x[1])).lower() in domain.lower()
     pages, requested_page = get_effective_page(request.args.get("page", 0),
@@ -62,6 +69,7 @@ def introspect(domain):
             requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/interrogate/<qstring>", methods=['GET'])
+@view_cache
 def interrogate(qstring):
     filter_func = lambda x: search_func(loads(x[1]), qstring)
     pages, requested_page = get_effective_page(request.args.get("page", 0),
@@ -72,6 +80,7 @@ def interrogate(qstring):
             requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/", methods=['GET'])
+@view_cache
 def root():
     pages, requested_page = get_effective_page(request.args.get("page", 0))
     items = get_items(lambda x: True, g.db_file, requested_page)
@@ -100,16 +109,19 @@ def root():
         current_page=request.args.get('page', 0))
 
 @app.route("/sigma")
+@view_cache
 def sigma():
     items = top_things(g.db_file)
     graph_data = items[2]
     return render_template("sigma.html", items=items, graph_data=graph_data)
 
 @app.route("/top")
+@view_cache
 def top():
     return redirect(url_for('merveilles.stats'))
 
 @app.route("/stats")
+@view_cache
 def stats():
     db_file = g.db_file
     top_items = top_things(db_file)
@@ -135,21 +147,25 @@ def stats():
         stats=stats, graph_data=graph_data)
 
 @app.route("/data/all")
+@view_cache
 def all_posts():
     items = get_all_items(g.db_file)
     return Response(dumps(items), mimetype="application/json")
 
 @app.route("/data/<int:post_num>")
+@view_cache
 def post_num(post_num):
     item = get_post_num(post_num, g.db_file)
     return Response(dumps(item), mimetype="application/json")
 
 @app.route("/data/<username>")
+@view_cache
 def user_stats(username):
     item = get_user_stats(username, g.db_file)
     return Response(dumps(item), mimetype="application/json")
 
 @app.route("/data/<int:post_num>/pretty")
+@view_cache
 def post_num_pretty(post_num):
     item = get_post_num(post_num, g.db_file)
     if item == {}:
