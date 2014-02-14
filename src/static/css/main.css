@@ -1,9 +1,3 @@
-@font-face {
-  font-family: 'wtf';
-  font-style: normal;
-  font-weight: 200;
-  src: url("../static/css/wtf.woff") format('woff');
-}
 html {
     background-color: #DDD;
     color: #3D3D3D;
@@ -13,9 +7,6 @@ html {
 body {
     margin: 0px;
     overflow-x: hidden;
-}
-.title_header {
-    font-family: 'wtf', sans-serif;
 }
 .nav {
     background-color: #111;
