@@ -25,3 +25,7 @@ def file_size(size_str):
 def unix_to_human(timestamp_str):
     time = float(timestamp_str)
     return unicode(datetime.fromtimestamp(time))
+
+def is_video(item):
+    video_urls = ['youtube.com', 'vimeo.com']
+    return reduce(lambda a, v: a or (v.lower() in get_domain_filter(item['url']).lower()), video_urls, False)
