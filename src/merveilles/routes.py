@@ -1,13 +1,12 @@
-from json import loads, dumps
+from json import loads
 from datetime import datetime, timedelta, date
-from flask import current_app, Blueprint, render_template, request, Response, \
+from flask import current_app, Blueprint, render_template, request, \
     abort, redirect, url_for, g
 from time import mktime
 
 from cache import view_cache
 from database import insert_item, get_items, top_things, search_func, \
-    get_all_items, get_post_num, get_items_last_X_days, \
-    aggregate_by_hour, get_user_stats
+    get_items_last_X_days, aggregate_by_hour
 from utils import get_domain, build_posts, get_effective_page
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
@@ -145,30 +144,3 @@ def stats():
 
     return render_template("stats.html", items=top_items, hourly_activity=hourly_activity,
         stats=stats, graph_data=graph_data)
-
-@app.route("/data/all")
-@view_cache
-def all_posts():
-    items = get_all_items(g.db_file)
-    return Response(dumps(items), mimetype="application/json")
-
-@app.route("/data/<int:post_num>")
-@view_cache
-def post_num(post_num):
-    item = get_post_num(post_num, g.db_file)
-    return Response(dumps(item), mimetype="application/json")
-
-@app.route("/data/<username>")
-@view_cache
-def user_stats(username):
-    item = get_user_stats(username, g.db_file)
-    return Response(dumps(item), mimetype="application/json")
-
-@app.route("/data/<int:post_num>/pretty")
-@view_cache
-def post_num_pretty(post_num):
-    item = get_post_num(post_num, g.db_file)
-    if item == {}:
-        abort(404)
-    return render_template("index.html", items=[item])
-

@@ -277,6 +277,18 @@ def get_user_stats(username, db_file):
 
     return item
 
+def get_post_by_date(key, db_file):
+    item = None
+    db = DB()
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+    item = db.get(key)
+
+    db.close()
+    if item is not None:
+        return loads(item[1])
+    return dict()
+
 def get_post_num(post_num, db_file):
     item = None
     db = DB()
