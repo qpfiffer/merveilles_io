@@ -39,7 +39,6 @@ def user_stats(username):
     return Response(dumps(item), mimetype="application/json")
 
 @app.route("/data/<int:post_num>/pretty")
-@view_cache
 def post_num_pretty(post_num):
     item = get_post_num(post_num, g.db_file)
     if item == {}:
@@ -47,7 +46,6 @@ def post_num_pretty(post_num):
     return render_template("index.html", items=[item])
 
 @app.route("/data/data/<int:key>/pretty")
-@view_cache
 def post_date_pretty(key):
     item = get_post_by_date(key, g.db_file)
     if item == {}:

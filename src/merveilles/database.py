@@ -286,7 +286,7 @@ def get_post_by_date(key, db_file):
 
     db.close()
     if item is not None:
-        return loads(item[1])
+        return loads(item)
     return dict()
 
 def get_post_num(post_num, db_file):
