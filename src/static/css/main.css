@@ -9,7 +9,7 @@ body {
     margin: 0px;
     overflow-x: hidden;
 }
-#dummy_block {
+.dummy_block {
     height: 55px;
     width: 100%;
 }
@@ -85,6 +85,10 @@ body {
     width: 50%;
 }
 #fuck_pages {
+    padding-top: 3px;
+    padding-bottom: 6px;
+    list-style: none;
+    height: 55px;
     font-size: 24px;
     text-align: center;
 }
@@ -118,7 +122,8 @@ a:hover {
     color: #C72020;
 }
 .time {
-    font-size: 16px;
+    margin-top: 2em;
+    font-size: 14px;
 }
 .highcharts-container {
     overflow: visible!important;

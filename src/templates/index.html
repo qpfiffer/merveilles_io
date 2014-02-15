@@ -56,6 +56,7 @@
                     <a href="{{ url_for('merveilles.intrigue', user=item.person) }}" class="person">{{item.person}}</a>
                 </div>
                 <a target="_blank" href="{{item.url}}"><span class="link">{{item.title or item.url}}</span></a>
+                <!--
                 {% if item.thumbnail %}
                     <div class="summary">
                         <a target="_blank" href="{{item.url}}">
@@ -71,12 +72,14 @@
                 {% else %}
                     <div class="summary"><p>{{item.summary}}</p></div>
                 {% endif %}
+                -->
                 <div class="time"><span>Linked on <a href="{{ url_for('merveilles_api.post_date_pretty', key=item.created_at|int) }}">{{item.created_at|unix_to_human}}</a></span> | <a href="{{ url_for('merveilles.introspect', domain=get_domain(item.url)) }}">Similar Links</a></div>
             </div>
             {% endfor %}
         {% else %}
             <p>No items yet. :<</p>
         {% endif %}
+        {% include "page_junk.html" %}
     </div>
 </div>
 {% endblock %}
