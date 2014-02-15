@@ -2,36 +2,51 @@ html {
     background-color: #EFEFEF;
     color: #333;
     /* font-family: 'Titillium Web','Helvetica Neue',Helvetica,Arial,sans-serif; */
-    font: 15px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font: 16px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-repeat: repeat;
 }
 body {
     margin: 0px;
     overflow-x: hidden;
 }
+#dummy_block {
+    height: 55px;
+    width: 100%;
+}
 .nav {
+    background-color: #EFEFEF;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    z-index: 254;
+    height: 65px;
+}
+.nav .wrapper {
     margin: 0 auto;
     width: 1140px;
     padding-top: 3px;
     padding-bottom: 6px;
     border-bottom: 1px solid #222;
     list-style: none;
-    min-height: 60px;
+    height: 55px;
 }
 .nav #qiji {
     height: 55px;
 }
 .nav h1, .nav h2, .nav h3, .nav h4, .nav h5, .nav h6 {
+    position: relative;
+    top: -0.75em;
     display: inline;
 }
 .nav ul {
-    vertical-align: top;
+    vertical-align: middle;
     display: block;
     margin-left: 2px;
     padding-left: 0px;
 }
 .nav li, .nav li h1 {
-    vertical-align: top;
+    vertical-align: middle;
     display: inline;
     padding-right: 20px;
 }
@@ -103,7 +118,7 @@ a:hover {
     color: #C72020;
 }
 .time {
-    font-size: 12px;
+    font-size: 16px;
 }
 .highcharts-container {
     overflow: visible!important;

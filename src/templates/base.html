@@ -23,30 +23,36 @@
     </head>
     <body>
         <nav class="nav">
-            <ul class="left">
-                <li>
-                    <a href="{{ url_for('merveilles.root') }}"><img id="qiji" src="{{ url_for('static', filename='img/qiji.png') }}"></img></a>
-                </li>
-                <li><a href="{{ url_for('merveilles.root') }}"><h2 style="display: inline;" >{{channel}}</h2></a></li>
-                <!-- Render time: {{ g.request_time() }} -->
-                <li><span id="meta_info">DB Size: {{ size|file_size }}, Links Saved: </span><a class="link" style="font-size: 12px;" href="{{ url_for('merveilles.stats') }}">{{ count }}</a></li>
-            </ul>
-            <ul class="right">
-                <li>
-                    <a href="{{ url_for('merveilles.blog') }}">Blog</a>
-                </li>
-                <li>
-                    <a href="{{ url_for('merveilles.viz') }}">Data, Statistics and Visualizations</a>
-                </li>
-                <li>
-                    <a href="//github.com/qpfiffer/merveilles_io">Code</a>
-                </li>
-                <li>
-                    <input id="search_box" type="text" placeholder="search" />
-                    <input id="search_button" type="button" value="Go" />
-                </li>
-            </ul>
+            <div class="wrapper">
+                <ul class="left">
+                    <li>
+                        <a href="{{ url_for('merveilles.root') }}"><img id="qiji" src="{{ url_for('static', filename='img/qiji.png') }}"></img></a>
+                    </li>
+                    <li><a href="{{ url_for('merveilles.root') }}"><h2 style="display: inline;" >{{channel}}</h2></a></li>
+                    <!-- Render time: {{ g.request_time() }} -->
+                    <!-- DB Size: {{ size|file_size }} -->
+                    <!-- Links Saved:  {{ count }}-->
+                </ul>
+                <ul class="right">
+                    <!--
+                    <li>
+                        <a href="{{ url_for('merveilles.blog') }}">Blog</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('merveilles.viz') }}">Data, Statistics and Visualizations</a>
+                    </li>
+                    <li>
+                        <a href="//github.com/qpfiffer/merveilles_io">Code</a>
+                    </li>
+                    <li>
+                        <input id="search_box" type="text" placeholder="search" />
+                        <input id="search_button" type="button" value="Go" />
+                    </li>
+                    -->
+                </ul>
+            </div>
         </nav>
+        <div id="dummy_block"></div>
         {% block content %}
         {% endblock %}
         {% include "page_junk.html" %}
