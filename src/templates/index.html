@@ -82,6 +82,9 @@
                     {% if item|is_video %}
                     <span> | <img class="thumb_icon" src="{{ url_for('static', filename="img/video_icon.svg") }}"></img></span>
                     {% endif %}
+                    {% if item|is_sound %}
+                    <span> | <img class="thumb_icon" src="{{ url_for('static', filename="img/sound_icon.svg") }}"></img></span>
+                    {% endif %}
                 </div>
             </div>
             {% endfor %}

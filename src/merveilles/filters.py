@@ -29,3 +29,7 @@ def unix_to_human(timestamp_str):
 def is_video(item):
     video_urls = ['youtube.com', 'vimeo.com']
     return reduce(lambda a, v: a or (v.lower() in get_domain_filter(item['url']).lower()), video_urls, False)
+
+def is_sound(item):
+    video_urls = ['bandcamp.com', 'soundcloud.com']
+    return reduce(lambda a, v: a or (v.lower() in get_domain_filter(item['url']).lower()), video_urls, False)

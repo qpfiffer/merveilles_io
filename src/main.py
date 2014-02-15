@@ -6,7 +6,8 @@ from merveilles.api_routes import app as api_routes
 from merveilles.context_processors import app as context_processors
 from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
     DEFAULT_CHANNEL, BLOG_DIR
-from merveilles.filters import get_domain_filter, file_size, unix_to_human, is_video
+from merveilles.filters import get_domain_filter, file_size, unix_to_human,\
+    is_video, is_sound
 from merveilles.utils import gen_thumbnail_for_url
 import sys, os, getopt, time
 
@@ -26,6 +27,7 @@ app.jinja_env.filters['get_domain'] = get_domain_filter
 app.jinja_env.filters['file_size'] = file_size
 app.jinja_env.filters['unix_to_human'] = unix_to_human
 app.jinja_env.filters['is_video'] = is_video
+app.jinja_env.filters['is_sound'] = is_sound
 
 
 @app.before_request
