@@ -1,11 +1,15 @@
 from context_processors import db_meta_info
-from flask import request
+from flask import request, current_app
 from functools import wraps
 from kyotocabinet import DB
 
 def view_cache(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        # Debug
+        if not current_app.config['CACHE']:
+            return f(*args, **kwargs)
+
         db = DB()
         db.open("/tmp/page_cache.kch")
         res = None

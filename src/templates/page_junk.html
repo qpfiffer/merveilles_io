@@ -1,23 +1,19 @@
 {% if pages %}
 <div id="fuck_pages" class="container">
     <a href="{{request.path}}?page={{current_page|int -1}}">&laquo;</a>
-    {% for page in pages[0:5] %}
-    <a href="{{request.path}}?page={{page}}">{% if current_page|int == page|int %}<u>{{page}}</u>{% else %}{{page}}{%endif%}</a>
-    {% endfor %}
-    {% if current_page|int in pages[0:5] or current_page|int in pages[::-1][0:5] %}
-    <a href="#">&hellip;</a>
-    {% else %}
-        <a href="#">&hellip;</a>
-        <a href="{{request.path}}?page={{current_page|int - 2}}">{{current_page|int -2}}</a>
-        <a href="{{request.path}}?page={{current_page|int - 1}}">{{current_page|int -1}}</a>
-        <a href="{{request.path}}?page={{current_page}}"><u>{{current_page}}</u></a>
-        <a href="{{request.path}}?page={{current_page|int + 1}}">{{current_page|int +1}}</a>
-        <a href="{{request.path}}?page={{current_page|int + 2}}">{{current_page|int +2}}</a>
-        <a href="#">&hellip;</a>
+    {% if current_page|int >= 2 %}
+    <a href="{{request.path}}?page={{current_page|int - 2}}">{{current_page|int -2}}</a>
     {% endif %}
-    {% for page in pages[::-1][0:5]|reverse %}
+    {% if current_page|int >= 1 %}
+    <a href="{{request.path}}?page={{current_page|int - 1}}">{{current_page|int -1}}</a>
+    {% endif %}
+    <a href="{{request.path}}?page={{current_page}}"><u>{{current_page}}</u></a>
+    <a href="{{request.path}}?page={{current_page|int + 1}}">{{current_page|int +1}}</a>
+    <a href="{{request.path}}?page={{current_page|int + 2}}">{{current_page|int +2}}</a>
+    <a href="#">&hellip;</a>
+    {% with page = pages[::-1][0] %}
     <a href="{{request.path}}?page={{page}}">{% if current_page|int == page|int %}<u>{{page}}</u>{% else %}{{page}}{%endif%}</a>
-    {% endfor %}
+    {% endwith %}
     <a href="{{request.path}}?page={{current_page|int +1}}">&raquo;</a>
     <div><span style="font-size: 12px; text-align: center;">Pages are deceptive. Live life in a basket.</span></div>
 </div>

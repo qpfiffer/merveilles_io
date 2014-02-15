@@ -18,6 +18,7 @@ app.config['LIVE_SITE'] = os.environ.get("LIVE_SITE") or False #Turns on or off 
 app.config['BLOG_DIR'] = os.environ.get("BLOG_DIR") or BLOG_DIR
 app.config['PARADISE_JSON'] = os.environ.get("PARADISE_JSON") or PARADISE_JSON
 app.config['THUMBNAIL_DIR'] = os.environ.get("THUMBNAIL_DIR") or THUMBNAIL_DIR
+app.config['CACHE'] = True
 app.jinja_env.globals.update(get_domain=get_domain_filter)
 app.jinja_env.filters['get_domain'] = get_domain_filter
 app.jinja_env.filters['file_size'] = file_size
@@ -96,6 +97,9 @@ def main(argv):
     if should_gen_thumbnails and app.config['DB_FILE']:
         gen_thumbnails(app.config['DB_FILE'])
         sys.exit(0)
+
+    if debug:
+        app.config['CACHE'] = False
 
     app.run(debug=debug, port=port)
 

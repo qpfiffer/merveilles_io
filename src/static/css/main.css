@@ -1,7 +1,8 @@
 html {
-    background-color: #DDD;
-    color: #3D3D3D;
-    font-family: 'Titillium Web',"Helvetica Neue",Helvetica,Arial,sans-serif;
+    background-color: #EFEFEF;
+    color: #333;
+    /* font-family: 'Titillium Web','Helvetica Neue',Helvetica,Arial,sans-serif; */
+    font: 15px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
     background-repeat: repeat;
 }
 body {
@@ -9,25 +10,42 @@ body {
     overflow-x: hidden;
 }
 .nav {
-    background-color: #111;
-    width: 100%;
+    margin: 0 auto;
+    width: 1140px;
     padding-top: 3px;
     padding-bottom: 6px;
-    border-bottom: 5px solid #94B2FF;
+    border-bottom: 1px solid #222;
     list-style: none;
-    min-height: 1.5em;
+    min-height: 60px;
+}
+.nav #qiji {
+    height: 55px;
+}
+.nav h1, .nav h2, .nav h3, .nav h4, .nav h5, .nav h6 {
+    display: inline;
 }
 .nav ul {
+    vertical-align: top;
     display: block;
     margin-left: 2px;
+    padding-left: 0px;
 }
 .nav li, .nav li h1 {
+    vertical-align: top;
     display: inline;
     padding-right: 20px;
 }
+.nav a {
+    font-weight: normal;
+}
+.nav a:visited {
+    color: #333;
+}
+.nav a:hover {
+    color: #C72020;
+}
 .left {
     margin-top: 0px;
-    margin-: 0px;
     float: left;
 }
 .right {
@@ -46,7 +64,10 @@ body {
 }
 .container {
     margin: 0 auto;
-    width: 960px;
+    width: 1120px;
+}
+.col-50 {
+    width: 50%;
 }
 #fuck_pages {
     font-size: 24px;
@@ -66,28 +87,20 @@ body {
     padding-bottom: 3px;
     border-bottom: 1px solid ;
 }
-h1 {
-    color: rgb(83,83,83);
-}
 #meta_info {
     font-size: 12px;
-    color: #EEE;
+    /* color: #EEE; */
 }
 a {
-    color: #3B3636;
-    text-decoration: none;
     font-weight: bold;
+    text-decoration: none;
+    color: #333;
 }
 a:visited {
-    color: #8B8686;
-}
-.nav a {
-    color: #C2ECFF;
-    font-weight: normal;
-    /* text-decoration: none; */
+    color: #BBB;
 }
 a:hover {
-    color: #94B2FF;
+    color: #C72020;
 }
 .time {
     font-size: 12px;

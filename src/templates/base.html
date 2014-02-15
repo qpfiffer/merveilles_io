@@ -5,7 +5,7 @@
         {% block includes %}
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-2.0.3.min.js') }}"></script>
         {% endblock %}
-        <link href="http://fonts.googleapis.com/css?family=Titillium+Web:400,700,200" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,700" rel="stylesheet" type="text/css">
         <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.png') }}" />
         <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
         <script type="text/javascript">
@@ -24,8 +24,12 @@
     <body>
         <nav class="nav">
             <ul class="left">
-                <li><span><a href="{{ url_for('merveilles.root') }}">{{channel}}</a></span></li>
-                <li><span id="meta_info">DB Size: {{ size|file_size }},  Render Time: {{ g.request_time() }}, Links Saved:  </span><a class="link" style="font-size: 12px;" href="{{ url_for('merveilles.stats') }}">{{ count }}</a></li>
+                <li>
+                    <a href="{{ url_for('merveilles.root') }}"><img id="qiji" src="{{ url_for('static', filename='img/qiji.png') }}"></img></a>
+                </li>
+                <li><a href="{{ url_for('merveilles.root') }}"><h2 style="display: inline;" >{{channel}}</h2></a></li>
+                <!-- Render time: {{ g.request_time() }} -->
+                <li><span id="meta_info">DB Size: {{ size|file_size }}, Links Saved: </span><a class="link" style="font-size: 12px;" href="{{ url_for('merveilles.stats') }}">{{ count }}</a></li>
             </ul>
             <ul class="right">
                 <li>
