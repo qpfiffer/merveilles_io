@@ -45,10 +45,17 @@ def post_num_pretty(post_num):
         abort(404)
     return render_template("index.html", items=[item])
 
-@app.route("/data/data/<int:key>/pretty")
+@app.route("/data/date/<int:key>/pretty")
 def post_date_pretty(key):
     item = get_post_by_date(key, g.db_file)
     if item == {}:
         abort(404)
     return render_template("index.html", items=[item])
+
+@app.route("/data/date/single/<int:key>")
+def post_date_single(key):
+    item = get_post_by_date(key, g.db_file)
+    if item == {}:
+        abort(404)
+    return render_template("single_item.html", item=item)
 

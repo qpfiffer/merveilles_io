@@ -31,7 +31,12 @@ $(function() {
     });
     $(".link").each(function(iter, val) {
         $(val).click(function(e) {
-            alert($(val).data());
+            var key= $(val).data().key;
+            $.ajax({
+                  url: single_item_url.replace("0", key),
+            }).done(function(response) {
+                $("#murder_me").html(response);
+            });
             return false;
         });
     });
