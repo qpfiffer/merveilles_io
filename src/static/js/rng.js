@@ -151,4 +151,6 @@ WELL.prototype.randBits = function(bits) {
 	return (this.bit_state >> unshift) & mask;
 }
 
-module.exports = WELL;
+if (module) {
+    module.exports = WELL;
+}
