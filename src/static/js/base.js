@@ -16,6 +16,14 @@ String.prototype.hashCode = function(){
 
 $(function() {
     $("#search_button").click(search);
+    $(".nav img.search").click(function() {
+        var sbox = $("#search_box");
+        if (sbox.css("display") === "none") {
+            $("#search_box").fadeIn();
+        } else {
+            $("#search_box").fadeOut();
+        }
+    });
     $("#search_box").keypress(function(e) {
         if (e.keyCode == 13) {
             search();

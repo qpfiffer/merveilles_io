@@ -50,6 +50,19 @@ body {
     display: inline;
     padding-right: 20px;
 }
+#search_box {
+    display: none;
+    border: 0;
+    appearance: none;
+    height: 2em;
+    position: relative;
+    top: -2em;
+    padding: 2px;
+}
+.nav img.search {
+    height: 55px;
+    cursor: pointer;
+}
 .nav a {
     font-weight: normal;
 }
