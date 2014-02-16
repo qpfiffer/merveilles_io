@@ -7,7 +7,7 @@ from merveilles.context_processors import app as context_processors
 from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
     DEFAULT_CHANNEL, BLOG_DIR
 from merveilles.filters import get_domain_filter, file_size, unix_to_human,\
-    is_video, is_sound
+    is_video, is_sound, youtube_vid, is_youtube
 from merveilles.utils import gen_thumbnail_for_url
 import sys, os, getopt, time
 
@@ -23,11 +23,14 @@ app.config['PARADISE_JSON'] = os.environ.get("PARADISE_JSON") or PARADISE_JSON
 app.config['THUMBNAIL_DIR'] = os.environ.get("THUMBNAIL_DIR") or THUMBNAIL_DIR
 app.config['CACHE'] = True
 app.jinja_env.globals.update(get_domain=get_domain_filter)
+
 app.jinja_env.filters['get_domain'] = get_domain_filter
 app.jinja_env.filters['file_size'] = file_size
 app.jinja_env.filters['unix_to_human'] = unix_to_human
 app.jinja_env.filters['is_video'] = is_video
 app.jinja_env.filters['is_sound'] = is_sound
+app.jinja_env.filters['is_youtube'] = is_youtube
+app.jinja_env.filters['youtube_vid'] = youtube_vid
 
 
 @app.before_request

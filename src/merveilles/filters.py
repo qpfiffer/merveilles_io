@@ -30,6 +30,12 @@ def is_video(item):
     video_urls = ['youtube.com', 'vimeo.com']
     return reduce(lambda a, v: a or (v.lower() in get_domain_filter(item['url']).lower()), video_urls, False)
 
+def is_youtube(item):
+    return 'youtube.com' in get_domain_filter(item['url']).lower()
+
+def youtube_vid(item):
+    return item['url'].split('?')[1].split('v=')[1]
+
 def is_sound(item):
     video_urls = ['bandcamp.com', 'soundcloud.com']
     return reduce(lambda a, v: a or (v.lower() in get_domain_filter(item['url']).lower()), video_urls, False)
