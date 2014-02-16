@@ -34,7 +34,9 @@ def is_youtube(item):
     return 'youtube.com' in get_domain_filter(item['url']).lower()
 
 def youtube_vid(item):
-    return item['url'].split('?')[1].split('v=')[1]
+    query_str = item['url'].split('?')[1].split("&")
+    ve_str = filter(lambda a: 'v=' in a, query_str)[0]
+    return ve_str.split('v=')[1]
 
 def is_sound(item):
     video_urls = ['bandcamp.com', 'soundcloud.com']
