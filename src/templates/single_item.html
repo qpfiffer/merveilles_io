@@ -1,3 +1,7 @@
+<div class="item">
+    <div class="item_header">
+        <a target="blank_" href="{{ item.url }}">{{item.title or item.url}}</a>
+    </div>
 {% if item.thumbnail %}
     <div class="summary">
         <a target="_blank" href="{{item.url}}">
@@ -13,3 +17,4 @@
 {% else %}
     <div class="summary"><p>{{item.summary}}</p></div>
 {% endif %}
+</div>

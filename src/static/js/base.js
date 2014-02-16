@@ -40,4 +40,7 @@ $(function() {
             return false;
         });
     });
+    $(window).scroll(function(e) {
+        $("#murder_me").css("top", window.pageYOffset);
+    });
 });
