@@ -151,6 +151,6 @@ WELL.prototype.randBits = function(bits) {
 	return (this.bit_state >> unshift) & mask;
 }
 
-if (module !== undefined) {
+if (typeof module != "undefined") {
     module.exports = WELL;
 }
