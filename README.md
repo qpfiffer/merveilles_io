@@ -11,7 +11,7 @@ and preferably virtualenvwrapper.
 
 1. Create virtual environment: `mkvirtualenv merveilles`
 1. Install requirements: `pip install -r requirements.txt`
-1. Installed Kyoto Cabinet:
+1. Install Kyoto Cabinet:
 
 ````
     cd dependencies/

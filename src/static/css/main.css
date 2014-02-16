@@ -24,7 +24,7 @@ body {
 }
 .nav .wrapper {
     margin: 2px auto;
-    width: 1140px;
+    width: 960px;
     padding-top: 3px;
     padding-bottom: 6px;
     border-bottom: 1px solid #222;
@@ -56,11 +56,16 @@ body {
     appearance: none;
     height: 2em;
     position: relative;
-    top: -2em;
     padding: 2px;
 }
-.nav img.search {
-    height: 55px;
+#search_box:focus {
+    jutline: none;
+}
+.nav .right img {
+    position: relative;
+    top: 1em;
+    display: inline-block;
+    height: 25px;
     cursor: pointer;
 }
 .nav a {
@@ -85,19 +90,24 @@ body {
     display: inline;
 }
 .right li {
-    border-right: 1px solid #BBB;
     margin-right: 2px;
     margin-left: 2px;
-    padding-right: 0px;
+    padding: 5px;
 }
 .container {
     margin: 0 auto;
-    width: 1140px;
+    width: 960px;
 }
 .col-50 {
     display: inline-block;
-    width: 48%;
+    width: 48.5%;
     vertical-align: top;
+}
+.col-50:first-child {
+    margin-right: 2%;
+}
+.col-50:last-child {
+    width: 49%;
 }
 #fuck_pages {
     padding-top: 3px;
