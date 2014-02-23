@@ -1,67 +1,22 @@
 {% extends "base.html" %}
 {% block includes %}{{super()}}
 <script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/stats.js') }}"></script>
 {% endblock %}
-{% block startup %}{{super()}}
-{% if stats %}
-    var stats = {{ stats|tojson|safe }};
-    var hourly_activity = {{ hourly_activity|tojson|safe }};
-
-    $('#activity_by_hour').highcharts({
-        chart: {
-            type: 'column',
-            backgroundColor: '#DDD'
-        },
-        title: {
-            text: false,
-            style: {
-                color: '#111'
-            }
-        },
-        tooltip: {
-            formatter: function() {
-                    return '<b>'+ this.series.name +'</b><br/>'+
-                    + this.y +' total links';
-            }
-        },
-        yAxis: {
-            min: 0,
-        },
-        series: hourly_activity
-    });
-    $('#last_day').highcharts({
-        chart: {
-            type: 'spline',
-            backgroundColor: '#DDD'
-        },
-        title: {
-            text: false,
-            style: {
-                color: '#111'
-            }
-        },
-        tooltip: {
-            formatter: function() {
-                    return '<b>'+ this.series.name +'</b><br/>'+
-                    Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' links';
-            }
-        },
-        xAxis: {
-            type: 'datetime',
-            dateTimeLabelFormats: { // don't display the dummy year
-                month: '%e. %b',
-                year: '%b'
-            }
-        },
-        yAxis: {
-            min: 0,
-        },
-        series: stats
-    });
-{% endif %}
+{% block startup %}
+    stats = {{ stats|tojson|safe }};
+    stats_ten = {{ stats_ten|tojson|safe }};
+    hourly_activity = {{ hourly_activity|tojson|safe }};
+    start_date = {{ start_date }};
+    {{super()}}
+    build_charts();
 {% endblock %}
 {% block content %}
 <div class="container">
+    <div class="item">
+        <p class="item_header">Activity in the last ten days</p>
+        <div id="last_10_days"></div>
+    </div>
     <div class="item">
         <p class="item_header">Posts in the last day</p>
         <div id="last_day"></div>

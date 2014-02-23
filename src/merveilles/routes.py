@@ -92,27 +92,7 @@ def root():
     pages, requested_page = get_effective_page(request.args.get("page", 0))
     items = get_items(lambda x: True, g.db_file, requested_page)
 
-    ten_days = get_items_last_X_days(g.db_file, 10)
-
-    time = datetime.now() - timedelta(days=10)
-    date_obj = date(year=time.year, month=time.month, day=time.day)
-    day_unix = int(mktime(date_obj.timetuple()))
-
-    p_to_dp = {}
-    stats = []
-
-    for item in ten_days:
-        for person in ten_days[item]:
-            if p_to_dp.get(person, False) == False:
-                p_to_dp[person] = [[item, ten_days[item][person]]]
-            else:
-                p_to_dp[person].append([item, ten_days[item][person]])
-
-    for item in p_to_dp:
-        stats.append({"name": item, "data": sorted(p_to_dp[item])})
-
-    return render_template("index.html", items=items,
-        stats=stats, start_date=day_unix, pages=pages,
+    return render_template("index.html", items=items, pages=pages,
         current_page=request.args.get('page', 0))
 
 @app.route("/sigma")
@@ -135,7 +115,25 @@ def stats():
     graph_data = top_items[2]
 
     last_day = get_items_last_X_days(db_file, 1, munge=False)
+    ten_days = get_items_last_X_days(g.db_file, 10)
     hourly_activity = aggregate_by_hour(db_file)
+
+    time = datetime.now() - timedelta(days=10)
+    date_obj = date(year=time.year, month=time.month, day=time.day)
+    day_unix = int(mktime(date_obj.timetuple()))
+
+    p_to_dp_ten = {}
+    stats_ten = []
+
+    for item in ten_days:
+        for person in ten_days[item]:
+            if p_to_dp_ten.get(person, False) == False:
+                p_to_dp_ten[person] = [[item, ten_days[item][person]]]
+            else:
+                p_to_dp_ten[person].append([item, ten_days[item][person]])
+
+    for item in p_to_dp_ten:
+        stats_ten.append({"name": item, "data": sorted(p_to_dp_ten[item])})
 
     p_to_dp = {}
     stats = []
@@ -150,5 +148,10 @@ def stats():
     for item in p_to_dp:
         stats.append({"name": item, "data": sorted(p_to_dp[item])})
 
-    return render_template("stats.html", items=top_items, hourly_activity=hourly_activity,
-        stats=stats, graph_data=graph_data)
+    return render_template("stats.html",
+        items=top_items,
+        hourly_activity=hourly_activity,
+        start_date=day_unix,
+        stats=stats,
+        stats_ten=stats_ten,
+        graph_data=graph_data)
