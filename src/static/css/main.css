@@ -1,5 +1,5 @@
 html {
-    background-color: #EFEFEF;
+    background-color: #DEDEDE;
     color: #333;
     /* font-family: 'Titillium Web','Helvetica Neue',Helvetica,Arial,sans-serif; */
     font: 16px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -14,7 +14,7 @@ body {
     width: 100%;
 }
 .nav {
-    background-color: #EFEFEF;
+    background-color: #DEDEDE;
     width: 100%;
     position: fixed;
     top: 0px;
@@ -142,7 +142,7 @@ a, .link {
     color: #333;
 }
 a:visited {
-    color: #BBB;
+    color: #888;
 }
 a:hover, .link:hover {
     cursor: pointer;
@@ -159,7 +159,8 @@ a:hover, .link:hover {
     overflow: visible!important;
 }
 #murder_me {
-    position: relative;
+    position: fixed;
+    width: 472px;
 }
 #murder_me img {
     display: block;
