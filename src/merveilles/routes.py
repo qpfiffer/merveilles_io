@@ -137,16 +137,22 @@ def stats():
 
     p_to_dp = {}
     stats = []
+    people = {}
+    i = 0
 
     for item in last_day:
         for person in last_day[item]:
+            if people.get(person, False) == False:
+                people[person] = i
+                i = i+1
             if p_to_dp.get(person, False) == False:
                 p_to_dp[person] = [[item, last_day[item][person]]]
             else:
                 p_to_dp[person].append([item, last_day[item][person]])
 
     for item in p_to_dp:
-        stats.append({"name": item, "data": sorted(p_to_dp[item])})
+        muh_lambda = lambda x: (x[0], people[item])
+        stats.append({"name": item, "data": map(muh_lambda, sorted(p_to_dp[item]))})
 
     return render_template("stats.html",
         items=top_items,
