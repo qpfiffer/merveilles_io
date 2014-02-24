@@ -1,4 +1,4 @@
-from flask import Flask, g, request, session
+from flask import abort, Flask, g, request, session
 from json import loads, dumps
 from kyotocabinet import DB
 from olegsessions import OlegDBSessionInterface
@@ -45,7 +45,7 @@ def before_request():
 
 @app.before_request
 def csrf_protect():
-    if request.method == "POST":
+    if request.url_rule.rule != '/submit' and request.method == "POST":
         token = session.get('_csrf_token', None)
         if not token or token != request.form.get('_csrf_token'):
             abort(403)
