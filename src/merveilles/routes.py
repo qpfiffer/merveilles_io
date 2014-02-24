@@ -7,7 +7,7 @@ from time import mktime
 from cache import view_cache
 from database import insert_item, get_items, top_things, search_func, \
     get_items_last_X_days, aggregate_by_hour
-from utils import get_domain, build_posts, get_effective_page
+from utils import get_domain, build_posts, get_effective_page, auth_user
 import requests, urllib
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
@@ -26,12 +26,21 @@ def blog():
         return redirect(url_for('merveilles.root'))
     return render_template("blog.html", posts=posts)
 
-#@app.route("/login", methods=['GET'])
-#def login():
-#    url = "https://api.twitter.com/oauth/request_token?oauth_callback={}".format(
-#        urllib.quote(request.url_root))
-#    resp = requests.post(url)
-#    return render_template("login.html")
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    message = ''
+    if request.method == 'POST':
+        email_address = request.form['email_address']
+        password = request.form['password']
+        if auth_user(email_address, password):
+            session.permanent = True
+            session['email_address'] = request.form['email_address']
+            return redirect(url_for('kyoto.manage'))
+        else:
+            message = 'Login incorrect.'
+
+    return render_template("login.html", message=message)
+    return render_template("login.html")
 
 @app.route("/blog/<slug>", methods=['GET'])
 @view_cache

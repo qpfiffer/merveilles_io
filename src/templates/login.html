@@ -1,11 +1,20 @@
 {% extends "base.html" %}
-{% block includes %}{{super()}}
-<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/animals.css') }}" />
-<script type="text/javascript" src="{{ url_for('static', filename='js/rng.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/hexfaces.js') }}"></script>
-{# <script type="text/javascript" src="{{ url_for('static', filename='js/highcharts.js') }}"></script> #}
-{% endblock %}
 {% block content %}
 <div class="container">
+    <form method="POST">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <p>
+            <label>Username:</label>
+            <input type="text" name="email_address"/>
+        </p>
+        <p>
+            <label>Password:</label>
+            <input type="password" name="password"/>
+        </p>
+        <p>{{message}}</p>
+        <p>
+            <input type="submit" value="Log in"/>
+        </p>
+    </form>
 </div>
 {% endblock %}

@@ -1,6 +1,8 @@
-from flask import Flask, g
+from flask import Flask, g, request, session
 from json import loads, dumps
 from kyotocabinet import DB
+from olegsessions import OlegDBSessionInterface
+
 from merveilles.routes import app as routes
 from merveilles.api_routes import app as api_routes
 from merveilles.context_processors import app as context_processors
@@ -8,7 +10,8 @@ from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
     DEFAULT_CHANNEL, BLOG_DIR
 from merveilles.filters import get_domain_filter, file_size, unix_to_human,\
     is_video, is_sound, youtube_vid, is_youtube
-from merveilles.utils import gen_thumbnail_for_url
+from merveilles.utils import gen_thumbnail_for_url, random_password
+
 import sys, os, getopt, time
 
 app = Flask(__name__)
@@ -22,6 +25,7 @@ app.config['BLOG_DIR'] = os.environ.get("BLOG_DIR") or BLOG_DIR
 app.config['PARADISE_JSON'] = os.environ.get("PARADISE_JSON") or PARADISE_JSON
 app.config['THUMBNAIL_DIR'] = os.environ.get("THUMBNAIL_DIR") or THUMBNAIL_DIR
 app.config['CACHE'] = True
+app.session_interface = OlegDBSessionInterface()
 app.jinja_env.globals.update(get_domain=get_domain_filter)
 
 app.jinja_env.filters['get_domain'] = get_domain_filter
@@ -38,6 +42,20 @@ def before_request():
     g.request_start_time = time.time()
     g.request_time = lambda: "%.2fms" % ((time.time() - g.request_start_time) * 1000)
     g.db_file = app.config['DB_FILE']
+
+@app.before_request
+def csrf_protect():
+    if request.method == "POST":
+        token = session.get('_csrf_token', None)
+        if not token or token != request.form.get('_csrf_token'):
+            abort(403)
+
+def generate_csrf_token():
+    if '_csrf_token' not in session:
+        session['_csrf_token'] = random_password()
+    return session['_csrf_token']
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 def gen_thumbnails(db_file):
     db = DB()

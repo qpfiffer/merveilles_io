@@ -2,7 +2,7 @@ from constants import PERSON_COLORS, THUMBNAIL_SIZE, THUMBNAIL_DIR
 from flask import Markup, current_app
 from merveilles.filters import get_domain_filter
 from PIL import Image
-import re, requests, os, markdown
+import re, requests, os, markdown, random, string
 
 def gen_thumbnail_for_url(url, filename):
     thumbnail_location = current_app.config['THUMBNAIL_DIR'] if current_app else THUMBNAIL_DIR
@@ -95,3 +95,24 @@ def get_effective_page(page, filter_func=lambda x: True):
         requested_page = pages[-1]
 
     return (pages, requested_page)
+
+def random_password():
+    myrg = random.SystemRandom()
+    length = 32
+    # If you want non-English characters, remove the [0:52]
+    alphabet = string.letters[0:52] + string.digits
+    pw = str().join(myrg.choice(alphabet) for _ in range(length))
+    return pw
+
+def auth_user(email_address, password):
+    connect_str = "http://localhost:8080/{}".format(email_address)
+    response = requests.get(connect_str)
+
+    if response.status_code == 200:
+        user = response.json()
+        hash = hashpw("{0}{1}".format(email_address, password), user.salt)
+
+        if user.password == hash:
+            return True
+
+    return False
