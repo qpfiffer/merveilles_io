@@ -1,7 +1,9 @@
 {% if pages %}
 <div class="fpages_wrapper">
     <div id="fuck_pages">
+        {% if current_page|int - 1 >= pages[0] %}
         <a href="{{request.path}}?page={{current_page|int -1}}">&laquo;</a>
+        {% endif %}
         {% if current_page|int >= 2 %}
         <a href="{{request.path}}?page={{current_page|int - 2}}">{{current_page|int -2}}</a>
         {% endif %}
@@ -9,13 +11,19 @@
         <a href="{{request.path}}?page={{current_page|int - 1}}">{{current_page|int -1}}</a>
         {% endif %}
         <a href="{{request.path}}?page={{current_page}}"><u>{{current_page}}</u></a>
+        {% if current_page|int + 1 <= pages[::-1][0] %}
         <a href="{{request.path}}?page={{current_page|int + 1}}">{{current_page|int +1}}</a>
+        {% endif %}
+        {% if current_page|int + 2 <= pages[::-1][0] %}
         <a href="{{request.path}}?page={{current_page|int + 2}}">{{current_page|int +2}}</a>
+        {% endif %}
         <a href="#">&hellip;</a>
         {% with page = pages[::-1][0] %}
         <a href="{{request.path}}?page={{page}}">{% if current_page|int == page|int %}<u>{{page}}</u>{% else %}{{page}}{%endif%}</a>
         {% endwith %}
+        {% if current_page|int + 1 <= pages[::-1][0] %}
         <a href="{{request.path}}?page={{current_page|int +1}}">&raquo;</a>
+        {% endif %}
         <p style="font-size: 12px; text-align: center;">Pages are deceptive. Live life in a basket.</p>
     </div>
 </div>
