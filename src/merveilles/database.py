@@ -157,14 +157,15 @@ def get_items(item_filter, db_file, page=0):
     cur = db.cursor()
     cur.jump_back()
     while len(items) < FILTER_MAX:
-        if item_iter != (FILTER_MAX * page):
-            item_iter = item_iter + 1
-            cur.step_back()
-            continue
-
         rec = cur.get(False)
         if not rec:
             break
+
+        if item_iter != (FILTER_MAX * page):
+            if item_filter(rec):
+                item_iter = item_iter + 1
+            cur.step_back()
+            continue
 
         if item_filter(rec):
             items.append(rec)
