@@ -17,9 +17,11 @@
         {% if current_page|int + 2 <= pages[::-1][0] %}
         <a href="{{request.path}}?page={{current_page|int + 2}}">{{current_page|int +2}}</a>
         {% endif %}
-        <a href="#">&hellip;</a>
-        {% with page = pages[::-1][0] %}
-        <a href="{{request.path}}?page={{page}}">{% if current_page|int == page|int %}<u>{{page}}</u>{% else %}{{page}}{%endif%}</a>
+        {% with page = pages[::-1][0], cpage_int=current_page|int %}
+            {% if not page|int in [cpage_int - 2, cpage_int - 1,  cpage_int, cpage_int + 1, cpage_int+2] %}
+            <a href="#">&hellip;</a>
+            <a href="{{request.path}}?page={{page}}">{% if current_page|int == page|int %}<u>{{page}}</u>{% else %}{{page}}{%endif%}</a>
+            {% endif %}
         {% endwith %}
         {% if current_page|int + 1 <= pages[::-1][0] %}
         <a href="{{request.path}}?page={{current_page|int +1}}">&raquo;</a>
