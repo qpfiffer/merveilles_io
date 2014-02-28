@@ -3,7 +3,7 @@ from flask import request, current_app
 from functools import wraps
 from kyotocabinet import DB
 
-def view_cache(f):
+def kc_view_cache(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         # Debug
