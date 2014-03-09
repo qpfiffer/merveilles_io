@@ -45,7 +45,7 @@ def before_request():
 
 @app.before_request
 def csrf_protect():
-    if request.url_rule.rule != '/submit' and request.method == "POST":
+    if request.url_rule and request.url_rule.rule != '/submit' and request.method == "POST":
         token = session.get('_csrf_token', None)
         if not token or token != request.form.get('_csrf_token'):
             abort(403)
