@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from context_processors import db_meta_info
 from flask import request, current_app
 from functools import wraps
@@ -12,9 +13,10 @@ def ol_view_cache(f):
             return f(*args, **kwargs)
 
         res = None
-        fancy = "{}{}{}{}".format(db_meta_info()['count'],
+        fancy = u"{}{}{}{}{}".format(db_meta_info()['count'],
                 request.host,
                 request.query_string,
+                unicode(request.path).replace("/", u"☃"),
                 f.func_name)
         quoted = urllib.quote(fancy.encode('ascii', 'replace'))
 
