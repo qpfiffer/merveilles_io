@@ -23,7 +23,7 @@ def ol_view_cache(f):
         if resp.status_code == 404:
             res = f(*args, **kwargs)
             # 24 hours
-            expiration = int(calendar.timegm(time.gmtime())) + (60 * 60)
+            expiration = int(calendar.timegm(time.gmtime())) + 60 #(60 * 60 * 24)
             utf_data = res.encode('utf-8')
             compressed = zlib.compress(utf_data)
             requests.post("http://localhost:8080/{}".format(quoted),
