@@ -3,7 +3,7 @@ from context_processors import db_meta_info
 from flask import request, current_app
 from functools import wraps
 from kyotocabinet import DB
-import requests, time, zlib, urllib, calendar
+import requests, time, urllib, calendar
 
 def ol_view_cache(f):
     @wraps(f)
@@ -26,15 +26,13 @@ def ol_view_cache(f):
             # 24 hours
             expiration = int(calendar.timegm(time.gmtime())) + (60 * 60)
             utf_data = res.encode('utf-8')
-            compressed = zlib.compress(utf_data)
             requests.post("http://localhost:8080/{}".format(quoted),
-                data=compressed,
+                data=utf_data,
                 headers={
                     "Content-Type": "text/html",
                     "X-OlegDB-use-by": expiration})
         else:
-            compressed = resp.raw.read()
-            res = zlib.decompress(compressed)
+            res = resp.raw.read()
 
         return res
     return decorated_function
