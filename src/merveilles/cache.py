@@ -34,8 +34,8 @@ def ol_view_cache(f):
         else:
             res = resp.raw.read()
 
-        start_cache_time = lambda: "%.2fms" % ((time.time() - start_cache_time) * 1000)
-        cache_str = "<!-- {} -->".format(start_cache_time())
+        full_time = lambda: "%.2fms" % ((time.time() - start_cache_time) * 1000)
+        cache_str = "<!-- Cache time: {} -->".format(full_time())
         return "{}{}".format(res, cache_str)
     return decorated_function
 
