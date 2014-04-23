@@ -36,7 +36,12 @@ def ol_view_cache(f):
 
         full_time = lambda: "%.2fms" % ((time.time() - start_cache_time) * 1000)
         cache_str = "<!-- Cache time: {} -->".format(full_time())
-        return "{}{}".format(res, cache_str)
+        appended = res
+        try:
+            appended = "{}{}".format(res, cache_str)
+        except UnicodeEncodeError:
+            pass
+        return appended
     return decorated_function
 
 def kc_view_cache(f):
