@@ -7,6 +7,7 @@ import requests, time, urllib, calendar
 def ol_view_cache(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
+        start_cache_time = time.time()
         # Debug
         if not current_app.config['CACHE']:
             return f(*args, **kwargs)
@@ -33,7 +34,9 @@ def ol_view_cache(f):
         else:
             res = resp.raw.read()
 
-        return res
+        start_cache_time = lambda: "%.2fms" % ((time.time() - start_cache_time) * 1000)
+        cache_str = "<!-- {} -->".format(start_cache_time)
+        return "{}{}".format(res, cache_str)
     return decorated_function
 
 def kc_view_cache(f):
