@@ -37,9 +37,29 @@ $(function() {
         var con = canvas.getContext('2d');
         drawHexFace(con, username.hashCode(), 'rgb(255,255,255)', 'rgb(68,68,68)');
     });
+
+    $(".star").each(function(iter, val) {
+        $(val).click(function(e) {
+            var key= $(val).parents(".item").data("key");
+            var img = $(val).find("img")[0];
+            $.ajax({
+                  url: star_toggle_url.replace("0", key),
+            }).done(function(response) {
+                if (response.success) {
+                    if (response.starred) {
+                        $(img).attr("src", star_img);
+                    } else {
+                        $(img).attr("src", unstar_img);
+                    }
+                }
+            });
+            return false;
+        });
+    });
+
     $(".link").each(function(iter, val) {
         $(val).click(function(e) {
-            var key= $(val).parentsUntil("item").data().key;
+            var key= $(val).parents(".item").data("key");
             $.ajax({
                   url: single_item_url.replace("0", key),
             }).done(function(response) {

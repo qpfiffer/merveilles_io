@@ -4,7 +4,8 @@ from json import dumps
 
 from cache import kc_view_cache
 from database import get_all_items, get_post_num, \
-        get_post_by_date, get_user_stats
+        get_post_by_date, get_user_stats, set_user
+from context_processors import get_user
 
 app = Blueprint('merveilles_api', __name__, template_folder='templates')
 
@@ -21,6 +22,33 @@ def post_num(post_num):
     if item == {}:
         abort(404)
     return Response(dumps(item), mimetype="application/json")
+
+@app.route("/star/<key>", methods=['GET', 'POST'])
+def star_toggle(key):
+    key = int(key)
+    to_return = {"success": False, "error": None}
+    user = get_user()["user"]
+
+    if not user:
+        to_return["error"] = "You are not logged in."
+        return Response(dumps(to_return), mimetype="application/json"), 403
+
+    if key in user["starred"]:
+        user["starred"] = [x for x in user["starred"] if x != key]
+        to_return["starred"] = False
+    else:
+        user["starred"].append(key)
+        to_return["starred"] = True
+
+    print "User stars: {}".format(user["starred"])
+    if set_user(user):
+        to_return["success"] = True
+        return Response(dumps(to_return), mimetype="application/json")
+    else:
+        to_return["error"] = "Could not set user object."
+        return Response(dumps(to_return), mimetype="application/json"), 500
+
+    return Response(dumps(to_return), mimetype="application/json"), 403
 
 @app.route("/data/date/<int:key>")
 @kc_view_cache

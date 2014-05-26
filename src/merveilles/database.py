@@ -1,4 +1,4 @@
-from flask import current_app, session
+from flask import current_app, session, g
 from bcrypt import hashpw, gensalt
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, date
@@ -153,6 +153,19 @@ def insert_item(url, person, db_file):
 
     return Response('{"What happened?": "MUDADA"}',
         mimetype=mimetype)
+
+def set_user(user_obj):
+    from merveilles.database import _get_user_str
+    user = None
+    username = session.get("username")
+
+    if username:
+        oleg = g.oleg
+        user_str = _get_user_str(username)
+        oleg.set(user_str, user_obj)
+        return True
+
+    return False
 
 def get_items(item_filter, db_file, page=0):
     item_iter = 0

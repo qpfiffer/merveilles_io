@@ -58,6 +58,9 @@
         <script type="text/javascript">
             search_url = "{{ url_for('merveilles.interrogate', qstring="") }}";
             single_item_url = "{{ url_for('merveilles_api.post_date_single', key=0) }}";
+            star_toggle_url = "{{ url_for('merveilles_api.star_toggle', key=0) }}";
+            star_img = "{{ url_for('static', filename='img/starred.svg') }}";
+            unstar_img = "{{ url_for('static', filename='img/starred.svg') }}";
             $(function() {
             {% block startup %}
             {% endblock %}
