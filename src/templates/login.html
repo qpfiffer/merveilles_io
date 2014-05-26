@@ -11,7 +11,9 @@
             <label>Password:</label>
             <input type="password" name="password"/>
         </p>
-        <p class="error">{{message}}</p>
+        {% if error %}
+        <p class="error">{{error}}</p>
+        {% endif %}
         <p>
             <input type="submit" value="Log in"/>
         </p>

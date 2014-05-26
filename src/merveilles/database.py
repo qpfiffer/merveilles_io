@@ -1,3 +1,5 @@
+from flask import current_app, session
+from bcrypt import hashpw, gensalt
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, date
 from flask import Response, current_app
@@ -11,6 +13,11 @@ import random
 from constants import FILTER_MAX, PERSON_COLORS
 from utils import get_domain, visible
 
+SCHEMA_VERSION = "0001"
+USERS_PREFIX = "users"
+
+def _get_user_str(username):
+    return "{}{}".format(USERS_PREFIX, username)
 def search_func(record, search_string):
     for item in record:
         if search_string in unicode(record[item]):
@@ -413,3 +420,38 @@ def get_page_count(item_filter = lambda x: True):
     cur.disable()
     db.close()
     return count / FILTER_MAX
+
+def _hash_pw(username, pw, salt):
+    return hashpw("{}{}".format(username, pw), salt)
+
+def auth_user(connection, username, pw):
+    getstr = _get_user_str(username)
+
+    userobj = connection.get(getstr)
+    if userobj and userobj['username'] == username:
+        salt = userobj['salt']
+        sent_hash = _hash_pw(username, pw, salt)
+
+        if sent_hash == userobj['password']:
+            return True
+    return False
+
+def sign_up(connection, username, password, admin=False):
+    salt = gensalt()
+    pwhash = _hash_pw(username, password, salt)
+    user = connection.get(_get_user_str(username))
+
+    if not user:
+        new_user = {
+            "api_version": SCHEMA_VERSION,
+            "username": username,
+            "password": pwhash,
+            "starred": [],
+            "salt": salt,
+            "admin": admin
+        }
+        connection.set(_get_user_str(username), new_user)
+        return (True, new_user)
+    else:
+        return (False, "Username already taken.")
+    return (False, "Could not create user for some reason.")

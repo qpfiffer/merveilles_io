@@ -4,9 +4,6 @@ from merveilles.filters import get_domain_filter
 from PIL import Image
 import re, requests, os, markdown, random, string
 
-SCHEMA_VERSION = "0001"
-USERS_PREFIX = "users"
-
 def gen_thumbnail_for_url(url, filename):
     thumbnail_location = current_app.config['THUMBNAIL_DIR'] if current_app else THUMBNAIL_DIR
     is_image = url.lower().endswith(("jpg", "jpeg", "gif", "png"))
@@ -106,35 +103,3 @@ def random_password():
     alphabet = string.letters[0:52] + string.digits
     pw = str().join(myrg.choice(alphabet) for _ in range(length))
     return pw
-
-def sign_up(connection, username, password, admin=False):
-    salt = gensalt()
-    pwhash = _hash_pw(username, password, salt)
-    user = connection.get(_get_user_str(username))
-
-    if not user:
-        new_user = {
-            "api_version": SCHEMA_VERSION,
-            "username": username,
-            "password": pwhash,
-            "salt": salt,
-            "admin": admin
-        }
-        connection.set(_get_user_str(username), new_user)
-        return (True, new_user)
-    else:
-        return (False, "Username already taken.")
-    return (False, "Could not create user for some reason.")
-
-def auth_user(email_address, password):
-    connect_str = "http://localhost:8080/{}".format(email_address)
-    response = requests.get(connect_str)
-
-    if response.status_code == 200:
-        user = response.json()
-        hash = hashpw("{0}{1}".format(email_address, password), user.salt)
-
-        if user.password == hash:
-            return True
-
-    return False

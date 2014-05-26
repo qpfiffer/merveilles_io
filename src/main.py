@@ -2,6 +2,7 @@ from flask import abort, Flask, g, request, session
 from json import loads, dumps
 from kyotocabinet import DB
 from olegsessions import OlegDBSessionInterface
+from olegdb import OlegDB
 
 from merveilles.routes import app as routes
 from merveilles.api_routes import app as api_routes
@@ -42,6 +43,7 @@ def before_request():
     g.request_start_time = time.time()
     g.request_time = lambda: "%.2fms" % ((time.time() - g.request_start_time) * 1000)
     g.db_file = app.config['DB_FILE']
+    g.oleg = OlegDB()
 
 @app.before_request
 def csrf_protect():

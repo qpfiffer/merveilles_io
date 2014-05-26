@@ -1,14 +1,14 @@
 from json import loads
 from datetime import datetime, timedelta, date
 from flask import current_app, Blueprint, render_template, request, \
-    abort, redirect, url_for, g
+    abort, redirect, url_for, g, session
 from time import mktime
 from werkzeug.exceptions import BadRequestKeyError
 
 from cache import ol_view_cache
 from database import insert_item, get_items, top_things, search_func, \
-    get_items_last_X_days, aggregate_by_hour
-from utils import get_domain, build_posts, get_effective_page, auth_user
+    get_items_last_X_days, aggregate_by_hour, auth_user, sign_up
+from utils import get_domain, build_posts, get_effective_page
 import requests, urllib
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
@@ -29,18 +29,17 @@ def blog():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-    message = ''
+    error = None
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        if auth_user(username, password):
-            session.permanent = True
-            session['username'] = request.form['username']
-            return redirect(url_for('kyoto.manage'))
-        else:
-            message = 'Login incorrect.'
 
-    return render_template("login.html", message=message)
+        if auth_user(g.oleg, username, password):
+            session.permanent = True
+            session['username'] = username
+            return redirect(url_for('metaforcefeed.root'))
+        error = "Could not log in for some reason."
+    return render_template("login.html", error=error)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -62,11 +61,11 @@ def register():
             error = "Passwords do not match."
             return render_template("register.html", error=error)
 
-        created, user_obj = sign_up(g.db, username, password1)
+        created, user_obj = sign_up(g.oleg, username, password1)
         if created:
             session.permanent = True
             session['username'] = user_obj['username']
-            return redirect(url_for('metaforcefeed.root'))
+            return redirect(url_for('merveilles.root'))
         # Well something didn't work right.
         error = user_obj
 
@@ -152,6 +151,11 @@ def sigma():
 @ol_view_cache
 def top():
     return redirect(url_for('merveilles.stats'))
+
+@app.route("/logout", methods=['GET'])
+def logout():
+    session.clear()
+    return redirect(url_for('merveilles.root'))
 
 @app.route("/stats")
 @ol_view_cache
