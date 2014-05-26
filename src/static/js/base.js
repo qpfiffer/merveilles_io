@@ -43,7 +43,9 @@ $(function() {
             var key= $(val).parents(".item").data("key");
             var img = $(val).find("img")[0];
             $.ajax({
-                  url: star_toggle_url.replace("0", key),
+                type: "POST",
+                data: { "_csrf_token": csrf_token },
+                url: star_toggle_url.replace("0", key),
             }).done(function(response) {
                 if (response.success) {
                     if (response.starred) {

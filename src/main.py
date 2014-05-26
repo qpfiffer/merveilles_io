@@ -49,7 +49,14 @@ def before_request():
 def csrf_protect():
     if request.url_rule and request.url_rule.rule != '/submit' and request.method == "POST":
         token = session.get('_csrf_token', None)
-        if not token or token != request.form.get('_csrf_token'):
+        in_form = token == request.form.get('_csrf_token')
+        try:
+            stuff = json.loads(request.data).get("_csrf_token")
+            in_data = stuff == token
+        except Exception as e:
+            print e
+            in_data = False
+        if not token or not (in_form or in_data):
             abort(403)
 
 def generate_csrf_token():

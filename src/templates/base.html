@@ -33,6 +33,7 @@
                     {% if not user %}
                         <a href="{{ url_for('merveilles.login') }}"><img title="Log in" src="{{ url_for('static', filename='img/login_icon.svg') }}"></a>
                     {% else %}
+                        <a href="{{ url_for('merveilles.starred') }}"><img title="Starred Links" src="{{ url_for('static', filename='img/unstarred.svg') }}"></a>
                         <a href="{{ url_for('merveilles.logout') }}"><img title="Log out" src="{{ url_for('static', filename='img/logout.svg') }}"></a>
                     {% endif %}
                     </li>
@@ -60,7 +61,8 @@
             single_item_url = "{{ url_for('merveilles_api.post_date_single', key=0) }}";
             star_toggle_url = "{{ url_for('merveilles_api.star_toggle', key=0) }}";
             star_img = "{{ url_for('static', filename='img/starred.svg') }}";
-            unstar_img = "{{ url_for('static', filename='img/starred.svg') }}";
+            unstar_img = "{{ url_for('static', filename='img/unstarred.svg') }}";
+            csrf_token = "{{ session['_csrf_token'] }}";
             $(function() {
             {% block startup %}
             {% endblock %}

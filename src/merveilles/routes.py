@@ -6,6 +6,7 @@ from time import mktime
 from werkzeug.exceptions import BadRequestKeyError
 
 from cache import ol_view_cache
+from context_processors import get_user
 from database import insert_item, get_items, top_things, search_func, \
     get_items_last_X_days, aggregate_by_hour, auth_user, sign_up
 from utils import get_domain, build_posts, get_effective_page
@@ -112,6 +113,21 @@ def introspect(domain):
 
     return render_template("index.html", items=items, pages=pages,
             requested_page=requested_page, current_page=request.args.get('page', 0))
+
+@app.route("/user/starred", methods=['GET'])
+def starred():
+    user = get_user()["user"]
+    if not user:
+        return redirect(url_for('merveilles.login'))
+
+    filter_func = lambda x: int(loads(x[1])["created_at"]) in user["starred"]
+    pages, requested_page = get_effective_page(request.args.get("page", 0),
+            filter_func)
+    items = get_items(filter_func, g.db_file)
+
+    return render_template("index.html", items=items, pages=pages,
+            requested_page=requested_page, current_page=request.args.get('page', 0))
+
 
 @app.route("/introspect", methods=['GET'])
 def introspect_old():
