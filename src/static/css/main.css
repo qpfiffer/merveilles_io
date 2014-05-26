@@ -9,6 +9,9 @@ body {
     margin: 0px;
     overflow-x: hidden;
 }
+p.error {
+    color: red;
+}
 .dummy_block {
     height: 67px;
     width: 100%;

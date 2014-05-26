@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, date
 from flask import current_app, Blueprint, render_template, request, \
     abort, redirect, url_for, g
 from time import mktime
+from werkzeug.exceptions import BadRequestKeyError
 
 from cache import ol_view_cache
 from database import insert_item, get_items, top_things, search_func, \
@@ -30,17 +31,46 @@ def blog():
 def login():
     message = ''
     if request.method == 'POST':
-        email_address = request.form['email_address']
+        username = request.form['username']
         password = request.form['password']
-        if auth_user(email_address, password):
+        if auth_user(username, password):
             session.permanent = True
-            session['email_address'] = request.form['email_address']
+            session['username'] = request.form['username']
             return redirect(url_for('kyoto.manage'))
         else:
             message = 'Login incorrect.'
 
     return render_template("login.html", message=message)
-    return render_template("login.html")
+
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    error = ""
+    if request.method == 'POST':
+        try:
+            username = request.form['username']
+            password1 = request.form['password1']
+            password2 = request.form['password2']
+        except BadRequestKeyError:
+            error = "Some data didn't make it to the front."
+            return render_template("register.html", error=error)
+
+        if len(username) == 0:
+            error = "Must input username."
+            return render_template("register.html", error=error)
+
+        if password1 != password2:
+            error = "Passwords do not match."
+            return render_template("register.html", error=error)
+
+        created, user_obj = sign_up(g.db, username, password1)
+        if created:
+            session.permanent = True
+            session['username'] = user_obj['username']
+            return redirect(url_for('metaforcefeed.root'))
+        # Well something didn't work right.
+        error = user_obj
+
+    return render_template("register.html", error=error)
 
 @app.route("/blog/<slug>", methods=['GET'])
 @ol_view_cache
