@@ -5,7 +5,6 @@ from flask import current_app, Blueprint, render_template, request, \
 from time import mktime
 from werkzeug.exceptions import BadRequestKeyError
 
-from cache import ol_view_cache
 from context_processors import get_user
 from database import insert_item, get_items, top_things, search_func, \
     get_items_last_X_days, aggregate_by_hour, auth_user, sign_up
@@ -15,12 +14,10 @@ import requests, urllib
 app = Blueprint('merveilles', __name__, template_folder='templates')
 
 @app.route("/viz", methods=['GET'])
-@ol_view_cache
 def viz():
     return render_template("viz.html")
 
 @app.route("/blog", methods=['GET'])
-@ol_view_cache
 def blog():
     try:
         posts = build_posts(current_app.config["BLOG_DIR"])
@@ -73,7 +70,6 @@ def register():
     return render_template("register.html", error=error)
 
 @app.route("/blog/<slug>", methods=['GET'])
-@ol_view_cache
 def blog_post(slug):
     # Whole-ass getting the post:
     try:
@@ -93,7 +89,6 @@ def submit():
     return insert_item(url, person, g.db_file)
 
 @app.route("/intrigue/<user>", methods=['GET'])
-@ol_view_cache
 def intrigue(user):
     filter_func = lambda x: loads(x[1])["person"].lower() == user.lower()
     pages, requested_page = get_effective_page(request.args.get("page", 0),
@@ -104,7 +99,6 @@ def intrigue(user):
             requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/introspect/<domain>", methods=['GET'])
-@ol_view_cache
 def introspect(domain):
     filter_func = lambda x: get_domain(loads(x[1])).lower() in domain.lower()
     pages, requested_page = get_effective_page(request.args.get("page", 0),
@@ -137,7 +131,6 @@ def introspect_old():
     return redirect(url_for('merveilles.introspect', domain=request.args['domain']))
 
 @app.route("/interrogate/<qstring>", methods=['GET'])
-@ol_view_cache
 def interrogate(qstring):
     filter_func = lambda x: search_func(loads(x[1]), qstring)
     pages, requested_page = get_effective_page(request.args.get("page", 0),
@@ -148,7 +141,6 @@ def interrogate(qstring):
             requested_page=requested_page, current_page=request.args.get('page', 0))
 
 @app.route("/", methods=['GET'])
-@ol_view_cache
 def root():
     pages, requested_page = get_effective_page(request.args.get("page", 0))
     items = get_items(lambda x: True, g.db_file, requested_page)
@@ -157,14 +149,12 @@ def root():
         current_page=request.args.get('page', 0))
 
 @app.route("/sigma")
-@ol_view_cache
 def sigma():
     items = top_things(g.db_file)
     graph_data = items[2]
     return render_template("sigma.html", items=items, graph_data=graph_data)
 
 @app.route("/top")
-@ol_view_cache
 def top():
     return redirect(url_for('merveilles.stats'))
 
@@ -174,7 +164,6 @@ def logout():
     return redirect(url_for('merveilles.root'))
 
 @app.route("/stats")
-@ol_view_cache
 def stats():
     db_file = g.db_file
     top_items = top_things(db_file)
