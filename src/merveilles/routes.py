@@ -37,7 +37,7 @@ def login():
         if auth_user(g.oleg, username, password):
             session.permanent = True
             session['username'] = username
-            return redirect(url_for('metaforcefeed.root'))
+            return redirect(url_for('merveilles.root'))
         error = "Could not log in for some reason."
     return render_template("login.html", error=error)
 
