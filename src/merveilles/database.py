@@ -447,6 +447,7 @@ def sign_up(connection, username, password, admin=False):
             "username": username,
             "password": pwhash,
             "starred": [],
+            "icon_hash": None,
             "salt": salt,
             "admin": admin
         }
