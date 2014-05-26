@@ -13,17 +13,17 @@
         {% include "page_junk.html" %}
         {% if items %}
             {% for item in items %}
-            <div class="item">
+            <div class="item" data-key="{{item.created_at}}">
                 <div class="item_header">
                     <div class="the_animal {{item.person}}"></div>
                     <a href="{{ url_for('merveilles.intrigue', user=item.person) }}" class="person">{{item.person}}</a>
                 </div>
-                <span class="link" data-key="{{item.created_at}}" >{{item.title or item.url}}</span>
+                <span class="link" >{{item.title or item.url}}</span>
                 <div class="time">
                     <span>Linked on <a href="{{ url_for('merveilles_api.post_date_pretty', key=item.created_at|int) }}">{{item.created_at|unix_to_human}}</a> | </span>
                     <a href="{{ url_for('merveilles.introspect', domain=get_domain(item.url)) }}">Similar Links</a>
                     {% if user %}
-                    <span> |
+                    <span class="star"> |
                         {% if item.created_at in user.starred %}
                             <img class="thumb_icon" src="{{ url_for('static', filename="img/starred.svg") }}"></img>
                         {% else %}

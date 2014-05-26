@@ -39,7 +39,7 @@ $(function() {
     });
     $(".link").each(function(iter, val) {
         $(val).click(function(e) {
-            var key= $(val).data().key;
+            var key= $(val).parentsUntil("item").data().key;
             $.ajax({
                   url: single_item_url.replace("0", key),
             }).done(function(response) {
