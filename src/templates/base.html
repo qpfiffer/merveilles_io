@@ -29,14 +29,18 @@
                     <li>
                         <a href="{{ url_for('merveilles.stats') }}"><img title="Stats" src="{{ url_for('static', filename='img/graph_icon.svg') }}"></a>
                     </li>
-                    <li>
                     {% if not user %}
+                    <li>
                         <a href="{{ url_for('merveilles.login') }}"><img title="Log in" src="{{ url_for('static', filename='img/login_icon.svg') }}"></a>
-                    {% else %}
-                        <a href="{{ url_for('merveilles.starred') }}"><img title="Starred Links" src="{{ url_for('static', filename='img/unstarred.svg') }}"></a>
-                        <a href="{{ url_for('merveilles.logout') }}"><img title="Log out" src="{{ url_for('static', filename='img/logout.svg') }}"></a>
-                    {% endif %}
                     </li>
+                    {% else %}
+                    <li>
+                        <a href="{{ url_for('merveilles.starred') }}"><img title="Starred Links" src="{{ url_for('static', filename='img/unstarred.svg') }}"></a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('merveilles.logout') }}"><img title="Log out" src="{{ url_for('static', filename='img/logout.svg') }}"></a>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
