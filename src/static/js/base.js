@@ -35,7 +35,13 @@ $(function() {
         var canvas = val.appendChild(document.createElement('canvas'));
         canvas.width = canvas.height = 32;
         var con = canvas.getContext('2d');
-        drawHexFace(con, username.hashCode(), 'rgb(255,255,255)', 'rgb(68,68,68)');
+        try {
+          drawHexFace(con, username.hashCode(), 'rgb(255,255,255)', 'rgb(68,68,68)');
+        } catch (e) {
+          if (typeof console !== 'undefined') {
+            console.log(e);
+          }
+        }
     });
 
     $(".star").each(function(iter, val) {
