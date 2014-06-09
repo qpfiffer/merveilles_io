@@ -1,7 +1,7 @@
 from json import loads
 from datetime import datetime, timedelta, date
 from flask import current_app, Blueprint, render_template, request, \
-    abort, redirect, url_for, g, session
+    abort, redirect, url_for, g, session, Response
 from time import mktime
 from werkzeug.exceptions import BadRequestKeyError
 
@@ -84,6 +84,14 @@ def blog_post(slug):
 
 @app.route("/submit", methods=['POST'])
 def submit():
+    failure_response = (Response('{"Fucking Burn": True}', mimetype="application/json"), 666)
+
+    try:
+        if request.json['submission_salt'] != current_app.config['SUBMISSION_SALT']:
+            return failure_response
+    except KeyError:
+            return failure_response
+
     url = request.json['url']
     person = request.json["person"]
     return insert_item(url, person, g.db_file)
