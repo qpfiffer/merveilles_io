@@ -26,6 +26,7 @@ app.config['BLOG_DIR'] = os.environ.get("BLOG_DIR") or BLOG_DIR
 app.config['PARADISE_JSON'] = os.environ.get("PARADISE_JSON") or PARADISE_JSON
 app.config['THUMBNAIL_DIR'] = os.environ.get("THUMBNAIL_DIR") or THUMBNAIL_DIR
 app.config['CACHE'] = True
+app.config['SUBMISSION_SALT'] = os.environ['SUBMISSION_SALT']
 app.session_interface = OlegDBSessionInterface()
 app.jinja_env.globals.update(get_domain=get_domain_filter)
 
