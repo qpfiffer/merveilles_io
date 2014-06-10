@@ -13,7 +13,7 @@ from merveilles.filters import get_domain_filter, file_size, unix_to_human,\
     is_video, is_sound, youtube_vid, is_youtube
 from merveilles.utils import gen_thumbnail_for_url, random_password
 
-import sys, os, getopt, time
+import sys, os, getopt, time, json
 
 app = Flask(__name__)
 app.register_blueprint(routes)

@@ -9,7 +9,6 @@ from context_processors import get_user
 from database import insert_item, get_items, top_things, search_func, \
     get_items_last_X_days, aggregate_by_hour, auth_user, sign_up
 from utils import get_domain, build_posts, get_effective_page
-import requests, urllib
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
 

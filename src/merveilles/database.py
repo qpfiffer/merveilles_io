@@ -1,8 +1,7 @@
-from flask import current_app, session, g
+from flask import current_app, session, g, Response
 from bcrypt import hashpw, gensalt
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta, date
-from flask import Response, current_app
 from kyotocabinet import DB
 from json import dumps, loads
 from time import mktime
@@ -156,7 +155,6 @@ def insert_item(url, person, db_file):
 
 def set_user(user_obj):
     from merveilles.database import _get_user_str
-    user = None
     username = session.get("username")
 
     if username:

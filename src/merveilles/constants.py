@@ -1,5 +1,3 @@
-import os
-
 DB_FILE = "/tmp/links.kct"
 DEFAULT_CHANNEL = "#merveilles"
 BLOG_DIR = "src/static/blog_posts/"
