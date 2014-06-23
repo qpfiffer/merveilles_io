@@ -48,7 +48,10 @@ def before_request():
 
 @app.before_request
 def csrf_protect():
-    if request.url_rule and request.url_rule.rule != '/submit' and request.method == "POST":
+    if  request.url_rule and
+        request.url_rule.rule != '/submit' and
+        '/star/' not in request.url_rule.rule and
+        request.method == "POST":
         token = session.pop('_csrf_token', None)
         in_form = token == request.form.get('_csrf_token')
         try:
