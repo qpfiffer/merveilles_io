@@ -110,7 +110,7 @@ def introspect(domain):
     filter_func = lambda x: get_domain(loads(x[1])).lower() in domain.lower()
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
-    items = get_items(filter_func, g.db_file)
+    items = get_items(filter_func, g.db_file, requested_page)
 
     return render_template("index.html", items=items, pages=pages,
             requested_page=requested_page, current_page=request.args.get('page', 0))
@@ -124,7 +124,7 @@ def starred():
     filter_func = lambda x: int(loads(x[1])["created_at"]) in user["starred"]
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
-    items = get_items(filter_func, g.db_file)
+    items = get_items(filter_func, g.db_file, requested_page)
 
     return render_template("index.html", items=items, pages=pages,
             requested_page=requested_page, current_page=request.args.get('page', 0))
@@ -142,7 +142,7 @@ def interrogate(qstring):
     filter_func = lambda x: search_func(loads(x[1]), qstring)
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
-    items = get_items(filter_func, g.db_file)
+    items = get_items(filter_func, g.db_file, requested_page)
 
     return render_template("index.html", items=items, pages=pages,
             requested_page=requested_page, current_page=request.args.get('page', 0))
