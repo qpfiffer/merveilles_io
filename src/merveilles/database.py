@@ -17,10 +17,22 @@ USERS_PREFIX = "users"
 
 def _get_user_str(username):
     return "{}{}".format(USERS_PREFIX, username)
+
 def search_func(record, search_string):
-    for item in record:
-        if search_string in unicode(record[item]):
+    split_string = search_string.split(" ")
+    lowered_strings = [x.lower() for x in split_string]
+
+    # Loop through every item in the object
+    for item in ["summary", "title", "url"]:
+        def search_reduce_func(accum, val):
+            return accum and (val in unicode(record[item]).lower())
+
+        results = reduce(search_reduce_func, lowered_strings, True)
+
+        # Break out if we find a match
+        if results:
             return True
+
     return False
 
 def is_url_in_db(db, url):
