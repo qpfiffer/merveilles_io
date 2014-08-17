@@ -20,7 +20,21 @@
                 </div>
                 <a href="{{item.url}}">{{item.title or item.url}}</a>
                 <div class="time">
-                    <p>{{item.summary}}</p>
+                    {% if item.thumbnail %}
+                        <div class="summary">
+                            <a target="_blank" href="{{item.url}}">
+                                <img src="{{ url_for('static', filename=item.thumbnail) }}"></img>
+                            </a>
+                        </div>
+                    {% elif item.is_image %}
+                        <div class="summary">
+                            <a target="_blank" href="{{item.url}}">
+                                <img src="{{ url_for('static', filename="img/thumbnails/no_thumbnail.jpg") }}"></img>
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="summary"><p>{{item.summary}}</p></div>
+                    {% endif %}
                     <span>Linked on <a href="{{ url_for('merveilles_api.post_date_pretty', key=item.created_at|int) }}">{{item.created_at|unix_to_human}}</a> | </span>
                     <a href="{{ url_for('merveilles.introspect', domain=get_domain(item.url)) }}">Similar Links</a>
                     {% if user %}
