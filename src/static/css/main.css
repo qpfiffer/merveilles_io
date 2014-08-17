@@ -102,6 +102,12 @@ p.error {
     margin: 0 auto;
     width: 960px;
 }
+.col-80-20 {
+    display: inline-block;
+    vertical-align: top;
+    width: 78.5%;
+    margin-left: 10%;
+}
 .col-50 {
     display: inline-block;
     width: 48.5%;

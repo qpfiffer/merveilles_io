@@ -65,6 +65,7 @@ $(function() {
         });
     });
 
+    /*
     $(".link").each(function(iter, val) {
         $(val).click(function(e) {
             var key= $(val).parents(".item").data("key");
@@ -76,4 +77,5 @@ $(function() {
             return false;
         });
     });
+    */
 });

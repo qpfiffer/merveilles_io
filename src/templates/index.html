@@ -9,7 +9,7 @@
 {% block content %}
 <!-- <div id="last_10_days"></div> -->
 <div class="container">
-    <div class="col-50">
+    <div class="col-80-20">
         {% include "page_junk.html" %}
         {% if items %}
             {% for item in items %}
@@ -18,8 +18,9 @@
                     <div class="the_animal {{item.person}}"></div>
                     <a href="{{ url_for('merveilles.intrigue', user=item.person) }}" class="person">{{item.person}}</a>
                 </div>
-                <span class="link" >{{item.title or item.url}}</span>
+                <a href="{{item.url}}">{{item.title or item.url}}</a>
                 <div class="time">
+                    <p>{{item.summary}}</p>
                     <span>Linked on <a href="{{ url_for('merveilles_api.post_date_pretty', key=item.created_at|int) }}">{{item.created_at|unix_to_human}}</a> | </span>
                     <a href="{{ url_for('merveilles.introspect', domain=get_domain(item.url)) }}">Similar Links</a>
                     {% if user %}
@@ -48,6 +49,7 @@
         {% endif %}
         {% include "page_junk.html" %}
     </div>
+    <!--
     <div class="col-50">
         <div id="murder_me">
             <p>Code: <a href="https://github.com/qpfiffer/merveilles_io">https://github.com/qpfiffer/merveilles_io</a></p>
@@ -56,5 +58,6 @@
             <a id="hexa_madness" href="http://hexeosis.tumblr.com/post/68289994887"><img src="{{ url_for('static', filename='img/hex3.gif') }}"></img></a>
         </div>
     </div>
+    -->
 </div>
 {% endblock %}
