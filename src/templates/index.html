@@ -32,6 +32,8 @@
                                 <img src="{{ url_for('static', filename="img/thumbnails/no_thumbnail.jpg") }}"></img>
                             </a>
                         </div>
+                    {% elif item|is_youtube %}
+                    <iframe width="560" height="315" src="//www.youtube.com/embed/{{item|youtube_vid}}" frameborder="0" allowfullscreen></iframe>
                     {% else %}
                         <div class="summary"><p>{{item.summary}}</p></div>
                     {% endif %}
