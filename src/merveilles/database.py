@@ -111,7 +111,7 @@ def top_things(db_file):
             sorted(people.items(), key=lambda x: x[1], reverse=True),
             graph)
 
-def insert_item(url, person, db_file):
+def insert_item(url, person, db_file, submitted_title=''):
     mimetype = "application/json"
     db = DB()
 
@@ -132,8 +132,11 @@ def insert_item(url, person, db_file):
     try:
         thing = urlopen(url, timeout=10)
         soup = BeautifulSoup(thing)
-        title = soup.title.string
-
+        title = ''
+        if len(submitted_title) > 0:
+            title = submitted_title
+        else:
+            title = soup.title.string
         # Do some dumb summarizing if we can
         func = lambda a,v: a + " " + v.strip()
         visible_stuff = filter(visible, soup.findAll(text=True))

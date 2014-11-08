@@ -93,7 +93,10 @@ def submit():
 
     url = request.json['url']
     person = request.json["person"]
-    return insert_item(url, person, g.db_file)
+    title = ''
+    if 'title' in request.json:
+        title = request.json['title']
+    return insert_item(url, person, g.db_file, title)
 
 @app.route("/intrigue/<user>", methods=['GET'])
 def intrigue(user):
