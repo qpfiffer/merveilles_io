@@ -18,7 +18,10 @@
                     <div class="the_animal {{item.person}}"></div>
                     <a href="{{ url_for('merveilles.intrigue', user=item.person) }}" class="person">{{item.person}}</a>
                 </div>
-                <a href="{{item.url}}">{{item.title or item.url}}</a>
+                <a href="{{item.url}}">{{item.title or item.comment or item.url}}</a>
+                {% if item.comment %}
+                <p class="comment">{{ item.comment }}</s>
+                {% endif %}
                 <div class="time">
                     {% if item.thumbnail %}
                         <div class="summary">

@@ -91,9 +91,10 @@ def submit():
     except KeyError:
             return failure_response
 
-    url = request.json['url']
+    url = request.json["url"]
     person = request.json["person"]
-    return insert_item(url, person, g.db_file)
+    title = request.json.get("title", "")
+    return insert_item(url, person, g.db_file, title)
 
 @app.route("/intrigue/<user>", methods=['GET'])
 def intrigue(user):
