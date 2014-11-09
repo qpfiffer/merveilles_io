@@ -132,11 +132,7 @@ def insert_item(url, person, db_file, submitted_title=''):
     try:
         thing = urlopen(url, timeout=10)
         soup = BeautifulSoup(thing)
-        title = ''
-        if len(submitted_title) > 0:
-            title = submitted_title
-        else:
-            title = soup.title.string
+        title = soup.title.string
         # Do some dumb summarizing if we can
         func = lambda a,v: a + " " + v.strip()
         visible_stuff = filter(visible, soup.findAll(text=True))
@@ -160,7 +156,8 @@ def insert_item(url, person, db_file, submitted_title=''):
         "summary": summary,
         "person_color": PERSON_COLORS[random.randint(0, len(PERSON_COLORS)-1)],
         "is_image": is_image,
-        "thumbnail": thumbnail
+        "thumbnail": thumbnail,
+        "comment": submitted_title
     }
     db.set(created_at, dumps(record))
     db.close()
