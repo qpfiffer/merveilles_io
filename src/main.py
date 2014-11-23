@@ -84,7 +84,7 @@ def gen_thumbnails(db_file):
             break
 
         loaded = loads(rec[1])
-        is_image = loaded["url"].lower().endswith(("jpg", "jpeg", "gif", "png"))
+        is_image = loaded["url"].lower().endswith(("jpg", "jpeg", "gif", "png", "webm"))
 
         if is_image:
             print "Thumbnailing {}".format(loaded["url"])
