@@ -31,7 +31,9 @@ def is_video(item):
     return reduce(lambda a, v: a or (v.lower() in get_domain_filter(item['url']).lower()), video_urls, False)
 
 def is_youtube(item):
-    return 'youtube.com' in get_domain_filter(item['url']).lower()
+    x = 'youtube.com' in get_domain_filter(item['url']).lower()
+    y = 'youtube.com/watch' in item['url'].lower()
+    return x and y
 
 def youtube_vid(item):
     query_str = item['url'].split('?')[1].split("&")
