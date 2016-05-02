@@ -18,9 +18,9 @@ def main():
 
     all_keys = []
     cur = db.cursor()
-    cur.jump_back()
+    cur.jump()
     while True:
-        rec = cur.get(False)
+        rec = cur.get(True)
         if not rec:
             break
 
