@@ -20,13 +20,17 @@ def main():
     cur = db.cursor()
     cur.jump()
     while True:
-        rec = cur.get(True)
+        rec = cur.get(False)
         if not rec:
             break
 
         loaded = loads(rec[1])
         if loaded["person"] == username:
             all_keys.append(cur.get_key())
+
+        cur.step()
+    cur.disable()
+    db.close()
 
     print "Found {} records.".format(len(all_keys))
 
