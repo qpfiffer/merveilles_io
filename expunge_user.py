@@ -4,12 +4,17 @@ from kyotocabinet import DB
 from sys import argv
 
 def main():
-    db_file = argv[0]
-    username = argv[1]
+    db_file = argv[1]
+    username = argv[2]
+
+    if not db_file and not username:
+        print "Need db_file and username."
+        return -1
 
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
         print "Could not open database."
+        return -1
 
     all_keys = []
     cur = db.cursor()
