@@ -12,7 +12,7 @@ def main():
         return -1
 
     db = DB()
-    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+    if not db.open("{0}".format(db_file), DB.OWRITER):
         print "Could not open database."
         return -1
 
@@ -30,9 +30,16 @@ def main():
 
         cur.step()
     cur.disable()
-    db.close()
 
     print "Found {} records.".format(len(all_keys))
+    for key in all_keys:
+        print "Pending {}...".format(key)
+        if len(argv) > 3 and argv[3] == '--delete':
+            print "Removing {}...".format(key)
+            if not db.remove(key):
+                print "Could not remove key: {}".format(db.error())
+
+    db.close()
 
 if __name__ == '__main__':
     main()
