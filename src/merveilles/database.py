@@ -107,8 +107,11 @@ def top_things(db_file):
     cur.disable()
     db.close()
 
-    return (sorted(urls.items(), key=lambda x: x[1], reverse=True),
-            sorted(people.items(), key=lambda x: x[1], reverse=True),
+    def get_one(x):
+        return x[1]
+
+    return (sorted(urls.items(), key=get_one, reverse=True),
+            sorted(people.items(), key=get_one, reverse=True),
             graph)
 
 def insert_item(url, person, db_file, submitted_title=''):
@@ -134,9 +137,10 @@ def insert_item(url, person, db_file, submitted_title=''):
         soup = BeautifulSoup(thing)
         title = soup.title.string
         # Do some dumb summarizing if we can
-        func = lambda a,v: a + " " + v.strip()
+        def concat(a, v):
+            return a + " " + v.strip()
         visible_stuff = filter(visible, soup.findAll(text=True))
-        summary = reduce(func, visible_stuff, "")[:900] + "..."
+        summary = reduce(concat, visible_stuff, "")[:900] + "..."
     except:
         pass
         #return Response('{"What happened?": '\

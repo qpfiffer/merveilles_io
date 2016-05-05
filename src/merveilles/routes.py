@@ -72,7 +72,9 @@ def register():
 def blog_post(slug):
     # Whole-ass getting the post:
     try:
-        post = filter(lambda x: x["slug"] == slug, build_posts(current_app.config["BLOG_DIR"]))
+        def s(x):
+            return x["slug"] == slug
+        post = filter(s, build_posts(current_app.config["BLOG_DIR"]))
     except OSError:
         abort(404)
 
@@ -98,7 +100,8 @@ def submit():
 
 @app.route("/intrigue/<user>", methods=['GET'])
 def intrigue(user):
-    filter_func = lambda x: loads(x[1])["person"].lower() == user.lower()
+    def filter_func(x):
+        return loads(x[1])["person"].lower() == user.lower()
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
     items = get_items(filter_func, g.db_file, requested_page)
@@ -108,7 +111,8 @@ def intrigue(user):
 
 @app.route("/introspect/<domain>", methods=['GET'])
 def introspect(domain):
-    filter_func = lambda x: get_domain(loads(x[1])).lower() in domain.lower()
+    def filter_func(x):
+        return get_domain(loads(x[1])).lower() in domain.lower()
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
     items = get_items(filter_func, g.db_file, requested_page)
@@ -122,7 +126,8 @@ def starred():
     if not user:
         return redirect(url_for('merveilles.login'))
 
-    filter_func = lambda x: int(loads(x[1])["created_at"]) in user["starred"]
+    def filter_func(x)
+        return int(loads(x[1])["created_at"]) in user["starred"]
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
     items = get_items(filter_func, g.db_file, requested_page)
@@ -140,7 +145,8 @@ def introspect_old():
 
 @app.route("/interrogate/<qstring>", methods=['GET'])
 def interrogate(qstring):
-    filter_func = lambda x: search_func(loads(x[1]), qstring)
+    def filter_func(x):
+        return search_func(loads(x[1]), qstring)
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
     items = get_items(filter_func, g.db_file, requested_page)
@@ -151,7 +157,9 @@ def interrogate(qstring):
 @app.route("/", methods=['GET'])
 def root():
     pages, requested_page = get_effective_page(request.args.get("page", 0))
-    items = get_items(lambda x: True, g.db_file, requested_page)
+    def s(x):
+        return True
+    items = get_items(, g.db_file, requested_page)
 
     return render_template("index.html", items=items, pages=pages,
         current_page=request.args.get('page', 0))
@@ -214,7 +222,8 @@ def stats():
                 p_to_dp[person].append([item, last_day[item][person]])
 
     for item in p_to_dp:
-        muh_lambda = lambda x: (x[0], people[item])
+        def muh_lambda(x):
+            return (x[0], people[item])
         stats.append({"name": item, "data": map(muh_lambda, sorted(p_to_dp[item]))})
 
     return render_template("stats.html",
