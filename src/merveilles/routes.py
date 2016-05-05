@@ -159,7 +159,7 @@ def root():
     pages, requested_page = get_effective_page(request.args.get("page", 0))
     def s(x):
         return True
-    items = get_items(, g.db_file, requested_page)
+    items = get_items(s, g.db_file, requested_page)
 
     return render_template("index.html", items=items, pages=pages,
         current_page=request.args.get('page', 0))
