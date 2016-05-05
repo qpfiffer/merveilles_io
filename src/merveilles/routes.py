@@ -126,7 +126,7 @@ def starred():
     if not user:
         return redirect(url_for('merveilles.login'))
 
-    def filter_func(x)
+    def filter_func(x):
         return int(loads(x[1])["created_at"]) in user["starred"]
     pages, requested_page = get_effective_page(request.args.get("page", 0),
             filter_func)
