@@ -1,9 +1,10 @@
 from flask import Blueprint, render_template, Response, \
-    abort, g
+    abort, g, request
 from json import dumps
 
 from database import get_all_items, get_post_num, \
-        get_post_by_date, get_user_stats, set_user
+        get_post_by_date, get_user_stats, set_user, \
+        get_items_on_page, get_last_items
 from context_processors import get_user
 
 app = Blueprint('merveilles_api', __name__, template_folder='templates')
@@ -12,6 +13,18 @@ app = Blueprint('merveilles_api', __name__, template_folder='templates')
 def all_posts():
     items = get_all_items(g.db_file)
     return Response(dumps(items), mimetype="application/json")
+
+@app.route("/data/page/<int:page_num>")
+def page_posts(page_num):
+    items = get_items_on_page(page_num, g.db_file)
+    return Response(dumps(items), mimetype="application/json")
+
+@app.route("/data/latest")
+def page_posts(page_num):
+    pages = request.args.get('pages')
+    items = get_last_items(g.db_file, pages)
+    return Response(dumps(items), mimetype="application/json")
+
 
 @app.route("/data/<int:post_num>")
 def post_num(post_num):

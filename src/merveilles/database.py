@@ -215,6 +215,50 @@ def get_items(item_filter, db_file, page=0):
             item['title'] = item['url']
     return sorted_items_for_viewing
 
+def get_items_on_page(page, db_file):
+    item_iter = 0
+    items = []
+    db = DB()
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump_back()
+    while len(items) < FILTER_MAX:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        if item_iter >= (FILTER_MAX * page):
+            items.append(rec)
+
+        item_iter = item_iter + 1
+        cur.step_back()
+    cur.disable()
+    db.close()
+
+    return items
+
+def get_last_items(db_file, pages=1):
+    items = []
+    db = DB()
+    if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
+        print "Could not open database."
+
+    cur = db.cursor()
+    cur.jump_back()
+    while len(items) < pages * FILTER_MAX:
+        rec = cur.get(False)
+        if not rec:
+            break
+
+        items.append(rec)
+        cur.step_back()
+    cur.disable()
+    db.close()
+
+    return items
+
 def get_all_items(db_file):
     items = []
     db = DB()
