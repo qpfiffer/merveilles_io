@@ -247,7 +247,7 @@ def get_last_items(db_file, pages=1):
 
     cur = db.cursor()
     cur.jump_back()
-    while len(items) < pages * FILTER_MAX:
+    while len(items) < (pages * FILTER_MAX):
         rec = cur.get(False)
         if not rec:
             break

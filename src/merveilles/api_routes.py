@@ -21,7 +21,7 @@ def page_posts_by_num(page_num):
 
 @app.route("/data/latest")
 def latest_posts():
-    pages = request.args.get('pages', 0)
+    pages = request.args.get('pages', 1)
     items = get_last_items(g.db_file, pages)
     return Response(dumps(items), mimetype="application/json")
 
