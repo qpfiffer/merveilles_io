@@ -15,12 +15,12 @@ def all_posts():
     return Response(dumps(items), mimetype="application/json")
 
 @app.route("/data/page/<int:page_num>")
-def page_posts(page_num):
+def page_posts_by_num(page_num):
     items = get_items_on_page(page_num, g.db_file)
     return Response(dumps(items), mimetype="application/json")
 
 @app.route("/data/latest")
-def page_posts(page_num):
+def page_posts_latest(page_num):
     pages = request.args.get('pages')
     items = get_last_items(g.db_file, pages)
     return Response(dumps(items), mimetype="application/json")
