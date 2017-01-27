@@ -13,25 +13,25 @@ and preferably virtualenvwrapper.
 2. Install requirements: `pip install -r requirements.txt`
 3. Install Kyoto Cabinet:
 
-````
+```
     cd dependencies/
     tar -xf kyotocabinet-1.2.76.tar.gz
     cd kyotocabinet-1.2.76
     ./configure
     make
     sudo make install
-````
+```
 
 4. Install kyoto cabinet python bindings into your virtual environment
 
-````
+```
     cd dependencies/
     tar -xf kyotocabinet-python-legacy-1.18.tar.gz
     cd kyotocabinet-python-legacy-1.18
     make
     sudo make install
     python setup.py install
-````
+```
 
 5. You'll also need [OlegDB](http://olegdb.org/) running to handle user stuff.
 We have a multi-database paradigm! Great!
