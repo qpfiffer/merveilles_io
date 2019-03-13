@@ -7,7 +7,7 @@ argparse==1.2.1
 beautifulsoup4==4.3.1
 itsdangerous==0.23
 wsgiref==0.1.2
-requests==2.0.1
+requests>=2.20.0
 Markdown==2.3.1
 pil==1.1.7
 olegdb-python==0.1.3
