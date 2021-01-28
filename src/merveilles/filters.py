@@ -1,4 +1,5 @@
 from datetime import datetime
+from functools import reduce
 
 def get_domain_filter(raw_url):
     domain = ""
@@ -24,7 +25,7 @@ def file_size(size_str):
 
 def unix_to_human(timestamp_str):
     time = float(timestamp_str)
-    return unicode(datetime.fromtimestamp(time))
+    return str(datetime.fromtimestamp(time))
 
 def is_video(item):
     video_urls = ['youtube.com', 'vimeo.com']
@@ -37,7 +38,7 @@ def is_youtube(item):
 
 def youtube_vid(item):
     query_str = item['url'].split('?')[1].split("&")
-    ve_str = filter(lambda a: 'v=' in a, query_str)[0]
+    ve_str = [a for a in query_str if 'v=' in a][0]
     return ve_str.split('v=')[1]
 
 def is_sound(item):

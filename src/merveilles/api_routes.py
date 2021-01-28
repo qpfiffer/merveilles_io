@@ -2,10 +2,10 @@ from flask import Blueprint, render_template, Response, \
     abort, g, request
 from json import dumps
 
-from database import get_all_items, get_post_num, \
+from .database import get_all_items, get_post_num, \
         get_post_by_date, get_user_stats, set_user, \
         get_items_on_page, get_last_items
-from context_processors import get_user
+from .context_processors import get_user
 
 app = Blueprint('merveilles_api', __name__, template_folder='templates')
 
@@ -50,7 +50,7 @@ def star_toggle(key):
         user["starred"].append(key)
         to_return["starred"] = True
 
-    print "User stars: {}".format(user["starred"])
+    print("User stars: {}".format(user["starred"]))
     if set_user(user):
         to_return["success"] = True
         return Response(dumps(to_return), mimetype="application/json")

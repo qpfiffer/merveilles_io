@@ -4,14 +4,14 @@ from kyotocabinet import DB
 from olegsessions import OlegDBSessionInterface
 from olegdb import OlegDB
 
-from merveilles.routes import app as routes
-from merveilles.api_routes import app as api_routes
-from merveilles.context_processors import app as context_processors
-from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
+from .merveilles.routes import app as routes
+from .merveilles.api_routes import app as api_routes
+from .merveilles.context_processors import app as context_processors
+from .merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
     DEFAULT_CHANNEL, BLOG_DIR
-from merveilles.filters import get_domain_filter, file_size, unix_to_human,\
+from .merveilles.filters import get_domain_filter, file_size, unix_to_human,\
     is_video, is_sound, youtube_vid, is_youtube
-from merveilles.utils import gen_thumbnail_for_url, random_password
+from .merveilles.utils import gen_thumbnail_for_url, random_password
 
 import sys, os, getopt, time, json
 
@@ -58,7 +58,7 @@ def csrf_protect():
             stuff = json.loads(request.data).get("_csrf_token")
             in_data = stuff == token
         except Exception as e:
-            print e
+            print(e)
             in_data = False
         if not token or not (in_form or in_data):
             abort(403)
@@ -87,21 +87,21 @@ def gen_thumbnails(db_file):
         is_image = loaded["url"].lower().endswith(("jpg", "jpeg", "gif", "png", "webm"))
 
         if is_image:
-            print "Thumbnailing {}".format(loaded["url"])
+            print("Thumbnailing {}".format(loaded["url"]))
             loaded["is_image"] = True
             try:
                 thumbnail = gen_thumbnail_for_url(loaded["url"], rec[0])
             except IOError as e:
-                print "IOError: {}".format(e)
-                print "Save result: {}".format(cur.set_value(dumps(loaded)))
+                print("IOError: {}".format(e))
+                print("Save result: {}".format(cur.set_value(dumps(loaded))))
                 cur.step_back()
                 continue
 
 
             if thumbnail:
                 loaded["thumbnail"] = thumbnail
-                print "Thumbnailed {}".format(loaded["url"])
-                print "Save result: {}".format(cur.set_value(dumps(loaded)))
+                print("Thumbnailed {}".format(loaded["url"]))
+                print("Save result: {}".format(cur.set_value(dumps(loaded))))
 
         cur.step_back()
 
@@ -118,11 +118,11 @@ def main(argv):
     try:
         opts, args = getopt.getopt(argv,"hi:o:",["db=", "debug", "port=", "gen-thumbnails"])
     except getopt.GetoptError:
-        print "merveilles_io --db=<db_dir>"
+        print("merveilles_io --db=<db_dir>")
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'NO HELP FOR THE WICKED'
+            print('NO HELP FOR THE WICKED')
             sys.exit()
         elif opt in ("-d", "--db"):
             app.config['DB_FILE'] = arg

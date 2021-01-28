@@ -5,12 +5,13 @@ from datetime import datetime, timedelta, date
 from kyotocabinet import DB
 from json import dumps, loads
 from time import mktime
-from urllib2 import urlopen
-from utils import gen_thumbnail_for_url
+from urllib.request import urlopen
+from .utils import gen_thumbnail_for_url
 import random
 
-from constants import FILTER_MAX, PERSON_COLORS
-from utils import get_domain, visible
+from .constants import FILTER_MAX, PERSON_COLORS
+from .utils import get_domain, visible
+from functools import reduce
 
 SCHEMA_VERSION = "0001"
 USERS_PREFIX = "users"
@@ -25,7 +26,7 @@ def search_func(record, search_string):
     # Loop through every item in the object
     for item in ["summary", "title", "url"]:
         def search_reduce_func(accum, val):
-            return accum and (val in unicode(record[item]).lower())
+            return accum and (val in str(record[item]).lower())
 
         results = reduce(search_reduce_func, lowered_strings, True)
 
@@ -66,7 +67,7 @@ def top_things(db_file):
     db = DB()
 
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database. (Top things)"
+        print("Could not open database. (Top things)")
 
     cur = db.cursor()
     cur.jump_back()
@@ -110,8 +111,8 @@ def top_things(db_file):
     def get_one(x):
         return x[1]
 
-    return (sorted(urls.items(), key=get_one, reverse=True),
-            sorted(people.items(), key=get_one, reverse=True),
+    return (sorted(list(urls.items()), key=get_one, reverse=True),
+            sorted(list(people.items()), key=get_one, reverse=True),
             graph)
 
 def insert_item(url, person, db_file, submitted_title=''):
@@ -139,7 +140,7 @@ def insert_item(url, person, db_file, submitted_title=''):
         # Do some dumb summarizing if we can
         def concat(a, v):
             return a + " " + v.strip()
-        visible_stuff = filter(visible, soup.findAll(text=True))
+        visible_stuff = list(filter(visible, soup.findAll(text=True)))
         summary = reduce(concat, visible_stuff, "")[:900] + "..."
     except:
         pass
@@ -186,7 +187,7 @@ def get_items(item_filter, db_file, page=0):
     items = []
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     cur = db.cursor()
     cur.jump_back()
@@ -220,7 +221,7 @@ def get_items_on_page(page, db_file):
     items = []
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     cur = db.cursor()
     cur.jump_back()
@@ -243,7 +244,7 @@ def get_last_items(db_file, pages=1):
     items = []
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     cur = db.cursor()
     cur.jump_back()
@@ -263,7 +264,7 @@ def get_all_items(db_file):
     items = []
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     cur = db.cursor()
     cur.jump()
@@ -297,7 +298,7 @@ def get_user_stats(username, db_file):
 
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     cur = db.cursor()
     cur.jump()
@@ -360,7 +361,7 @@ def get_post_by_date(key, db_file):
     item = None
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
     item = db.get(key)
 
     db.close()
@@ -372,7 +373,7 @@ def get_post_num(post_num, db_file):
     item = None
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     cur = db.cursor()
     cur.jump()
@@ -399,7 +400,7 @@ def get_items_last_X_days(db_file, X, munge=True):
     dates = {}
     db = DB()
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     X_days_ago = datetime.now() - timedelta(days=X)
 
@@ -446,7 +447,7 @@ def aggregate_by_hour(db_file):
     db = DB()
 
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OCREATE):
-        print "Could not open database."
+        print("Could not open database.")
 
     cur = db.cursor()
     cur.jump_back()
@@ -474,7 +475,7 @@ def get_page_count(item_filter = lambda x: True):
     db = DB()
     db_file = current_app.config['DB_FILE']
     if not db.open("{0}".format(db_file), DB.OREADER | DB.OWRITER | DB.OCREATE):
-        print "Could not open database (get_page_count). Error: {}".format(db.error())
+        print("Could not open database (get_page_count). Error: {}".format(db.error()))
 
     cur = db.cursor()
     cur.jump_back()

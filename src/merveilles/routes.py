@@ -5,10 +5,10 @@ from flask import current_app, Blueprint, render_template, request, \
 from time import mktime
 from werkzeug.exceptions import BadRequestKeyError
 
-from context_processors import get_user
-from database import insert_item, get_items, top_things, search_func, \
+from .context_processors import get_user
+from .database import insert_item, get_items, top_things, search_func, \
     get_items_last_X_days, aggregate_by_hour, auth_user, sign_up
-from utils import get_domain, build_posts, get_effective_page
+from .utils import get_domain, build_posts, get_effective_page
 
 app = Blueprint('merveilles', __name__, template_folder='templates')
 
@@ -74,7 +74,7 @@ def blog_post(slug):
     try:
         def s(x):
             return x["slug"] == slug
-        post = filter(s, build_posts(current_app.config["BLOG_DIR"]))
+        post = list(filter(s, build_posts(current_app.config["BLOG_DIR"])))
     except OSError:
         abort(404)
 
@@ -224,7 +224,7 @@ def stats():
     for item in p_to_dp:
         def muh_lambda(x):
             return (x[0], people[item])
-        stats.append({"name": item, "data": map(muh_lambda, sorted(p_to_dp[item]))})
+        stats.append({"name": item, "data": list(map(muh_lambda, sorted(p_to_dp[item])))})
 
     return render_template("stats.html",
         items=top_items,

@@ -1,8 +1,8 @@
-from context_processors import db_meta_info
+from .context_processors import db_meta_info
 from flask import request, current_app
 from functools import wraps
 from kyotocabinet import DB
-import requests, time, urllib, calendar
+import requests, time, urllib.request, urllib.parse, urllib.error, calendar
 
 def ol_view_cache(f):
     @wraps(f)
@@ -13,12 +13,12 @@ def ol_view_cache(f):
             return f(*args, **kwargs)
 
         res = None
-        fancy = u"{}{}{}{}{}".format(db_meta_info()['count'],
+        fancy = "{}{}{}{}{}".format(db_meta_info()['count'],
                 request.host,
                 request.query_string,
-                unicode(request.path).replace("/", "_"),
-                f.func_name)
-        quoted = urllib.quote(fancy.encode('ascii', 'replace'))
+                str(request.path).replace("/", "_"),
+                f.__name__)
+        quoted = urllib.parse.quote(fancy.encode('ascii', 'replace'))
 
         resp = requests.get("http://localhost:8080/{}".format(quoted), stream=True)
         if resp.status_code == 404:
@@ -54,7 +54,7 @@ def kc_view_cache(f):
         db = DB()
         db.open("/tmp/page_cache.kch")
         res = None
-        fancy = hash("{}{}{}".format(db_meta_info()['count'], request.url, f.func_name))
+        fancy = hash("{}{}{}".format(db_meta_info()['count'], request.url, f.__name__))
 
         res = db.get(fancy)
         if not res:

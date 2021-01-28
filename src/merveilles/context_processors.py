@@ -27,7 +27,7 @@ def db_meta_info():
     db = DB()
     db_file = current_app.config['DB_FILE']
     if not db.open("{0}".format(db_file), DB.OREADER):
-        print "Could not open database (meta info)."
+        print("Could not open database (meta info).")
     meta["size"] = db.size()
     meta["count"] = db.count()
     db.close()

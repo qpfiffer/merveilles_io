@@ -26,8 +26,8 @@ and preferably virtualenvwrapper.
 
 ```
     cd dependencies/
-    tar -xf kyotocabinet-python-legacy-1.18.tar.gz
-    cd kyotocabinet-python-legacy-1.18
+    tar -xf ./kyotocabinet-python-1.23.tar.gz
+    cd kyotocabinet-python-1.23
     make
     sudo make install
     python setup.py install
