@@ -87,7 +87,7 @@ def visible(element):
 def get_effective_page(page, filter_func=lambda x: True):
     from merveilles.database import get_page_count
     page_count = get_page_count(filter_func)
-    pages = list(range(0, page_count))
+    pages = list(range(0, int(page_count)))
     requested_page = int(page)
     if page_count > 0 and requested_page < 0:
         requested_page = 0
