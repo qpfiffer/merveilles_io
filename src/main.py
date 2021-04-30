@@ -2,14 +2,14 @@ from flask import abort, Flask, g, request, session
 from json import loads, dumps
 from kyotocabinet import DB
 
-from .merveilles.routes import app as routes
-from .merveilles.api_routes import app as api_routes
-from .merveilles.context_processors import app as context_processors
-from .merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
+from merveilles.routes import app as routes
+from merveilles.api_routes import app as api_routes
+from merveilles.context_processors import app as context_processors
+from merveilles.constants import THUMBNAIL_DIR, PARADISE_JSON, DB_FILE, \
     DEFAULT_CHANNEL, BLOG_DIR
-from .merveilles.filters import get_domain_filter, file_size, unix_to_human,\
+from merveilles.filters import get_domain_filter, file_size, unix_to_human,\
     is_video, is_sound, youtube_vid, is_youtube
-from .merveilles.utils import gen_thumbnail_for_url, random_password
+from merveilles.utils import gen_thumbnail_for_url, random_password
 
 import sys, os, getopt, time, json
 
