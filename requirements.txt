@@ -28,6 +28,6 @@ requests==2.25.1
 six==1.15.0
 soupsieve==2.1
 traitlets==5.0.5
-urllib3==1.26.3
+urllib3==1.26.5
 wcwidth==0.2.5
 Werkzeug==1.0.1
