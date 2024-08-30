@@ -90,8 +90,7 @@ def top_things(db_file):
         else:
             people[person] = people[person] + 1
 
-        if split is not None and split is not "" and \
-            person is not None and person is not "":
+        if split and person:
             # Build a crazy relational graph out of my nosql data
             if graph.get(split, False) == False:
                 graph[split] = {"is_person": False, "data": [person], "linked_to_count": 1}
