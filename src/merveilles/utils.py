@@ -91,8 +91,8 @@ def get_effective_page(page, filter_func=lambda x: True):
     requested_page = int(page)
     if page_count > 0 and requested_page < 0:
         requested_page = 0
-    elif page_count > 0 and requested_page > pages[-1]:
-        requested_page = pages[-1]
+    elif page_count > 0 and requested_page > page_count:
+        requested_page = page_count
 
     return (pages, requested_page)
 
